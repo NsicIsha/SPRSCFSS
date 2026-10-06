@@ -1,0 +1,52 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Company.master.cs" Inherits="appMaster_Company" %>
+<%@ Register Src="~/UserControl/Header_Admin.ascx" TagName="Header_Admin" TagPrefix="uc1" %>
+<%@ Register Src="~/UserControl/Footer_Admin.ascx" TagName="Footer_Admin" TagPrefix="uc2" %>
+<%@ Register Src="~/UserControl/TreeMenu_Admin.ascx" TagName="Tree_Menu" TagPrefix="uc3" %>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Single Point Registration (SPR)</title>
+    <link type="text/css" href="../CSS/StyleAdmin.css" rel="Stylesheet" />
+    <script type="text/javascript" src="../JScript/JSAdmin.js" language="javascript"></script>
+    
+   <%-- <script language="javascript" type="text/javascript" src="../JScript/jquery-1.7.1.js"></script>
+
+    <script src="../JScript/jquery-1.3.2-vsdoc.js" type="text/javascript"></script>
+
+    <script src="../JScript/jquery-1.3.2.js" type="text/javascript"></script>--%>
+    
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <table width="1000px" border="0" cellpadding="0" cellspacing="0"style="background-color: #FFFFFF;">
+            <tr>
+                <td colspan="2">
+                    <uc1:Header_Admin ID="Header_Admin2" runat="server" />
+                </td>
+            </tr>
+            <tr>
+                <td align="left" style="height: 435px; vertical-align: top; width: 200px; background-color: #DDF1F7;">
+                    <uc3:Tree_Menu ID="Tree_Menu2" runat="server" />
+                </td>
+                <td style="vertical-align: top; width: 700px;">
+                    <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>            
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <uc2:Footer_Admin ID="Footer_Admin2" runat="server" />
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+    </form>
+</body>
+</html>

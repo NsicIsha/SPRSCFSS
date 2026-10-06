@@ -1,0 +1,629 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Text;
+using NSICGP_VBClassLibrary;
+
+public partial class appAdministrator_Admin_Edit_monetary : System.Web.UI.Page
+{
+    public static DataTable Table = new DataTable();
+    public static DataTable newTable = new DataTable();
+    public static DataTable newsubtable = new DataTable();
+    ArrayList ParameterArray = new ArrayList();
+    int[] s = new int[10];
+    int unit1, unit2, unit3, unit4, unit5,unitcount;
+    int companyid, processid;
+    string commalist;
+    int UserId,RoleId;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        try
+        {
+            //if (!IsPostBack)
+            //{
+            UserId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+            RoleId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+            if (RoleId ==2 || RoleId == 5)
+            {
+                CreateTemplatedGridView();
+            }
+            else
+            {
+                // btnSearch.Visible = false;
+                Response.Redirect("logout.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.Message);
+        }
+        
+        //}
+      
+    }
+
+    void PopulateDataTable()
+    {
+        try
+        {
+           // clsCompanyInformationEdit objCompanyEdit = new clsCompanyInformationEdit();
+            clsCompany objcom = new clsCompany();
+            companyid = Convert.ToInt32(Request.QueryString["id"]);
+            processid = Convert.ToInt32(Request.QueryString["urlid"]);
+            DataSet ds = new DataSet();
+            //ds = objCompanyEdit.Company_Fetch_Monetary_dynamic(companyid, processid);
+
+            ds = objcom.FetchTurnover_history(companyid, processid);
+
+            if (ds != null)
+            {
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0] != null)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            hid_type.Value = ds.Tables[0].Rows[0]["type"].ToString();
+                        }
+                    }
+                }
+            }
+
+            newTable = ds.Tables[1];
+            newsubtable = ds.Tables[0];
+          //  unitcount = Convert.ToInt32(ds.Tables[1].Rows[0]["unitcount"]);
+            newTable.Columns.Remove("id");
+            
+           // commalist = Convert.ToString(ds.Tables[2].Rows[0]["unitlist"]);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.Message);
+        }
+    }
+
+    void CreateTemplatedGridView()
+    {
+        try
+        {
+            // fill the table which is to bound to the GridView
+            PopulateDataTable();
+            // add templated fields to the GridView
+            int rowcount = Table.Rows.Count;
+            TemplateField BtnTmpField = new TemplateField();
+            BtnTmpField.ItemTemplate =
+                new DynamicallyTemplatedGridViewHandler(ListItemType.Item, "Options", "Command");
+            BtnTmpField.HeaderTemplate =
+                new DynamicallyTemplatedGridViewHandler(ListItemType.Header, "Options", "Command");
+            BtnTmpField.EditItemTemplate =
+                new DynamicallyTemplatedGridViewHandler(ListItemType.EditItem, "Options", "Command");
+            gvmonetary.Columns.Add(BtnTmpField);
+
+            for (int i = 0; i < newTable.Columns.Count; i++)
+            {
+              
+                TemplateField ItemTmpField = new TemplateField();
+                // create HeaderTemplate
+                ItemTmpField.HeaderTemplate = new DynamicallyTemplatedGridViewHandler(ListItemType.Header,
+                                                              newTable.Columns[i].ColumnName,
+                                                              newTable.Columns[i].DataType.Name);
+                // create ItemTemplate
+                ItemTmpField.ItemTemplate = new DynamicallyTemplatedGridViewHandler(ListItemType.Item,
+                                                              newTable.Columns[i].ColumnName,
+                                                              newTable.Columns[i].DataType.Name);
+                //create EditItemTemplate
+                ItemTmpField.EditItemTemplate = new DynamicallyTemplatedGridViewHandler(ListItemType.EditItem,
+                                                              newTable.Columns[i].ColumnName,
+                                                              newTable.Columns[i].DataType.Name);
+                // then add to the GridView
+                gvmonetary.Columns.Add(ItemTmpField);
+
+            }
+
+            // bind and display the data
+
+            gvmonetary.DataSource = newTable;
+     gvmonetary.Columns[0].Visible = false;
+    
+            gvmonetary.DataBind();
+           // gvmonetary.Rows[gvmonetary.Rows.Count - 1].Visible = false;
+        //   gvmonetary.Columns[1].Visible = false;
+
+           clsCompanyInformationEdit objCompanyEdit = new clsCompanyInformationEdit();
+           
+            companyid = Convert.ToInt32(Request.QueryString["id"]);
+            processid = Convert.ToInt32(Request.QueryString["urlid"]);
+            DataSet ds = new DataSet();
+          ds = objCompanyEdit.Company_Fetch_Monetary_dynamic(companyid, processid);
+
+
+          Table = ds.Tables[0];
+       unitcount = Convert.ToInt32(ds.Tables[1].Rows[0]["unitcount"]);
+       commalist = Convert.ToString(ds.Tables[2].Rows[0]["unitlist"]);
+          Table.Columns.Remove("seqno");
+
+          if (hid_type.Value == "1")
+          {
+
+
+              if (unitcount == 1)
+              {
+                  //txtml1.Text = Table.Rows[3]["Unit1"].ToString();
+                  ViewState["ml1"] = newTable.Rows[3]["Profit1"].ToString();
+                  td2.Visible = false;
+                  td3.Visible = false;
+                  td4.Visible = false;
+                  td5.Visible = false;
+              }
+              else if (unitcount == 2)
+              {
+                  //txtml1.Text = Table.Rows[3]["Unit1"].ToString();
+                  //txtml2.Text = Table.Rows[3]["Unit2"].ToString();
+                  ViewState["ml1"] = newTable.Rows[3]["Profit1"].ToString();
+                  ViewState["ml2"] = newTable.Rows[3]["Profit2"].ToString();
+                  td3.Visible = false;
+                  td4.Visible = false;
+                  td5.Visible = false;
+              }
+
+              else if (unitcount == 3)
+              {
+
+                  //txtml1.Text = Table.Rows[3]["Unit1"].ToString();
+                  //txtml2.Text = Table.Rows[3]["Unit2"].ToString();
+                  //txtml3.Text = Table.Rows[3]["Unit3"].ToString();
+                  ViewState["ml1"] = newTable.Rows[3]["Profit1"].ToString();
+                  ViewState["ml2"] = newTable.Rows[3]["Profit2"].ToString();
+                  ViewState["ml3"] = newTable.Rows[3]["Profit3"].ToString();
+                  td4.Visible = false;
+                  td5.Visible = false;
+              }
+              else if (unitcount == 4)
+              {
+                  //txtml1.Text = Table.Rows[3]["Unit1"].ToString();
+                  //txtml2.Text = Table.Rows[3]["Unit2"].ToString();
+                  //txtml3.Text = Table.Rows[3]["Unit3"].ToString();
+                  //txtml4.Text = Table.Rows[3]["Unit4"].ToString();
+                  td5.Visible = false;
+                  ViewState["ml1"] = newTable.Rows[3]["Profit1"].ToString();
+                  ViewState["ml2"] = newTable.Rows[3]["Profit2"].ToString();
+                  ViewState["ml3"] = newTable.Rows[3]["Profit3"].ToString();
+                  ViewState["ml4"] = newTable.Rows[3]["Profit4"].ToString();
+              }
+              else
+              {
+                  //txtml1.Text = Table.Rows[3]["Unit1"].ToString();
+                  //txtml2.Text = Table.Rows[3]["Unit2"].ToString();
+                  //txtml3.Text = Table.Rows[3]["Unit3"].ToString();
+                  //txtml4.Text = Table.Rows[3]["Unit4"].ToString();
+                  //txtml5.Text = Table.Rows[3]["Unit5"].ToString();
+                  // string f1 = newTable.Rows[3]["Profit1"].ToString();
+                  ViewState["ml1"] = newTable.Rows[3]["Profit1"].ToString();
+                  ViewState["ml2"] = newTable.Rows[3]["Profit2"].ToString();
+                  ViewState["ml3"] = newTable.Rows[3]["Profit3"].ToString();
+                  ViewState["ml4"] = newTable.Rows[3]["Profit4"].ToString();
+                  ViewState["ml5"] = newTable.Rows[3]["Profit5"].ToString();
+              }
+
+          }
+          else
+          {
+              td2.Visible = false;
+              td3.Visible = false;
+              td4.Visible = false;
+              td5.Visible = false;
+              string f1 = newTable.Rows[3]["Turnover"].ToString();
+              ViewState["ml1"] = newTable.Rows[3]["Turnover"].ToString();
+              ViewState["ml2"] = newTable.Rows[3]["Turnover"].ToString();
+              ViewState["ml3"] = newTable.Rows[3]["Turnover"].ToString();
+              ViewState["ml4"] = newTable.Rows[3]["Turnover"].ToString();
+              ViewState["ml5"] = newTable.Rows[3]["Turnover"].ToString();
+          }
+
+
+
+            // commalist = Convert.ToString(ds.Tables[2].Rows[0]["unitlist"]);
+
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.Message);
+        }
+    }
+
+    public void gvmonetary_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+       // int unitid = Convert.ToInt32( Table.Columns[1].ColumnName);
+        gvmonetary.EditIndex = e.NewEditIndex;
+        gvmonetary.DataBind();
+        Session["SelecetdRowIndex"] = e.NewEditIndex;
+    }
+
+
+    public void gvmonetary_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        gvmonetary.EditIndex = -1;
+        gvmonetary.DataBind();
+        Session["SelecetdRowIndex"] = -1;
+
+    }
+
+    public void gvmonetary_RowUpdating(Object sender, GridViewUpdateEventArgs e)
+    {
+        try
+        {
+
+        clsCompanyInformationEdit objcom = new clsCompanyInformationEdit();
+      
+        GridViewRow row = gvmonetary.Rows[e.RowIndex];
+        string field_value0 = ((TextBox)row.FindControl(Table.Columns[0].ColumnName)).Text;
+        ParameterArray.Add(field_value0);
+        for (int i =1; i < Table.Columns.Count; i++)
+        {
+            string field_value = ((TextBox)row.FindControl(Table.Columns[i].ColumnName)).Text;
+            ParameterArray.Add(field_value);
+        }
+
+        StringBuilder str = new StringBuilder();
+
+        string yearval, yearamt;
+        yearval = "";
+        yearamt = "";
+        string Query = "";
+        int result = 0;
+        if (e.RowIndex < Table.Rows.Count - 1)
+        {
+
+            
+            string[] words = commalist.Split(',');
+            int counter = 1;
+         
+            foreach (string word in words)
+            {
+                //  Table.Columns[i + 1].ColumnName = word;
+                yearval = "fGPtbl_CUnit_TO_Year" + (e.RowIndex + 1).ToString();
+                yearamt = "fGPtbl_CUnit_TO_Amount_Year" + (e.RowIndex + 1).ToString();
+                //str.Append("<turnover>");
+                //str.Append("<" + yearval + ">" + ParameterArray[0].ToString() + "</" + yearval + ">");
+                //str.Append("<" + yearamt + ">" + ParameterArray[1].ToString() + "</" + yearamt + ">");
+                //str.Append("<unitid>" + word + "</unitid>");
+                //str.Append("</turnover>");
+                if (processid == 1)
+                {
+                    Query = "update GPtbl_CUnit_Turnover set " +  yearval  + "="
+                        + "'" + ParameterArray[0].ToString() + "'" + "," + yearamt + " ="
+                        + ParameterArray[counter].ToString() + " ,fGPtbl_CUnit_TO_Form_typeid = " + processid + "  "
+                         + " ,fGPtbl_CUnit_TO_EUser =  " + UserId + "  where fGPtbl_CUnit_TO_CompanyId = " + companyid + " and fGPtbl_CUnit_TO_UnitId = " + word + "  ";
+                    result = objcom.f_update_monetary_trunover(Query);     
+                }
+                else
+                {
+                    //Query = "update GPtbl_CUnitAmendment_Turnover set " + yearval + "="
+                    //  + "'" + ParameterArray[0].ToString() + "'" + "," + yearamt + " ="
+                    //  + ParameterArray[counter].ToString() + "  where fGPtbl_CUnit_TO_CompanyId = " + companyid + " and fGPtbl_CUnit_TO_UnitId = " + word + "  ";
+                    Query = "update GPtbl_CUnitAmendment_Turnover set " + yearval + "="
+                        + "'" + ParameterArray[0].ToString() + "'" + "," + yearamt + " ="
+                        + ParameterArray[counter].ToString() + " ,fGPtbl_CUnit_TO_Form_typeid = " + processid + "  "
+                         + " ,fGPtbl_CUnit_TO_EUser =  " + UserId + "  where fGPtbl_CUnit_TO_CompanyId = " + companyid + " and fGPtbl_CUnit_TO_UnitId = " + word + "  ";
+
+                    result = objcom.f_update_monetary_trunover(Query);     
+                }
+                counter = counter + 1;
+                
+            }
+           
+        }
+
+
+        if (e.RowIndex == Table.Rows.Count - 1)
+        {
+            string[] words = commalist.Split(',');
+            int counter = 1;
+            foreach (string word in words)
+            {
+                Query = "Update GPtbl_CUnit_MonetoryLimit set fGPtbl_CUnit_ML_MonetoryLimit = " + ParameterArray[counter].ToString() + ", "
+                               + " fGPtbl_CUnit_ML_FormtypeId = " + processid + " , fGPtbl_CUnit_ML_EUser = " + UserId + " where  fGPtbl_CUnit_ML_UnitId = " + word;
+                result = objcom.f_update_monetary_trunover(Query);     
+                counter = counter + 1;
+            }
+        }
+        
+      //  gvmonetary.EditIndex = -1;
+        //gvmonetary.DataBind();
+
+       Response.Redirect(Request.Url.AbsoluteUri);
+        //gvmonetary.DataSource = Table;
+        //gvmonetary.DataBind();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.Message);
+        }
+    }
+
+    void Clear_dynamic_grid()
+    { 
+  
+    }
+
+
+
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        if (txtml1.Text != string.Empty)
+        {
+            if (Convert.ToDecimal(ViewState["ml1"].ToString()) < Convert.ToDecimal(txtml1.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Unit 1 Monetary limit cannot be more than that set by Branch Accounts.');", true);
+                return;
+            }
+        }
+        if (txtml2.Text != string.Empty)
+        {
+            if (Convert.ToDecimal(ViewState["ml2"].ToString()) < Convert.ToDecimal(txtml2.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Unit 2 Monetary limit  cannot be more than that set by Branch Accounts..');", true);
+                return;
+            }
+        }
+        if (txtml3.Text != string.Empty)
+        {
+            if (Convert.ToDecimal(ViewState["ml3"].ToString()) < Convert.ToDecimal(txtml3.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Unit 3 Monetary limit  cannot be more than that set by Branch Accounts.');", true);
+                return;
+            }
+        }
+        if (txtml4.Text != string.Empty)
+        {
+            if (Convert.ToDecimal(ViewState["ml4"].ToString()) < Convert.ToDecimal(txtml4.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Unit 4 Monetary limit  cannot be more than that set by Branch Accounts.');", true);
+                return;
+            }
+        }
+        if (txtml5.Text != string.Empty)
+        {
+            if (Convert.ToDecimal(ViewState["ml5"].ToString()) < Convert.ToDecimal(txtml5.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Unit 5 Monetary limit  cannot be more than that set by Branch Accounts.');", true);
+                return;
+            }
+        }
+        
+
+        StringBuilder str = new StringBuilder();
+        string[] unitid = commalist.Split(new char[] { ',' });
+        for (int i = 1; i <= unitcount; i++)
+        {
+            str.Append("<MonetaryLimit>");
+            str.Append("<UnitID>" + unitid[i - 1].ToString() + "</UnitID>");
+            if (i == 1)
+            {
+                str.Append("<ML>" + txtml1.Text + "</ML>");
+                str.Append("<PML>" +ViewState["ml1"].ToString() + "</PML>");
+            }
+            else if (i == 2)
+            {
+                str.Append("<ML>" + txtml2.Text + "</ML>");
+                   str.Append("<PML>" + ViewState["ml2"].ToString() + "</PML>");
+            }
+
+            else if (i == 3)
+            {
+                str.Append("<ML>" + txtml3.Text + "</ML>");
+                   str.Append("<PML>" +ViewState["ml3"].ToString() + "</PML>");
+            }
+
+            else if (i == 4)
+            {
+                str.Append("<ML>" + txtml4.Text + "</ML>");
+                   str.Append("<PML>" + ViewState["ml4"].ToString() + "</PML>");
+            }
+            else
+            {
+                str.Append("<ML>" + txtml5.Text + "</ML>");
+                str.Append("<PML>" + ViewState["ml5"].ToString() + "</PML>");
+            }
+            str.Append("</MonetaryLimit>");
+
+            
+        }
+
+        clsCompany OBJCOM = new clsCompany();
+        int sussid;
+        companyid = Convert.ToInt32(Request.QueryString["id"]);
+        sussid = OBJCOM.F_Update_MonetaryLimit(str.ToString(), Convert.ToInt32(Request.QueryString["urlid"]), UserId,companyid);
+        if (sussid == 1)
+        {
+            Response.Redirect("Home.aspx");
+        }
+    }
+}
+
+public class DynamicallyTemplatedGridViewHandler : ITemplate
+{
+    #region data memebers
+
+    ListItemType ItemType;
+    string FieldName;
+    string InfoType;
+    int totalrow;
+    int currentindex;
+
+    #endregion
+
+    #region constructor
+
+    public DynamicallyTemplatedGridViewHandler(ListItemType item_type, string field_name, string info_type)
+    {
+        ItemType = item_type;
+        FieldName = field_name;
+        InfoType = info_type;
+       
+    }
+
+    #endregion
+
+
+    #region Methods
+
+    public void InstantiateIn(System.Web.UI.Control Container)
+    {
+        switch (ItemType)
+        {
+            case ListItemType.Header:
+                Literal header_ltrl = new Literal();
+             //   header_ltrl.Text = "<b>" + FieldName + "</b>";
+                header_ltrl.Text = FieldName;
+                Container.Controls.Add(header_ltrl);
+                break;
+            case ListItemType.Item:
+                switch (InfoType)
+                {
+                    case "Command":
+                        //ImageButton edit_button = new ImageButton();
+                        //edit_button.ID = "edit_button";
+                        //edit_button.ImageUrl = "~/images/Admin/edit.PNG";
+                        //edit_button.Width = 24;
+                        //edit_button.Height = 24;
+                        //edit_button.CommandName = "Edit";
+                        //edit_button.Click += new ImageClickEventHandler(edit_button_Click);
+                        
+                        //edit_button.ToolTip = "Edit";
+                        //Container.Controls.Add(edit_button);
+
+                       
+                            LinkButton edit_lnk = new LinkButton();
+                            edit_lnk.Text = "<b>Edit</b>" + "  ";
+                            edit_lnk.ToolTip = "Edit";
+                            edit_lnk.CommandName = "Edit";
+                            edit_lnk.Click += new EventHandler(edit_button_Click);
+                            Container.Controls.Add(edit_lnk);
+                   
+                        
+
+                        //LinkButton delete_lnk = new LinkButton();
+                        //delete_lnk.Text = "  " + " <b>Delete</b>";
+                        //delete_lnk.ToolTip = "Delete";
+                        //delete_lnk.CommandName = "Delete";
+                        //delete_lnk.OnClientClick = "return confirm('Are you sure to delete the record?')";
+                        //Container.Controls.Add(delete_lnk);
+
+                        //ImageButton delete_button = new ImageButton();
+                        //delete_button.ID = "delete_button";
+                        //delete_button.ImageUrl = "~/images/Admin/delete.PNG";
+                        //delete_button.CommandName = "Delete";
+                        //delete_button.ToolTip = "Delete";
+                        //delete_button.Width = 24;
+                        //delete_button.Height = 24;
+                        //delete_button.OnClientClick = "return confirm('Are you sure to delete the record?')";
+                        //Container.Controls.Add(delete_button);
+
+                    
+
+                        break;
+
+                    default:
+                        Label field_lbl = new Label();
+                        field_lbl.ID = FieldName;
+                        field_lbl.Text = String.Empty; //we will bind it later through 'OnDataBinding' event
+                        field_lbl.DataBinding += new EventHandler(OnDataBinding);
+                        Container.Controls.Add(field_lbl);
+                        break;
+
+                }
+                break;
+            case ListItemType.EditItem:
+                if (InfoType == "Command")
+                {
+                    //ImageButton update_button = new ImageButton();
+                    LinkButton update_button = new LinkButton();
+                    update_button.ID = "update_button";
+                    update_button.CommandName = "Update";
+                    update_button.Text = "<b> Update   </b>";
+                  //  update_button.ImageUrl = "~/images/update.gif";
+                    if ((int)new Page().Session["InsertFlag"] == 1)
+                        update_button.ToolTip = "Add";
+                    else
+                        update_button.ToolTip = "Update";
+                    update_button.OnClientClick = "return confirm('Are you sure to update the record?')";
+                    Container.Controls.Add(update_button);
+
+                  //  ImageButton cancel_button = new ImageButton();
+                    LinkButton cancel_button = new LinkButton();
+                 //   cancel_button.ImageUrl = "~/images/cancel.gif";
+                    cancel_button.ID = "cancel_button";
+                    cancel_button.Text = "<b>    Cancel</b>";
+                    cancel_button.CommandName = "Cancel";
+                    cancel_button.ToolTip = "Cancel";
+                    Container.Controls.Add(cancel_button);
+
+                }
+                else// for other 'non-command' i.e. the key and non key fields, bind textboxes with corresponding field values
+                {
+                    TextBox field_txtbox = new TextBox();
+                    field_txtbox.ID = FieldName;
+                    field_txtbox.Text = String.Empty;
+                    field_txtbox.Width = 90;
+                    // if Inert is intended no need to bind it with text..keep them empty
+                    if ((int)new Page().Session["InsertFlag"] == 0)
+                        field_txtbox.DataBinding += new EventHandler(OnDataBinding);
+                    Container.Controls.Add(field_txtbox);
+
+                }
+                break;
+
+        }
+
+    }
+
+    #endregion
+
+    #region Event Handlers
+
+    //just sets the insert flag OFF so that we ll be able to decide in OnRowUpdating event whether to insert or update 
+    protected void edit_button_Click(Object sender, EventArgs e)
+    {
+        new Page().Session["InsertFlag"] = 0;
+    }
+
+
+    private void OnDataBinding(object sender, EventArgs e)
+    {
+
+        object bound_value_obj = null;
+        Control ctrl = (Control)sender;
+        IDataItemContainer data_item_container = (IDataItemContainer)ctrl.NamingContainer;
+        bound_value_obj = DataBinder.Eval(data_item_container.DataItem, FieldName);
+
+        switch (ItemType)
+        {
+            case ListItemType.Item:
+                Label field_ltrl = (Label)sender;
+                field_ltrl.Text = bound_value_obj.ToString();
+
+                break;
+            case ListItemType.EditItem:
+                TextBox field_txtbox = (TextBox)sender;
+                field_txtbox.Text = bound_value_obj.ToString();
+
+                break;
+        }
+
+
+    }
+
+    #endregion
+
+}
+
+

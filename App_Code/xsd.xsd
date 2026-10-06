@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="xsd" targetNamespace="http://tempuri.org/xsd.xsd" xmlns:mstns="http://tempuri.org/xsd.xsd" xmlns="http://tempuri.org/xsd.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="xsd" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="xsd" msprop:Generator_DataSetName="xsd">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_UserTableName="DataTable1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ZoneName" msprop:Generator_ColumnPropNameInRow="ZoneName" msprop:Generator_ColumnPropNameInTable="ZoneNameColumn" msprop:Generator_ColumnVarNameInTable="columnZoneName" msprop:Generator_UserColumnName="ZoneName" type="xs:string" minOccurs="0" />
+              <xs:element name="BranchName" msprop:Generator_ColumnPropNameInRow="BranchName" msprop:Generator_ColumnPropNameInTable="BranchNameColumn" msprop:Generator_ColumnVarNameInTable="columnBranchName" msprop:Generator_UserColumnName="BranchName" type="xs:string" minOccurs="0" />
+              <xs:element name="AnnualTarget" msprop:Generator_ColumnPropNameInRow="AnnualTarget" msprop:Generator_ColumnPropNameInTable="AnnualTargetColumn" msprop:Generator_ColumnVarNameInTable="columnAnnualTarget" msprop:Generator_UserColumnName="AnnualTarget" type="xs:string" minOccurs="0" />
+              <xs:element name="Pro_Rata_Target" msprop:Generator_ColumnPropNameInRow="Pro_Rata_Target" msprop:Generator_ColumnPropNameInTable="Pro_Rata_TargetColumn" msprop:Generator_ColumnVarNameInTable="columnPro_Rata_Target" msprop:Generator_UserColumnName="Pro_Rata_Target" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalAmount" msprop:Generator_ColumnPropNameInRow="TotalAmount" msprop:Generator_ColumnPropNameInTable="TotalAmountColumn" msprop:Generator_ColumnVarNameInTable="columnTotalAmount" msprop:Generator_UserColumnName="TotalAmount" type="xs:string" minOccurs="0" />
+              <xs:element name="Achievement_Branch_Wise" msprop:Generator_ColumnPropNameInRow="Achievement_Branch_Wise" msprop:Generator_ColumnPropNameInTable="Achievement_Branch_WiseColumn" msprop:Generator_ColumnVarNameInTable="columnAchievement_Branch_Wise" msprop:Generator_UserColumnName="Achievement_Branch_Wise" type="xs:string" minOccurs="0" />
+              <xs:element name="Achievement_Zone" msprop:Generator_ColumnPropNameInRow="Achievement_Zone" msprop:Generator_ColumnPropNameInTable="Achievement_ZoneColumn" msprop:Generator_ColumnVarNameInTable="columnAchievement_Zone" msprop:Generator_UserColumnName="Achievement_Zone" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

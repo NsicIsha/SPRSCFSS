@@ -1,0 +1,45 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="PopupAdmin.master.cs" Inherits="appMaster_PopupAdmin" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%@ Register Src="../UserControl/Header_Login.ascx" TagName="Header_Login" TagPrefix="uc1" %>
+<%@ Register Src="../UserControl/Footer_Login.ascx" TagName="Footer_Login" TagPrefix="uc2" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Government Purchase Scheme</title>
+
+    <script language="javascript" type="text/javascript" src="../JScript/jquery-1.7.1.js"></script>
+
+    <link type="text/css" rel="Stylesheet" href="../CSS/StyleAdmin.css" />
+
+    <script language="javascript" type="text/javascript" src="../JScript/JSAdmin.js"></script>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <center>
+        <form id="form1" runat="server">
+        <div>
+            <table width="900" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF;">
+                <tr>
+                    <td>
+                        <uc1:Header_Login ID="Header_Login1" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; width: 700px; padding-top:10px;">
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <uc2:Footer_Login ID="Footer_Login1" runat="server" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </center>
+</body>
+</html>

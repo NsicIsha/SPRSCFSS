@@ -1,0 +1,81 @@
+﻿body_1
+{
+	margin-bottom:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:0px;
+}
+.bodytext_1 {
+	font-family: Tahoma;
+	font-size: 11px;
+	color: #222222;
+	line-height: 14px;
+	text-decoration: none;
+}
+.ClsMain_1
+{
+	width:350px;
+}
+.ClsTR_1
+{
+	azimuth:left;
+	text-align:left;
+	vertical-align:top;
+	width:100%;
+	background-repeat:repeat-x;
+}
+.ClsTD_1
+{
+	azimuth:left;
+	text-align:left;
+	vertical-align:top;
+	width:25;
+	background-repeat:repeat-x;
+}
+.ClsImage_1
+{
+	/*
+	width:20px;
+	height:20px;
+	*/
+}
+.ForeColorTd_1
+{
+	width:10px;
+	height:10px;
+}
+
+.clsEmotion_1
+{
+	display:none;	
+}
+
+.ClsTextBox_1
+{
+	height:195px;
+	width:500px;
+}
+.ClsFrame_1
+{
+	height:195px;
+	width:500px;
+	background-color:#FFFFFF;
+}
+.ClsTextBoxTD_1
+{
+	azimuth:left;
+	text-align:left;
+	vertical-align:top;
+	width:100%;
+	background-repeat:repeat-x;
+	height:202px;
+}
+.ClsFrameTD_1
+{
+	azimuth:left;
+	text-align:left;
+	vertical-align:top;
+	width:100%;
+	background-repeat:repeat-x;
+	height:202px;
+}

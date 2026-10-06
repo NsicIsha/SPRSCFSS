@@ -1,0 +1,372 @@
+﻿<%@ Page Title="" Language="C#" AutoEventWireup="true" CodeFile="NewUnitRegistration_Form0.aspx.cs" Inherits="appAdministrator_NewUnitRegistration_Form0" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>NSIC:: POINT OF INTEREST</title>
+
+
+    <link href="http://www.nsic.co.in/css/bootstrap.min.css?ver=2018" rel="stylesheet" />
+    <link href="http://www.nsic.co.in/font-awesome/css/font-awesome.css?ver=2018" rel="stylesheet" />
+    <link href="http://www.nsic.co.in/css/plugins/slick/slick.css?ver=2018" rel="stylesheet" />
+    <link href="http://www.nsic.co.in/css/plugins/slick/slick-theme.css?ver=2018" rel="stylesheet" />
+    <link href="http://www.nsic.co.in/css/plugins/dataTables/datatables.min.css?ver=2018" rel="stylesheet" />
+    <link href="http://www.nsic.co.in/css/animate.css?ver=2018" rel="stylesheet" />
+    <link href="http://www.nsic.co.in/css/style.css?ver=2018" rel="stylesheet" />
+
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
+        <style type="text/css">
+            body {
+                background: #AEE4FF;
+            }
+
+            .form-style-10 {
+                max-width: 800px;
+                padding: 30px;
+                margin: 40px auto;
+                background: #FFF;
+                border-radius: 10px;
+                -webkit-border-radius: 10px;
+                -moz-border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+                -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+                -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+            }
+
+                .form-style-10 .inner-wrap {
+                    padding: 30px;
+                    background: #F8F8F8;
+                    border-radius: 6px;
+                    margin-bottom: 15px;
+                }
+
+                .form-style-10 h1 {
+                    background: #2A88AD;
+                    padding: 20px 30px 15px 30px;
+                    margin: -30px -30px 30px -30px;
+                    border-radius: 10px 10px 0 0;
+                    -webkit-border-radius: 10px 10px 0 0;
+                    -moz-border-radius: 10px 10px 0 0;
+                    color: #fff;
+                    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
+                    font: normal 30px 'Bitter', serif;
+                    -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+                    -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+                    box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+                    border: 1px solid #257C9E;
+                }
+
+                    .form-style-10 h1 > span {
+                        display: block;
+                        margin-top: 2px;
+                        font: 13px Arial, Helvetica, sans-serif;
+                    }
+
+                .form-style-10 label {
+                    display: block;
+                    font: 13px Arial, Helvetica, sans-serif;
+                    color: #888;
+                    margin-bottom: 15px;
+                }
+
+                .form-style-10 input[type="text"],
+                .form-style-10 input[type="date"],
+                .form-style-10 input[type="datetime"],
+                .form-style-10 input[type="email"],
+                .form-style-10 input[type="number"],
+                .form-style-10 input[type="search"],
+                .form-style-10 input[type="time"],
+                .form-style-10 input[type="url"],
+                .form-style-10 input[type="password"],
+                .form-style-10 textarea,
+                .form-style-10 select {
+                    display: block;
+                    box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    width: 90%;
+                    padding: 8px;
+                    border-radius: 6px;
+                    -webkit-border-radius: 6px;
+                    -moz-border-radius: 6px;
+                    border: 2px solid #fff;
+                    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+                    -moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+                    -webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+                    height: 50%;
+                }
+
+                .form-style-10 .section {
+                    font: normal 20px 'Bitter', serif;
+                    color: #2A88AD;
+                    margin-bottom: 5px;
+                }
+
+                    .form-style-10 .section span {
+                        background: #2A88AD;
+                        padding: 5px 10px 5px 10px;
+                        position: absolute;
+                        border-radius: 50%;
+                        -webkit-border-radius: 50%;
+                        -moz-border-radius: 50%;
+                        border: 4px solid #fff;
+                        font-size: 14px;
+                        margin-left: -45px;
+                        color: #fff;
+                        margin-top: -3px;
+                    }
+
+                .form-style-10 input[type="button"],
+                .form-style-10 input[type="submit"] {
+                    background: #2A88AD;
+                    padding: 8px 20px 8px 20px;
+                    border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    -moz-border-radius: 5px;
+                    color: #fff;
+                    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
+                    font: normal 30px 'Bitter', serif;
+                    -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+                    -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+                    box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+                    border: 1px solid #257C9E;
+                    font-size: 15px;
+                }
+
+                    .form-style-10 input[type="button"]:hover,
+                    .form-style-10 input[type="submit"]:hover {
+                        background: #2A6881;
+                        -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+                        -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+                        box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+                    }
+
+                .form-style-10 .privacy-policy {
+                    float: right;
+                    width: 250px;
+                    font: 12px Arial, Helvetica, sans-serif;
+                    color: #4D4D4D;
+                    margin-top: 10px;
+                    text-align: right;
+                }
+
+            .two-col {
+                overflow: hidden; /* Makes this div contain its floats */
+            }
+
+                .two-col .col1,
+                .two-col .col2 {
+                    width: 50%;
+                }
+
+                .two-col .col1 {
+                    float: left;
+                }
+
+                .two-col .col2 {
+                    float: right;
+                }
+
+            /*.two-col label {
+                    display: block;
+                }*/
+        </style>
+
+</head>
+<body>
+     
+
+     
+
+        <div class="form-style-10">
+
+
+
+
+
+
+            <div style="width: 98%; padding-top: 5px; padding-bottom: 5px;" class="container top-logo-panel">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="width: 20%; text-align: left">
+                            <img src="../images/newNS.png" height="100" /></td>
+                        <td style="width: 60%; text-align: center">
+                            <%-- <div class="col-sm-8 col-xs-12">
+                        <div class="text-success">--%>
+                            <strong style="color: #0098DA">National Small Industries Corporation</strong>
+
+                            <h4 style="color: #0098DA">(A Government of India Enterprise)</h4>
+                            <%-- </div>
+                        <div>--%>
+                            <b>Registration under Single Point Registration Scheme</b>
+                            <br />
+                            <br />
+                            <br />
+                            <b>Online Application Form</b>
+                            <%--</div>
+                    </div>--%>
+
+                        </td>
+                        <td style="width: 20%; text-align: left">
+                            <img src="../images/msme.png" height="100" width="150" /></td>
+                    </tr>
+                </table>
+                <%--<div class="text-center">
+                    <div class="col-sm-2 col-xs-12">
+                        <img src="images/newNS.png" height="100" />
+                    </div>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="text-success">
+                            <strong>National Small Industries Corporation</strong>
+
+                           <h4> (A Government of India Enterprise)</h4>
+                        </div>
+                        <div>
+                       <b>   Registration in Single Point Registration Scheme</b>
+                        </div>
+                    </div>
+
+                    <div  class="col-md-1 col-xs-10 media-n hidden-xs" >
+                        <img src="images/msme.png" height="100" width="150" />
+                    </div>
+                </div>--%>
+            </div>
+
+
+
+
+
+
+
+            <form runat="server">
+                <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+                </asp:ToolkitScriptManager>
+                <asp:UpdatePanel ID="updSubmt" runat="server">
+<ContentTemplate>
+               <%-- <div id="updSubmt">--%>
+				<div class="section" style="padding-top: 50px">
+                            <span>.*.</span> SINGLE POINT REGISTRATION        
+                        </div>
+                        <div class="inner-wrap">
+                           <span>NSIC registers Micro & small Enterprises (MSEs) under Single Point Registration scheme (SPRS) for participation in Government Purchases.
+						   The units registered under Single Point Registration Scheme of NSIC are eligible to get the benefits under Public Procurement Policy for Micro & Small Enterprises (MSEs) Order 2012 as notified by the Government of India, Ministry of Micro Small & Medium Enterprises, New Delhi vide Gazette Notification dated 23.03.2012 and amendment vide order no. S.O. 5670(E) dated 9th November 2018.
+						   </span>
+                        </div>
+				
+	 <div class="section">
+ <span>1.</span>BENEFITS         
+                        </div>
+						  <div class="inner-wrap">
+                         <ol>
+						 <li>Issue of the Tender Sets free of cost.</li>
+<li>Exemption from payment of Earnest Money Deposit (EMD).</li>
+<li>In tender participating MSEs quoting price within price band of L1+15 per cent shall also be allowed to supply a portion upto 25% of requirement by bringing down their price to L1 Price where L1 is non MSEs.
+ </li>
+<li>Every Central Ministries/Departments/PSUs shall set an annual goal of minimum 25 per cent of the total annual purchases of the products or services produced or rendered by MSEs.Out of annual requirement of 25% procurement from MSEs, 4% is earmarked for units owned by Schedule Caste /Schedule Tribes and 3% is earmarked for the units owned by Women entrepreneurs.</li>
+<li>In addition to the above, 358 items are also reserved for exclusive purchase from SSI Sector (List is given below in download section).</li>
+                        <li>Will be part of MSME ecosystem.</li>
+                        
+                        <li>Access to so many schemes &amp; benefits under MSME.</li>                        
+                    </ol>
+
+</div>
+
+                        <div class="section" >
+                            <span>2.</span>REGISTRATION CRITERIA          
+                        </div>
+                        <div class="inner-wrap">
+                            <ol>
+                                <li>Micro and Small Enterprises (MSEs) involved in manufacturing &amp; Services are eligible for registration. </li>
+                                <li>Traders are not eligible for registration under this Scheme. </li>
+                                <li>MSEs already commenced their commercial production (Start Ups) but not completed one year of existence are eligible for Provisional Registration for one year.</li>
+                            </ol>
+                        </div>
+
+
+                        <div class="section">
+                            <span>3.</span>REGISTRATION PROCESS         
+                        </div>
+						
+                        <div class="inner-wrap">
+                            <ol>
+                                <li>It is mandatory for  Units to register themselves first in MSMEDataBank (www.msmedatabank.in), to get themslves registered for Single Point Registration. </li>
+                                <li>Single Point Registration is 7 step form,each step have save and continue option to maintain continuity of form.</li>
+								<li>It is requested to kindly go through <u><i>Checklist and Download section</i></u> to get to know about required annexure and documents.</li>
+                                <li>It is always advisable to kindly place all required upload items in a folder for fast filling items.</li>
+								<li>Fees will be charged on the basis of Unit Enterprise category(Micro or Small).</li>
+								<li>Third party inspection is also involved for store item inspection.Units are requested to kindly choose inspection agency according to their expertise and jurisdiction.  </li>
+                            </ol>                           
+
+                        </div>
+
+
+                       
+
+                        
+
+                        <div class="section"><span>4.</span>CHECKLIST & DOWNLOADS</div>
+                        <div class="inner-wrap">
+						
+                        <table class="table">
+                            <tbody>                               
+                                <tr>
+                                    <td><a href="../Document/pdfs/Fees.pdf" target="_blank">1.Registration Fee For Enlistment under SPRS</td>
+                                   
+                                    <td><a href="../Document/pdfs/CHECKLIST.pdf" target="_blank">2.Checklist of Documents (For Fresh Registration/ Renewal)</td>
+                                    
+                                </tr>
+
+
+
+                                <tr>
+                                    <td><a href="../Document/pdfs/Annexure.pdf" target="_blank">3.Annexures</td>
+                                    
+                                    <td><a href="../Document/pdfs/InspectionAgency.pdf" target="_blank">4.List of Empanelled Agencies along with Inspection Fees</td>                                 
+								  
+								  
+								  
+                                </tr>
+
+
+                                <tr>
+                                    <td><a href="../Document/pdfs/listof358itemsreserved.pdf" target="_blank">5.List of 358 reserved items</td>
+                                    
+                                    <td><a href="../Document/pdfs/FAQ.pdf" target="_blank">6.Frequently Asked Questions (FAQs)</td>
+                                    
+                                </tr>
+								
+								 <tr>
+                                   
+								   <td><a href="../Fee_Calculator.aspx" target="_blank">7.Fee Calculator</a> </td>
+                                    <td></td>
+								   
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                   
+						<span style="text-decoration-line: underline; color: red">Disclaimer: Merely submission of online application is not sufficient for getting NSIC Single Point Registration certificate.
+						Only Units which qualifies branch's document verification and third party inspection will be eligible and provided with NSIC Single Point Registration certificate</span>
+                            </div>
+                    
+					<div class="button-section">
+ <center> <asp:Button ID="Button1" runat="server" Text="APPLY NOW" OnClick="Button1_Click" />
+                               
+                                    <%--<input type="submit" name="btnEnroll" value="APPLY NOW"  id="btnEnroll">--%>
+
+                                </center>
+                            </div>
+             </ContentTemplate>
+    
+ </asp:UpdatePanel>
+            </form>
+        </div>
+
+    </body>
+
+
+    </html>

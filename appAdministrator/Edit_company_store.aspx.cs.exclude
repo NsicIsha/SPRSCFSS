@@ -1,0 +1,247 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Data;
+using System.Web.UI.WebControls;
+
+public partial class appAdministrator_Edit_company_store : System.Web.UI.Page
+{
+    public delegate DataTable RepeaterDelegate(int compid);
+    int UserId, RoleId = 0;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        UserId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+        RoleId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+        if (!IsPostBack)
+
+          
+       {
+           clsCompany objcom = new clsCompany();
+           if (RoleId == 1)
+           {
+               BindGridView();  
+           }
+           else
+           {
+               Response.Redirect("login.aspx");
+           }
+         
+        }
+    }
+
+
+    protected void gv_storedetails_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandArgument== "INSERT")
+        {
+            GridViewRow gvrow = gv_storedetails.FooterRow;
+
+
+            // TextBox txtName = (TextBox)testGrid.FooterRow.FindControl("txtSName");
+
+            //GridViewRow row = (GridViewRow)(((LinkButton)e.CommandSource).NamingContainer);
+
+            TextBox textBox = ((TextBox)gvrow.FindControl("txt_footproduct"));
+
+            string strName = textBox.Text;
+            DropDownList DDLSTORE = ((DropDownList)gv_storedetails.FooterRow.FindControl("ddl_footlocation"));
+            TextBox txt_store_des = ((TextBox)gv_storedetails.FooterRow.FindControl("txt_footproduct"));
+            TextBox txt_ref_bis = gv_storedetails.FooterRow.FindControl("txt_footrefbisspecification") as TextBox;
+            TextBox txt_model_brand = gv_storedetails.FooterRow.FindControl("txt_footmodel") as TextBox;
+            TextBox txt_limitingsize = gv_storedetails.FooterRow.FindControl("txt_footlimitingsize") as TextBox;
+            TextBox txt_anual_ptodcapicity = gv_storedetails.FooterRow.FindControl("txt_footannualcapacity") as TextBox;
+            TextBox txt_noofshifts = gv_storedetails.FooterRow.FindControl("txt_footnoofshifts") as TextBox;
+            TextBox txt_qualitaive = gv_storedetails.FooterRow.FindControl("txt_footqualitativecapcity") as TextBox;
+            TextBox txt_quantaive = gv_storedetails.FooterRow.FindControl("txt_footquantitativecapacity") as TextBox;
+            DropDownList ddlhscode = gv_storedetails.FooterRow.FindControl("ddl_foothscode") as DropDownList;
+
+            clsCompany objcom = new clsCompany();
+
+            int result = objcom.f_Insert_Update_Store_details_admin(Convert.ToInt32(Request.QueryString["urlid"]),
+                Convert.ToInt32(hndamendmentid.Value), 0,
+                Convert.ToInt32(DDLSTORE.SelectedValue), txt_store_des.Text, txt_ref_bis.Text,
+                txt_model_brand.Text, txt_limitingsize.Text, txt_anual_ptodcapicity.Text,
+                Convert.ToInt32(txt_noofshifts.Text), txt_quantaive.Text, txt_qualitaive.Text, "", ddlhscode.SelectedValue,
+                UserId, UserId);
+            gv_storedetails.EditIndex = -1;
+            BindGridView();
+        }
+
+
+    }
+
+  
+
+
+    private void BindGridView()
+    {
+        clsCompany company = new clsCompany();
+        int amendmentid = company.f_get_amendmentid(Convert.ToInt32(Request.QueryString["id"]));
+        hndamendmentid.Value = amendmentid.ToString(); 
+        DataSet ds = new DataSet();
+        int companyid, processid;
+        companyid = Convert.ToInt32(Request.QueryString["id"]);
+        processid = Convert.ToInt32(Request.QueryString["urlid"]);
+        ds = company.Company_Store_Details(companyid, processid);
+        if (ds.Tables[0].Rows.Count != 0)
+        {
+            gv_storedetails.DataSource = ds;
+            gv_storedetails.DataBind();
+        }
+        else
+        {
+            DataTable dtblank = new DataTable();
+            dtblank.Columns.Add("GPtbl_Company_Id");
+            dtblank.Columns.Add("fGPtbl_CUnitAmendment_Id");
+            dtblank.Columns.Add("fGPtbl_CUnit_Id");
+            dtblank.Columns.Add("fGPtbl_CUnit_1B_Factory_Address");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_Id");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_DescriptionStoresProducts");
+
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_RefOfBISSpecification");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_ModelBrand");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_LimitingSizeCapacityRating");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_AnnualProductionCapacity");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_NoOfShifts");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_QualitativeCapacity");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_QuantitativeCapacity");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_HsCode");
+            dtblank.Columns.Add("fGPtbl_CUnit_Store_Pmps");
+
+            DataRow drnew = dtblank.NewRow();
+            drnew["GPtbl_Company_Id"] = "test";
+            drnew["fGPtbl_CUnitAmendment_Id"] = "test";
+            dtblank.Rows.Add(drnew);
+            gv_storedetails.DataSource = dtblank;
+            gv_storedetails.DataBind();
+            gv_storedetails.Rows[0].Visible = false;
+        }
+       
+    }
+
+    protected void gv_storedetails_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow )
+        {
+            //string factid = ((Label)e.Row.FindControl("")).Text;
+            if (gv_storedetails.EditIndex == e.Row.RowIndex)
+            {
+                RepeaterDelegate repeatdelreg1;
+                clsCompany company = new clsCompany();
+                repeatdelreg1 = company.Company_Fetch_FactoryLocation;
+            DropDownList ddllocation = (DropDownList)e.Row.FindControl("ddl_editlocation");
+            DataTable dt = new DataTable();
+            if (Convert.ToInt32(Request.QueryString["urlid"]) == 1)
+            {
+                dt = company.Company_Fetch_FactoryLocation(Convert.ToInt32(Request.QueryString["id"]));
+            }
+            else
+            {
+                dt = company.Company_Fetch_FactoryLocation_AMENDMENT(Convert.ToInt32(Request.QueryString["id"]));
+            }
+
+           // dt = company.Company_Fetch_FactoryLocation(Convert.ToInt32(Request.QueryString["id"]));
+
+            ddllocation.DataTextField = dt.Columns["fAddress"].ToString();
+            ddllocation.DataValueField = dt.Columns["fGPtbl_CUnit_Id"].ToString();
+            ddllocation.DataSource = dt;
+            ddllocation.DataBind();
+            ddllocation.Items.Insert(0, new ListItem("---Select---", "0"));
+           
+           
+                DropDownList ddhscode =(DropDownList) e.Row.FindControl("ddl_hscode") ;
+            DataTable dthscode = new DataTable();
+            dthscode = clsDDL.ddlHscode();
+            ddhscode.DataSource = dthscode;
+            ddhscode.DataValueField = "fGPtbl_HS_HScode";
+            ddhscode.DataTextField = "fGPtbl_HS_HScode";
+            ddhscode.DataBind();
+            ddhscode.Width = 40;
+            ddhscode.Items.Insert(0, new ListItem("---Select---", "0"));
+
+            }
+         }
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            //DropDownList ddfootloc = gv_storedetails.FooterRow.FindControl("ddl_footlocation") as DropDownList;
+            DropDownList ddlfoothscode = e.Row.FindControl("ddl_foothscode") as DropDownList;
+            DataTable dt = new DataTable();
+            dt = clsDDL.ddlHscode();
+            ddlfoothscode.DataSource = dt;
+            ddlfoothscode.DataBind();
+           
+            ddlfoothscode.Items.Insert(0, new ListItem("---Select---", "0"));
+
+            DropDownList ddlfootloc;
+            ddlfootloc = e.Row.FindControl("ddl_footlocation") as DropDownList;
+            DataTable dtloc = new DataTable();
+            clsCompany company = new clsCompany();
+           // dtloc = company.Company_Fetch_FactoryLocation(Convert.ToInt32(Request.QueryString["id"]));
+            if (Convert.ToInt32(Request.QueryString["urlid"]) == 1)
+            {
+                dtloc = company.Company_Fetch_FactoryLocation(Convert.ToInt32(Request.QueryString["id"]));
+            }
+            else
+            {
+                dtloc = company.Company_Fetch_FactoryLocation_AMENDMENT(Convert.ToInt32(Request.QueryString["id"]));
+            }
+            ddlfootloc.DataSource = dtloc;
+            ddlfootloc.DataBind();
+           
+            ddlfootloc.Items.Insert(0, new ListItem("---Select---", "0"));
+
+        }
+    }
+    protected void gv_storedetails_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        gv_storedetails.EditIndex = e.NewEditIndex;
+        BindGridView();
+    }
+    protected void btn_add_Click(object sender, EventArgs e)
+    {
+      
+    }
+    protected void gv_storedetails_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        GridViewRow row = (GridViewRow)gv_storedetails.Rows[e.RowIndex];
+        int storeid = Convert.ToInt32(gv_storedetails.DataKeys[e.RowIndex].Value.ToString());
+        
+        int unitid = Convert.ToInt32(((DropDownList)row.FindControl("ddl_editlocation")).SelectedValue);
+        string productdes = ((TextBox)row.FindControl("txt_product")).Text;
+        string refbisspecification  =((TextBox)row.FindControl("txt_refbisspecification")).Text;
+        string modelbrand = ((TextBox)row.FindControl("txt_model")).Text;
+        string limitsize = ((TextBox)row.FindControl("txt_limitingsize")).Text;
+        string anualcapcity = ((TextBox)row.FindControl("txt_annualcapacity")).Text;
+        string noofshift = ((TextBox)row.FindControl("txt_noofshifts")).Text;
+        string qualitaive = ((TextBox)row.FindControl("txt_qualitativecapcity")).Text;
+        string quantitaive = ((TextBox)row.FindControl("txt_qualitativecapcity")).Text;
+
+        string hscode = ((DropDownList)row.FindControl("ddl_hscode")).SelectedValue;
+
+
+        clsCompany objcom = new clsCompany();
+
+        int result = objcom.f_Insert_Update_Store_details_admin(Convert.ToInt32(Request.QueryString["urlid"]),
+            Convert.ToInt32(hndamendmentid.Value), storeid,
+            unitid, productdes, refbisspecification,
+           modelbrand, limitsize, anualcapcity,
+            Convert.ToInt32(noofshift), quantitaive, qualitaive, "", hscode,
+            UserId, UserId);
+        gv_storedetails.EditIndex = -1;
+        BindGridView();
+    }
+    protected void gv_storedetails_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        GridViewRow gvrow = (GridViewRow)gv_storedetails.Rows[e.RowIndex];
+        int storeid = Convert.ToInt32(gv_storedetails.DataKeys[gvrow.RowIndex].Value.ToString());
+        clsCompany comobj = new clsCompany();
+        int result = comobj.f_deactivatestore(Convert.ToInt32(Request.QueryString["urlid"]), storeid);
+        if (result != 0)
+        {
+            BindGridView();
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alertmessage", "javascript:alert( store deleted successfully')", true);
+        }
+    }
+}

@@ -1,0 +1,37 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/appMaster/AdminOnline.master" CodeFile="RenewalCumAmendment.aspx.cs" Inherits="appAdministrator_RenewalCumAmendment" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+   
+    <asp:GridView ID="grdCondition" runat="server" AutoGenerateColumns="false">
+        <Columns>
+              <asp:TemplateField HeaderText="SNO">
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_Sno" runat="server" Text='<%#Container.DataItemIndex+1 %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Conditions">
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_Company_Name" runat="server" Text='<%#Eval("Condition")%>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+              <asp:TemplateField HeaderText="Conditions" visible="false">
+                    <ItemTemplate>
+                        <asp:Label ID="lblID" runat="server" Text='<%#Eval("ID")%>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Select">
+                    <ItemTemplate>
+                        <asp:CheckBox ID="chkSelect" runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                           
+            </Columns>
+
+        </asp:GridView>
+    <asp:Button  Text="SUBMIT" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" />
+    <asp:Button  Text="UPDATE" runat="server" ID="btnUpdate" OnClick="btnUpdate_Click" />
+     <asp:Button  Text="BACK" runat="server" ID="btnBack" OnClick="btnBack_Click"/>
+</asp:Content>
+

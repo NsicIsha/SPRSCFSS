@@ -1,0 +1,453 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using System.Data.SqlClient;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using NSICGP_VBClassLibrary;
+using System.Net.Mail;
+using System.Configuration;
+using System.Globalization;
+ 
+
+public partial class appInspectionAgency_InspectionisPending_View : System.Web.UI.Page
+{
+    int USERID, ROLEID, AGENCYID, BRANCHID;
+    string USERFULLNAME, UserEmailID, BRANCHNAME;
+    clsMasterInspectionAgency ObjAgency;
+    string unit, company, formtype;
+    public int uploadAction = 0;
+    DataSet Myds;
+
+    int FileStatus_1;
+    int successId, companyId;
+    string OriginalFilePath;
+    string filePath;
+    string file1;
+    int unitid1, formtypeid1, amendmentid=0;
+    string MailTo = string.Empty;
+    string MailFrom = string.Empty;
+    string MailSubject = string.Empty;
+    string MailBody = string.Empty;
+    string ccMail = string.Empty;
+    string bccMail = string.Empty;
+
+    SqlCommand MySqlComm;
+    SqlDataAdapter MyAdp;
+    SqlDataReader MyDr;
+    DataSet MyDs;
+    DataTable MyDt;
+    FormInputReplace objInputReplace;
+
+    int ErrorId = 0;
+
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        //Read Cookies+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        try
+        {
+            USERID = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+            ROLEID = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+            AGENCYID = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["AGENCYID"]).ToString());
+            BRANCHID = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["BRANCHID"]).ToString());
+            USERFULLNAME = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERFULLNAME"]).ToString();
+            BRANCHNAME = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["BRANCHNAME"]).ToString();
+            UserEmailID = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["EmailID"]).ToString();
+        }
+        catch (Exception ex)
+        {
+            USERID = 0;
+            ROLEID = 0;
+            AGENCYID = 0;
+            BRANCHID = 0;
+            USERFULLNAME = "";
+        }
+        //End Read Cookies+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        OriginalFilePath = "~/Document/Upload/Registration/";
+        filePath = Server.MapPath(".").ToString() + "/../Document/Upload/Registration/";
+        DecryptEncrypt objde = new DecryptEncrypt();
+
+        try
+        {
+            unit = Request.QueryString["u"].Replace(" ","+").ToString();
+            company = Request.QueryString["c"].Replace(" ","+").ToString();
+            companyId = Convert.ToInt32(objde.Decrypt(company));
+            formtype = Request.QueryString["f"].Replace(" ","+").ToString();
+
+            if (Request.QueryString["id"] != null)
+                uploadAction = 1;
+
+            DecryptEncrypt objd = new DecryptEncrypt();
+
+
+            unitid1 = Convert.ToInt32(objd.Decrypt(unit).ToString());
+            formtypeid1 = Convert.ToInt32(objd.Decrypt(formtype));
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        if (!Page.IsPostBack)
+        {
+            try
+            {
+                FunfillGridView(unit, company, formtype);
+
+            }
+            catch (Exception ex)
+            {
+                ErrHandler.WriteError(ex.Message);
+            }
+        }
+
+    }
+
+
+    private void FunfillGridView(string unit, string company, string formtype)
+    {
+        try
+        {
+            ObjAgency = new clsMasterInspectionAgency();
+            DecryptEncrypt objd = new DecryptEncrypt();
+            int unitid = Convert.ToInt32(objd.Decrypt(unit.Replace(" ","+")).ToString());
+            int companyid = Convert.ToInt32(objd.Decrypt(company.Replace(" ", "+")));
+            int formtypeid = Convert.ToInt32(objd.Decrypt(formtype.Replace(" ", "+")));
+
+            System.Data.DataTable Dt = new System.Data.DataTable();
+
+            //TO FETCH AMENDMENT ID
+            clsAmendment objAmendment = new clsAmendment();
+            amendmentid = objAmendment.CompanyAmendment_WaitingCompany_FetchAmendmentId(unitid);
+
+            Dt = ObjAgency.Agency_Fetch_InspectionisPendingByUnitCompanyFormtype(amendmentid, unitid, companyid, formtypeid);
+            if (Dt.Rows.Count != 0)
+            {
+                lblType.Text = Dt.Rows[0]["fGPtbl_MF_Name"].ToString();
+                lblCompany.Text = Dt.Rows[0]["fGPtbl_Company_Name"].ToString();
+                lblRegno.Text = Dt.Rows[0]["fGPtbl_CUnit_SSIRegistrationNo"].ToString();
+                lblPan.Text = Dt.Rows[0]["fGPtbl_Company_PAN"].ToString();
+                lblRequest.Text = Dt.Rows[0]["fGPtbl_IS_DateStatus4"].ToString();
+                hdnuserid.Value = Dt.Rows[0]["fGPtbl_IS_CUser"].ToString();
+            }
+            else
+            {
+                lblType.Text = "";
+                lblCompany.Text = "";
+                lblRegno.Text = "";
+                lblPan.Text = "";
+                lblRequest.Text = "";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+
+    //TO INSERT DOCUMENT UPLOADED BY AGENCY
+    public int Agency_Update_InspectionAgency_Documents(int unitid, int agencyid,
+int formtypeid, string reportname, string reportpath, int userid, int fGPtbl_IS_RecomendedStatus, string fGPtbl_IS_Remarks, string StrURLInspectionVideo)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Agency_Update_InspectionisPending_Documents", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_IS_UnitId", SqlDbType.Int).Value = unitid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_AgencyId", SqlDbType.Int).Value = agencyid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_FormtypeId", SqlDbType.Int).Value = formtypeid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_ReportName", SqlDbType.VarChar, 1000).Value = reportname;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_ReportPath", SqlDbType.VarChar, 2000).Value = reportpath;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = userid;
+
+            MySqlComm.Parameters.Add("@fGPtbl_IS_RecomendedStatus", SqlDbType.Int).Value = fGPtbl_IS_RecomendedStatus;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_Remarks", SqlDbType.VarChar, 2000).Value = fGPtbl_IS_Remarks;
+MySqlComm.Parameters.Add("@StrURLInspectionVideo", SqlDbType.VarChar, 5000).Value = StrURLInspectionVideo;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+
+    protected void btnSubmitUpload_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string fileexten, imagesize, pdffilesize;
+            fileexten = System.Configuration.ConfigurationManager.AppSettings["filefilter"].ToString();
+            imagesize = System.Configuration.ConfigurationManager.AppSettings["imagsize"].ToString();
+            pdffilesize = System.Configuration.ConfigurationManager.AppSettings["pdfsize"].ToString();
+
+            //if (FileUpload1.PostedFile!= null)
+            if (FileUpload1.HasFile)
+            {
+                object postedFile = FileUpload1.PostedFile;
+                string filenameWithoutExtn = System.IO.Path.GetFileNameWithoutExtension(FileUpload1.PostedFile.FileName);
+                string fileExtn = System.IO.Path.GetExtension(FileUpload1.PostedFile.FileName).ToLower();
+                string newFileName = "";
+                if (!fileexten.Contains(fileExtn))
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Only .jpg, .jpeg, .gif, .png,  .pdf are allowed  ');", true);
+                    return;
+                }
+                if (filenameWithoutExtn != "")
+                {
+
+                 
+
+                    string contentType = FileUpload1.PostedFile.ContentType.ToString();
+                    int contentLength = Convert.ToInt32(FileUpload1.PostedFile.ContentLength.ToString());
+                    newFileName = FormInputReplace.RenameFile(filenameWithoutExtn, fileExtn, 1);    //1=Registration
+                    int AllowedContentLengthInBytes;
+                    int filerecognige;
+                    if (fileExtn == ".jpg" || fileExtn == ".jpeg" || fileExtn == ".gif" || fileExtn == ".png")
+                    {
+                        AllowedContentLengthInBytes = Convert.ToInt32(imagesize);
+                        filerecognige = 1;
+                    }
+                    else
+                    {
+                        AllowedContentLengthInBytes = Convert.ToInt32(pdffilesize);
+                        filerecognige = 2;
+                    }
+
+                    if (contentLength > AllowedContentLengthInBytes)
+                    {
+                        if (filerecognige == 1)
+                        {
+                            Label1.Text = "File size can't be greater than 50kb ";
+                        }
+                        else
+                        {
+                            Label1.Text = "File size can't be greater than 1MB ";
+                        }                     
+                        FileStatus_1 = 1;
+                    }
+                    else
+                    {
+                        Label1.Text = "";
+                        FileStatus_1 = 2;
+                    }
+
+                    if (FileStatus_1 == 2)
+                    {
+
+                        FileUpload1.PostedFile.SaveAs(filePath + newFileName);
+                        ObjAgency = new clsMasterInspectionAgency();
+                        successId = 0;
+                        string strRemarks = "";
+                        if(txtRemarks.Text !="")
+                        {
+                            strRemarks = txtRemarks.Text;
+                        }
+                        else
+                        {
+                            strRemarks = "";
+                        }
+                       // successId = ObjAgency.Agency_Update_InspectionAgency_Documents(unitid1, AGENCYID, formtypeid1, newFileName, OriginalFilePath, USERID, Convert.ToInt32(rdbInspectionStatus.SelectedValue), strRemarks);
+
+                        successId = Agency_Update_InspectionAgency_Documents(unitid1, AGENCYID, formtypeid1, newFileName, OriginalFilePath, USERID, Convert.ToInt32(rdbInspectionStatus.SelectedValue), strRemarks);
+
+                        if (successId == 2)
+                        {
+                            Session["pendingAction"] = "Document uploaded successfully!";
+                            SendMailBranchUnit();
+                        }
+                        else
+                        {
+                            Session["pendingAction"] = "Server is busy!";
+                        }
+
+                        if (formtypeid1 == 1)
+                        {
+                            Response.Redirect("InspectionisPending.aspx?i=1", false);
+                        }
+                        else if (formtypeid1 == 3)
+                        {
+                            Response.Redirect("InspectionisPending.aspx?i=3", false);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    //TO SEND MAIL TO UNIT AND BRANCH
+    public void SendMailBranchUnit()
+    {
+        //1. SEND MAIL TO BRANCH FOR INSPECTION DATE ISSUED TO UNIT
+        // 2. SEND MAIL TO UNIT WITH INSPECTION DATE
+        try
+        {
+
+            string ToMail=string.Empty;
+              string  FromMail, ccMail, bccMail, subject, bodyMail;
+            string MailUser = string.Empty;
+            clsMasterUser objUser = new clsMasterUser();
+            clsCompany objCompany = new clsCompany();
+            clsMasterMailer objMailer = new clsMasterMailer();
+            ObjAgency = new clsMasterInspectionAgency();
+            //SqlDataReader Mydr;
+            DataTable Mydt = new DataTable();
+            Mydt = objCompany.Company_Detail_Fetch_ById(companyId);
+
+            Myds = new DataSet();
+
+            //TO BRANCH MAILER
+            Myds = objMailer.MasterMailer_Fetch_DataSet(5); // Change Here
+            FromMail = UserEmailID.ToString(); //Myds.Tables[0].Rows[0]["fGPtbl_MM_From"].ToString();
+            ccMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Cc"].ToString();
+            bccMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Bcc"].ToString();
+            subject = Myds.Tables[0].Rows[0]["fGPtbl_MM_Subject"].ToString();
+            bodyMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Body"].ToString();// +"Inspection Report has been submitted" + ".";
+
+            string str = bodyMail.Replace("$$Companyname$$", Mydt.Rows[0]["fGPtbl_Company_Name"].ToString());
+            str = str.Replace("$$InspectionAgency$$", ObjAgency.MasterInspectionAgency_Fetch_DataSet(AGENCYID).Tables[0].Rows[0]["fGPtbl_MIA_Name"].ToString());
+            DataSet DsAgencyName = new DataSet();
+            //ObjAgency = new clsMasterInspectionAgency();
+            DsAgencyName = ObjAgency.MasterInspectionAgency_Fetch_DataSet(AGENCYID);
+            string agencyname = string.Empty;
+            if (DsAgencyName.Tables[0].Rows.Count > 0)
+            {
+                agencyname = DsAgencyName.Tables[0].Rows[0]["fGPtbl_MIA_Name"].ToString();
+            }
+            else
+            {
+                agencyname = "";
+            }
+            //TO FETCH BRANCH(USER) EMAIL ID
+            if (hdnuserid.Value != "")
+            {
+
+                Myds = objUser.MasterUser_Fetch_DataSet(Convert.ToInt32(hdnuserid.Value));
+                ToMail = Myds.Tables[0].Rows[0]["fGPtbl_MU_Email"].ToString();
+                MailUser = Myds.Tables[0].Rows[0]["fGPtbl_MU_Name"].ToString();
+            }
+
+            string SmtpServerName = System.Configuration.ConfigurationManager.AppSettings["SmtpName"];
+            string SmtpUser = System.Configuration.ConfigurationManager.AppSettings["SmtpUser"];
+            string SmtpPwd = System.Configuration.ConfigurationManager.AppSettings["SmtpPwd"];
+            MailFrom = FromMail;  //"nsicclient@nsic.co.in";
+         MailTo = ToMail.ToString();
+            MailSubject = subject;
+            bodyMail = "Dear" + ' ' + MailUser + "<br/><br>" + str;  // "Inspection report has been uploaded for " + ' ' + lblCompany.Text.ToString() + "<br><br>" + "Thanks" + "<br><br>" + "Regards" + "<br/><br>" + agencyname;
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress(MailFrom);  // MailFrom
+            // Set the recepient address of the mail message
+            message.To.Add(new MailAddress(MailTo));
+
+            // Check if the bcc value is null or an empty string
+            if ((bccMail != null) && (bccMail != string.Empty))
+            {
+                // Set the Bcc address of the mail message
+                message.Bcc.Add(new MailAddress(bccMail));
+            }      // Check if the cc value is null or an empty value
+            if ((ccMail != null) && (ccMail != string.Empty))
+            {
+                // Set the CC address of the mail message
+                message.CC.Add(new MailAddress(ccMail));
+            }       // Set the subject of the mail message
+            message.Subject = MailSubject;
+            // Set the body of the mail message
+            message.Body = bodyMail;
+
+
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Host = SmtpServerName;
+
+            message.IsBodyHtml = true;
+            smtpClient.Port = 25;
+            smtpClient.UseDefaultCredentials = true;
+            smtpClient.Credentials = new System.Net.NetworkCredential(SmtpUser, SmtpPwd);
+
+            smtpClient.Send(message);
+
+            //INSERT INTO SENT MAILER
+            clsDDL.Insert_MailDetails(MailTo, 8, 1, MailFrom, 6, 2, MailSubject, bodyMail, 2);
+
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+     
+        // SendMail.Mail_WithOUTAttachment(ToMail, 0, 0, FromMail, 0, 0, ccMail, bccMail, subject, str, "", 0, "", "", "");
+
+        //TO SEND THE MAIL TO UNIT
+        /*
+        Mydr = objCompany.Company_Fetch_ByUnit_Step2(unitid1);
+
+        while (Mydr.Read())
+        {
+            ToMail = Mydr["fGPtbl_CUnit_1B_Factory_Email"].ToString();
+        }
+        Mydr.Close();
+
+        //TO UNIT
+        Myds = objMailer.MasterMailer_Fetch_DataSet(7);
+
+        FromMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_From"].ToString();
+        ccMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Cc"].ToString();
+        bccMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Bcc"].ToString();
+        subject = Myds.Tables[0].Rows[0]["fGPtbl_MM_Subject"].ToString();
+        bodyMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Body"].ToString() + "Inspection Report has been submitted" + ".";
+
+        //SEND MAIL TO UNIT
+        SendMail.Mail_WithOUTAttachment(ToMail, 0, 0, FromMail, 0, 0, ccMail, bccMail, subject, bodyMail, "", 0, "", "", "");
+        */
+    }
+
+    protected void lbBack_Click(object sender, EventArgs e)
+    {
+        if (formtypeid1 == 1)
+        {
+            Response.Redirect("InspectionisPending.aspx?i=1", false);
+        }
+        else if (formtypeid1 == 3)
+        {
+            Response.Redirect("InspectionisPending.aspx?i=3", false);
+        }
+    }
+
+    protected void rdbInspectionStatus_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if(rdbInspectionStatus.SelectedValue == "2")
+        {
+            trRemarks.Visible = true;
+            Rfdremarks.Enabled = true;
+        }
+        else
+        {
+            trRemarks.Visible = false;
+            Rfdremarks.Enabled = false;
+        }
+    }
+}

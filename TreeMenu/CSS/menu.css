@@ -1,0 +1,171 @@
+.menu_link
+{
+	font-family: Arial;
+	font-size: 11px;
+	font-weight:normal;
+	color: #444444;
+	text-decoration:none;
+}
+.menu_link:hover
+{
+	font-family: Arial;
+	font-size: 11px;
+	font-weight:normal;
+	color: #333333;
+		text-decoration:underline;
+
+}
+.td_menu_link
+{
+	font-family: Arial;
+	font-size: 12px;
+	font-weight:bold;
+	color: #444444;
+	text-decoration:none;
+	cursor:pointer;
+ padding-left:4px;
+
+}
+.td_menu_link:hover {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight:bold;
+	color: #333333;
+	text-decoration:underline;
+	cursor:pointer;
+}
+.menutitle{
+font-family: Arial;
+cursor:pointer;
+margin-bottom: 1px;
+background-color:#A9DCEB;
+color:#22518F;
+width:150px;
+height:26px;
+border-width:1px;
+border-color:#69C3DB;
+border-style:ridge;
+padding:2px;
+text-align:left;
+font-weight:bold;
+
+/*border:1px solid #22518F;*/
+}
+
+
+
+
+
+.menu_subtitle{
+font-family: Arial;
+cursor:pointer;
+margin-bottom: 0px;
+/*background-color: #D8DEF1;*/
+	background-color:#E0E0E0;
+color:#22518F;
+width:145px;
+padding:2px;
+text-align:left;
+font-weight:bold;
+/*/*/border:1px solid #22518F;/* */
+}
+.menu_subtitle:hover {
+	cursor:pointer;
+	margin-bottom: 0px;
+	/*background-color: #333333;*/
+	background-color:#E0E0E0;
+	/*color:#FFFFFF;*/
+	width:145px;
+	padding:2px;
+	text-align:left;
+	font-weight:bold;
+	/*/*/border:1px solid #22518F;/* */
+		text-decoration:underline;
+}
+
+
+.submenu{
+margin-bottom: 0px;
+background-color :#d6eff5;
+width:150px;
+
+}
+/* code added for paging on 7oct09 start */
+.Pagging span{ 
+			margin:2px;
+			padding:3px;
+			background:#B8DFB0;			/*#00aeef;*/
+			font-size:14px;
+			font-weight:bold;
+			color:#FFF;
+			line-height:16px;
+			width:16px;
+			text-align:center;
+			display:block;
+			float:left;
+			text-decoration:none;
+			text-transform:capitalize;
+}
+.Pagging a:link{ 
+			margin:2px;
+			padding:3px;
+			background:#CCCCCC;
+			font-size:14px;
+			font-weight:bold;
+			color:#FFF;
+			line-height:16px;
+			width:16px;
+			text-align:center;
+			display:block;
+			float:left;
+			text-decoration:none;
+			text-transform:capitalize;
+}
+.Pagging a:visited{ 
+			margin:2px;
+			padding:3px;
+			background:#CCCCCC;
+			font-size:14px;
+			font-weight:bold;
+			color:#FFF;
+			line-height:16px;
+			width:16px;
+			text-align:center;
+			display:block;
+			float:left;
+			text-decoration:none;
+			text-transform:capitalize;
+}
+.Pagging a:hover{ 
+			margin:2px;
+			padding:3px;
+			background:#85C879;			/*#00aeef;*/
+			font-size:14px;
+			font-weight:bold;
+			color:#FFF;
+			line-height:16px;
+			width:16px;
+			text-align:center;
+			display:block;
+			float:left;
+			text-decoration:none;
+			text-transform:capitalize;
+}
+.Pagging a:active{ 
+			margin:2px;
+			padding:3px;
+			background:#CCCCCC;
+			font-size:14px;
+			font-weight:bold;
+			color:#FFF;
+			line-height:16px;
+			width:16px;
+			text-align:center;
+			display:block;
+			float:left;
+			text-decoration:none;
+			text-transform:capitalize;
+}
+/* code added for paging on 7oct09 end */
+
+

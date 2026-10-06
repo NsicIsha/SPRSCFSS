@@ -1,0 +1,70 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Agency.master.cs" Inherits="appMaster_Agency" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
+<%@ Register Src="../UserControl/Footer_Admin.ascx" TagName="Footer_Admin" TagPrefix="uc2" %>
+<%@ Register Src="../UserControl/TreeMenu_Admin.ascx" TagName="TreeMenu_Admin" TagPrefix="uc3" %>
+<%@ Register Src="../UserControl/Header_Agency.ascx" TagName="Header_Agency" TagPrefix="uc1" %>
+
+
+<%@ Register src="../UserControl/TreeMenu_Admin_IA.ascx" tagname="TreeMenu_Admin_IA" tagprefix="uc4" %>
+
+
+<%--<%@ Register src="../UserControl/TreeMenu_Admin_IA.ascx" tagname="TreeMenu_Admin_IA" tagprefix="uc4" %>--%>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="x-ua-compatible" content="IE=8" />
+    <title>Single Point Registration (SPR)</title>
+
+    <script language="javascript" type="text/javascript" src="../JScript/jquery-1.7.1.js"></script>
+
+    <link type="text/css" rel="Stylesheet" href="../CSS/StyleAdmin.css" />
+
+    <script language="javascript" type="text/javascript" src="../JScript/JSAdmin.js"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <center>
+        <form id="form1" runat="server">
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+            </asp:ToolkitScriptManager>
+            <div>
+                <table width="900" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF;">
+                    <tr>
+                        <td colspan="2">
+                            <uc1:Header_Agency ID="Header_Agency1" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="height: 435px; vertical-align: top; width: 200px; background-color: #DDF1F7;">
+                            <%--<uc3:TreeMenu_Admin ID="TreeMenu_Admin1" runat="server" />--%>
+                             <%--<uc4:TreeMenu_Admin_IA ID="TreeMenu_Admin_IA1" runat="server" />--%>
+
+                             
+                            <uc4:TreeMenu_Admin_IA ID="TreeMenu_Admin_IA1" runat="server" />
+                        </td>
+                        <td style="vertical-align: top; width: 700px;">
+                            <asp:UpdatePanel ID="UpdatePanel1_PlzWait" runat="server">
+                                <ContentTemplate>
+                                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                                    </asp:ContentPlaceHolder>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <uc2:Footer_Admin ID="Footer_Admin1" runat="server" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </center>
+</body>
+</html>

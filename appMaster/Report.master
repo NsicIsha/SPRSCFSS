@@ -1,0 +1,67 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Report.master.cs" Inherits="appMaster_Report" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register Src="../UserControl/headerReport.ascx" TagName="Header_Admin" TagPrefix="uc1" %>
+<%@ Register Src="../UserControl/Footer_Admin.ascx" TagName="Footer_Admin" TagPrefix="uc2" %>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Single Point Registration (SPR)</title>
+    
+
+    <script language="javascript" type="text/javascript" src="../JScript/jquery-1.7.1.js"></script>
+
+    <link type="text/css" rel="Stylesheet" href="../CSS/StyleAdmin.css" />
+
+    <script language="javascript" type="text/javascript" src="../JScript/JSAdmin.js"></script>
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+ <center>
+  
+    <form id="form1" runat="server">
+    
+    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+        </asp:ToolkitScriptManager>
+     <div id="Main_div_header">
+            <table width="900" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF;">
+                <tr>
+                    <td colspan="2">
+                        <uc1:Header_Admin ID="Header_Admin1" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                   
+                    <td colspan="2" style="vertical-align: top; width: 100%;">
+                        <asp:UpdatePanel ID="UpdatePanel1_PlzWait" runat="server">
+                            <ContentTemplate>
+                                
+                                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="footer_td">
+                        <uc2:Footer_Admin ID="Footer_Admin1" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                 <td colspan="2">
+                
+                 </td>
+                
+                </tr>
+            </table>
+        </div>
+       <div>
+       
+        <input type="button" value="print" onclick="javascript:CallPrint('Main_div_header');"  />
+       </div>
+    </form>
+    </center>
+</body>
+</html>

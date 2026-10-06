@@ -1,0 +1,118 @@
+﻿using System;
+using System.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using NSICGP_VBClassLibrary;
+using System.Collections;
+
+public partial class appAdministrator_Certifiacte_Paging : System.Web.UI.Page
+{
+    clsCompany objCompany;
+    DataTable Mydt;
+    int count = 1;
+    int UserId, RoleId, DepartmentId, Branchid;
+    string UserFullName;
+    string UserEmailID = string.Empty;
+    DateTime dtold;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        try
+        {
+            UserId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+            RoleId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+            DepartmentId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["DEPARTMENTID"]).ToString());
+            UserFullName = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERFULLNAME"]).ToString();
+            //UserEmailID = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["UserEmailId"]).ToString();
+            clsTrans_UserBranch objtub = new clsTrans_UserBranch();
+            Branchid = Convert.ToInt32(objtub.Trans_UserBranch_FetchZoneId_DataSet(UserId).Tables[0].Rows[0]["fGPtbl_TUB_BrabchId"]);
+
+            if (!Page.IsPostBack)
+            {
+                Bind_Grid_View(1, 10);
+                AddpagingButton();
+            }
+
+        
+
+            //int totalRecord = 0;
+            //int noofRecord = 0;
+            //totalRecord = ViewState["TotalRecord"] != null ? (int)ViewState["TotalRecord"] : 0;
+            //noofRecord = ViewState["NoOfRecord"] != null ? (int)ViewState["NoOfRecord"] : 0;
+
+         
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    private void Bind_Grid_View(int pageNo, int noOfRecord)
+    {
+        DataSet ds = new DataSet();
+        objCompany = new clsCompany();
+        ds = objCompany.CertificateList_Paging(pageNo, noOfRecord, Branchid);
+        if (ds != null)
+        {
+            if (ds.Tables.Count > 0)
+            {
+                gvCertificateDetails.DataSource = ds.Tables[1];
+                gvCertificateDetails.DataBind();
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    ViewState["TotalRecord"] = ds.Tables[0].Rows[0]["coun"];
+                    ViewState["NoOfRecord"] = ds.Tables[1].Rows.Count; 
+                }
+            }
+        }
+    }
+
+    protected void PageNumberChanged(object sender, EventArgs e)
+    {
+        int Page = Convert.ToInt32(ddlpage.SelectedItem.Value);
+        Bind_Grid_View(Page, 10);
+    }
+
+    private  void AddpagingButton()
+    {
+        ddlpage.Items.Clear();
+        // this method for generate custom button for Custom paging in Gridview
+        int totalRecord = 0;
+        int noofRecord = 0;
+        totalRecord = ViewState["TotalRecord"] != null ? (int)ViewState["TotalRecord"] : 0;
+        noofRecord = ViewState["NoOfRecord"] != null ? (int)ViewState["NoOfRecord"] : 0;
+        int pages = 0;
+        if (totalRecord > 0 && noofRecord > 0)
+        {
+            // Count no of pages 
+
+            pages = (totalRecord / noofRecord) + ((totalRecord % noofRecord) > 0 ? 1 : 0);
+            for (int i = 1; i < pages; i++)
+            {
+              ddlpage.Items.Add(new ListItem(i.ToString(), i.ToString()));
+            }
+        }
+
+    }
+
+    void b_click(object sender, EventArgs e)
+    {
+        // this is for Get data from Database on button (paging button) click
+        string pageNo = ((LinkButton)sender).CommandArgument;
+        Bind_Grid_View(Convert.ToInt32(pageNo), 10);
+    }
+
+    protected void gvCertificateDetails_PreRender(object sender, EventArgs e)
+    {
+        GridView gv = (GridView)sender;
+        GridViewRow gvr = (GridViewRow)gv.BottomPagerRow;
+        if (gvr != null)
+        {
+            gvr.Visible = true;
+        }
+    }
+}

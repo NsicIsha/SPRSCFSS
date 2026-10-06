@@ -1,0 +1,1472 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using NSICGP_VBClassLibrary;
+
+
+
+public partial class appAdministrator_UnitRenewalStep1 : System.Web.UI.Page
+{
+    int UserId, RoleId, DepartmentId,Edit;
+    string UserFullName;
+
+    clsAmendment objAmendment;
+    clsCompany objCompany;
+    clsRenewal objRenewal;
+    int ErrorId, CompanyId, UnitId, Formtypeid, BranchId;
+    int fStatus;
+    public int unitbrAction = 0;
+    short tabindx = 9;
+
+    DataRow[] cityRows;
+    string expression = string.Empty;
+    DataTable ddlCityClone = new DataTable();
+    DataTable MydtState = new DataTable();
+    DataSet Myds;
+
+    DataSet AllstepchangeDs = new DataSet();
+    DataRow[] AllstepchangeRow;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        //Read Cookies+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        try
+        {
+           // btnSubmit.Attributes.Add("onclick", " this.disabled = true; " + ClientScript.GetPostBackEventReference(btnSubmit, null) + ";");
+
+
+            UserId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+            RoleId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+            DepartmentId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["DEPARTMENTID"]).ToString());
+            UserFullName = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERFULLNAME"]).ToString();
+        }
+        catch (Exception ex)
+        {
+            UserId = 0;
+            RoleId = 0;
+            DepartmentId = 0;
+            UserFullName = "";
+        }
+        //End Read Cookies+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        hfrole.Value = Convert.ToString(RoleId);
+        try
+        {
+            ddlCity_c4.Items.Insert(0, new ListItem("--Select City--"));
+
+            if (txt_1c1.Text == "")
+            {
+                RequiredFieldValidator11.Enabled = false;
+            }
+            else if (ddlCity_c4.SelectedItem.Text.ToString() == "--Select City--" && ddlState_c3.SelectedItem.Text.ToString() != "--Select State--")
+            {
+                RequiredFieldValidator11.Enabled = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        //ACCORDING TO BRANCH
+        if (RoleId == 8)
+        {
+            DecryptEncrypt objDecEnc = new DecryptEncrypt();
+            try
+            {
+                CompanyId=  Convert.ToInt32(objDecEnc.Decrypt(Request.QueryString["c"].Replace(" ", "+")).ToString());
+                Formtypeid = Convert.ToInt32(objDecEnc.Decrypt(Request.QueryString["f"].Replace(" ", "+")).ToString());
+                BranchId =  Convert.ToInt32(objDecEnc.Decrypt(Request.QueryString["b"].Replace(" ", "+")).ToString());
+                
+            }
+            catch
+            {
+                CompanyId = 0;
+                BranchId = 0;
+            }
+        }
+        else if (RoleId == 7)//ACCORDING TO COMPANY LOGIN
+        {
+            try
+            {
+                CompanyId = DepartmentId;
+            }
+            catch
+            {
+                CompanyId = 0;
+                BranchId = 0;
+            }
+        }
+
+
+        try
+        {
+            checkButtonDoubleClick(btnSubmit);
+            if (!Page.IsPostBack)
+            {
+                //ASSIGNING IN CACHE
+                Cache.Insert("City", clsDDL.ddlCity_Activated(0));// null, DateTime.Now.AddDays(1), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, null);
+                Cache.Insert("State", clsDDL.ddlState_Activated());//, null, DateTime.Now.AddDays(1), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, null);
+                FunFillDataset();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        //TO SHOW UNAVAILABLE DATA FOR COMPANY
+        try
+        {
+            Myds = new DataSet();
+            Myds = clsDDL.UnavailableData_Fetch_ByCompanyId_Dataset(CompanyId);
+            if (Myds.Tables[0].Rows.Count > 0 || Myds.Tables[1].Rows.Count > 0)
+            {
+                missingvalue.Visible = true;
+                missingvalueSendMail.Visible = true;
+                ShowmissingData(Myds);
+            }
+            else
+            {
+                missingvalue.Visible = false;
+                missingvalueSendMail.Visible = false;
+                lnkmail.Visible = false;
+            }
+        }
+        catch { }
+    }
+
+    protected void FunFillDataset()
+    {
+        try
+        {
+            if (!IsPostBack)
+            {
+                objRenewal = new clsRenewal();
+                Myds = new DataSet();
+
+                DataTable MydtCompany, MydtFactory, MydtBranch = new DataTable();
+
+                //TO FETCH DATA SET VALUE
+                //Myds = objAmendment.Company_UnitDetails_Fetch_ByCompanyId(CompanyId);
+                Myds = objRenewal.CompanyRenewal_Fetch_Step1_ByCompanyId(CompanyId);
+
+                //ASSIGNING IN MULTIPLE TABLES
+                MydtCompany = Myds.Tables[0];
+                MydtBranch = Myds.Tables[1];
+                MydtFactory = Myds.Tables[2];
+
+                //FILLING UP ALL DROPDOWN LIST
+                FunFillDDl();
+
+                //FILLING UP ALL CONTROLS
+                FunFillcontrols(MydtCompany, MydtBranch);
+
+                //FILLING FACTORY GRIDVIEW
+                FunFillFactory(MydtFactory);
+
+                FunctionShowHide();
+
+                //Writedatainxml();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    protected void FunFillDDl()
+    {
+        try
+        {
+            ddlBindState(ddlState_a3);
+            // ddlBindCity(ddlCity_a4);
+            ddlBindState(ddlState_c3);
+            //ddlBindCity(ddlCity_c4);
+            funfill_ddlCategory();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    public void ddlBindState(DropDownList ddlState)
+    {
+        try
+        {
+            MydtState = (DataTable)Cache["State"];
+
+            ddlState.DataSource = MydtState;
+            ddlState.DataTextField = MydtState.Columns["fGPtbl_MS_Name"].ToString();
+            ddlState.DataValueField = MydtState.Columns["fGPtbl_MS_Id"].ToString();
+            ddlState.DataBind();
+            ddlState.Items.Insert(0, new ListItem("--Select State--", ""));
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    public void ddlBindCity(DropDownList CityDDL, DataTable MydtCity)
+    {
+        try
+        {
+            CityDDL.DataSource = MydtCity;
+            CityDDL.DataTextField = MydtCity.Columns["fGPtbl_MCty_Name"].ToString();
+            CityDDL.DataValueField = MydtCity.Columns["fGPtbl_MCty_Id"].ToString();
+            CityDDL.DataBind();
+            CityDDL.Items.Insert(0, new ListItem("--Select City--", ""));
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    public void ddlBindCity(DropDownList CityDDL, string Statevalue)
+    {
+        DataTable MydtCity, MydtCityClone = new DataTable();
+        try
+        {
+            MydtCity = (DataTable)Cache["City"];
+            MydtCityClone = MydtCity.Clone();
+
+            cityRows = MydtCity.Select("fGPtbl_MCty_StateId=" + Statevalue);
+
+            foreach (DataRow r1 in cityRows)
+            {
+                MydtCityClone.ImportRow(r1);
+            }
+
+            CityDDL.DataSource = MydtCityClone;
+            CityDDL.DataTextField = MydtCityClone.Columns["fGPtbl_MCty_Name"].ToString();
+            CityDDL.DataValueField = MydtCityClone.Columns["fGPtbl_MCty_Id"].ToString();
+            CityDDL.DataBind();
+            CityDDL.Items.Insert(0, new ListItem("--Select City--", ""));
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    protected void FunFillcontrols(DataTable CompanyTable, DataTable BranchTable)
+    {
+        try
+        {
+            //FOR COMPANY
+            if (CompanyTable.Rows[0]["fGPtbl_Company_PAN"].ToString() == "          ")
+            {
+                string str = CompanyTable.Rows[0]["fGPtbl_Company_PAN"].ToString().Trim();
+                txt_1.Text = "";
+
+            }
+            else
+            {
+                txt_1.Text = CompanyTable.Rows[0]["fGPtbl_Company_PAN"].ToString().Trim();
+
+              //  txt_1.Attributes.Add("Readonly", "Readonly");
+
+            }
+            if (CompanyTable.Rows[0]["fGtbl_Company_AdharNumber"].ToString() == "")
+            {
+                txt_aahar.Text = "";// CompanyTable.Rows[0]["fGtbl_Company_AdharNumber"].ToString();
+            }
+            else
+            {
+                txt_aahar.Text = CompanyTable.Rows[0]["fGtbl_Company_AdharNumber"].ToString();
+                txt_aahar.Attributes.Add("Readonly", "Readonly");
+            }
+            txt_1p1.Text = CompanyTable.Rows[0]["fGPtbl_Company_Name"].ToString();
+            txt_1a1.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Address"].ToString();
+            txt_1a2.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Zip"].ToString();
+            ddlState_a3.SelectedValue = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_StateId"].ToString();
+            ddlBindCity(ddlCity_a4, CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_StateId"].ToString());
+            ddlCity_a4.SelectedValue = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_CityId"].ToString();
+            txt_1a5.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Phone"].ToString();
+            txt_mob.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Mobile"].ToString();
+            txt_1a6.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Fax"].ToString();
+            txt_1a7.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Email"].ToString();
+            txtproposaldate.Text = CompanyTable.Rows[0]["fGPtbl_Company_ProposalDate"].ToString();
+            txtproposalnumber.Text = CompanyTable.Rows[0]["fGPtbl_Company_ProposalNumber"].ToString();
+            rdo_declarationMSME.SelectedValue = CompanyTable.Rows[0]["fGPtbl_Company_MSME"].ToString() == "1" ? "1" : "2";
+                   
+       //     txt_mob.Text = CompanyTable.Rows[0]["fGPtbl_Company_HeadOffice_Mobile"].ToString();
+
+            //FOR BRANCH
+            if (BranchTable.Rows.Count != 0)
+            {
+                txt_1c1.Text = BranchTable.Rows[0]["fGPtbl_CUnitBranch_Address"].ToString();
+                txt_1c2.Text = BranchTable.Rows[0]["fGPtbl_CUnitBranch_Zip"].ToString();
+                ddlState_c3.SelectedValue = BranchTable.Rows[0]["fGPtbl_CUnitBranch_StateId"].ToString();
+                ddlBindCity(ddlCity_c4, BranchTable.Rows[0]["fGPtbl_CUnitBranch_StateId"].ToString());
+                ddlCity_c4.SelectedValue = BranchTable.Rows[0]["fGPtbl_CUnitBranch_CityId"].ToString();
+                txt_1c5.Text = BranchTable.Rows[0]["fGPtbl_CUnitBranch_Phone"].ToString();
+                txt_1c6.Text = BranchTable.Rows[0]["fGPtbl_CUnitBranch_Fax"].ToString();
+                txt_1c7.Text = BranchTable.Rows[0]["fGPtbl_CUnitBranch_Email"].ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+    }
+
+
+    //TO BIND FACTORY GRID VIEW
+    protected void FunFillFactory(DataTable FactoryTable)
+    {
+        try
+        {
+            DataTable FactoryTableClone = new DataTable();
+            FactoryTableClone = FactoryTable.Copy();
+          
+
+            GridFactory.DataSource = FactoryTableClone;
+            GridFactory.DataBind();
+
+            //BIND CATEGORY ID
+            ddl_1d.SelectedValue = FactoryTable.Rows[0]["fGPtbl_CUnit_CategoryAreaId"].ToString();
+            HdnCatarea.Value = FactoryTable.Rows[0]["fGPtbl_CUnit_CategoryAreaId"].ToString();
+            ddl_1e.SelectedValue = FactoryTable.Rows[0]["fGPtbl_CUnit_CategoryCastId"].ToString();
+            ddl_1f.SelectedValue = FactoryTable.Rows[0]["fGPtbl_CUnit_CategoryUnitSizeId"].ToString();
+            HdnCatunitsize.Value = FactoryTable.Rows[0]["fGPtbl_CUnit_CategoryUnitSizeId"].ToString();
+
+            //BIND BRANCH NAME
+            lblBranch.Text = FactoryTable.Rows[0]["BranchName"].ToString();
+            ViewState["BranchId"] = Convert.ToInt32(FactoryTable.Rows[0]["fGPtbl_CUnit_BranchId"]);
+
+            //FOR STEP COMPLETION
+            if (FactoryTable.Columns.Contains("fGPtbl_CUnit_StepCompletion"))
+            {
+                ViewState["StepCompletion"] = Convert.ToInt32(FactoryTable.Rows[0]["fGPtbl_CUnit_StepCompletion"].ToString().Trim());
+            }
+            else
+            {
+                ViewState["StepCompletion"] = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    protected void ddlState_a3_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            DataTable MydtCity, MydtCityClone = new DataTable();
+            MydtCity = (DataTable)Cache["City"];
+            MydtCityClone = MydtCity.Clone();
+            DropDownList stateddl = (DropDownList)sender;
+            string StateddlId = stateddl.ID;
+
+            cityRows = MydtCity.Select("fGPtbl_MCty_StateId=" + stateddl.SelectedValue.ToString());
+
+            foreach (DataRow r1 in cityRows)
+            {
+                MydtCityClone.ImportRow(r1);
+            }
+
+            if (StateddlId == "ddlState_a3")
+                ddlBindCity(ddlCity_a4, MydtCityClone);
+
+            if (StateddlId == "ddlState_c3")
+                ddlBindCity(ddlCity_c4, MydtCityClone);
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+
+    protected void GridFactory_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+
+
+                // Bind drop down to cities           
+                DropDownList ddlGridState = (DropDownList)e.Row.FindControl("ddlState_b3");
+
+                ddlBindState(ddlGridState);
+
+                HiddenField hdnstate = (HiddenField)e.Row.FindControl("hdnstate");
+                HiddenField hdncity = (HiddenField)e.Row.FindControl("hdncity");
+
+                DropDownList ddlGridcity = (DropDownList)e.Row.FindControl("ddlCity_b4");
+                ddlBindCity(ddlGridcity, hdnstate.Value);
+                HiddenField hdnNatureOfOperation = (HiddenField)e.Row.FindControl("hdnNatureOfOperation");
+                DropDownList ddlftNatureofOperation = (DropDownList)e.Row.FindControl("ddlNatureOfOperation_b8");
+                ddlftNatureofOperation.SelectedValue = hdnNatureOfOperation.Value; 
+                if (Convert.ToInt32(hdnstate.Value) != 0)
+                {
+                    ddlGridState.SelectedValue = (hdnstate.Value.ToString());
+                    ddlGridcity.SelectedValue = (hdncity.Value.ToString());
+                }
+                else
+                {
+                    ddlGridcity.Items.Insert(0, new ListItem("--Select City--", ""));
+                }
+
+                int index;
+                index = e.Row.RowIndex;
+
+                TextBox txtadd = (TextBox)e.Row.FindControl("txt_1b1");
+                TextBox txtpin = (TextBox)e.Row.FindControl("txt_1b2");
+                TextBox txtph = (TextBox)e.Row.FindControl("txt_1b5");
+                TextBox txtfax = (TextBox)e.Row.FindControl("txt_1b6");
+                TextBox txteml = (TextBox)e.Row.FindControl("txt_1b7");
+
+                txtadd.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+                txtpin.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+                ddlGridState.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+                ddlGridcity.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+                txtph.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+                txtfax.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+                txteml.TabIndex = (short)(tabindx);
+                tabindx = (short)(tabindx + 1);
+
+
+                if (index > 0)
+                {
+                    RequiredFieldValidator reqAdd = (RequiredFieldValidator)e.Row.FindControl("RequiredFieldValidator9");
+                    reqAdd.Enabled = false;
+
+                    RequiredFieldValidator reqZip = (RequiredFieldValidator)e.Row.FindControl("RequiredFieldValidator10");
+                    reqZip.Enabled = false;
+
+                    RequiredFieldValidator reqState = (RequiredFieldValidator)e.Row.FindControl("RequiredFieldValidator19");
+                    reqState.Enabled = false;
+
+                    RequiredFieldValidator reqCity = (RequiredFieldValidator)e.Row.FindControl("RequiredFieldValidator12");
+                    reqCity.Enabled = false;
+
+                    //RequiredFieldValidator reqPhone = (RequiredFieldValidator)e.Row.FindControl("RequiredFieldValidator13");
+                    //reqPhone.Enabled = false;
+
+                    //RequiredFieldValidator reqFax = (RequiredFieldValidator)e.Row.FindControl("RequiredFieldValidator14");
+                    //reqFax.Enabled = false;
+
+
+                }
+
+                AllstepchangeDs = clsDDL.Allfieldsbyrows_Fetch_Dataset(CompanyId);
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_Address' and Colval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    TextBox txtAddress = (TextBox)e.Row.FindControl("txt_1b1");
+                    txtAddress.ReadOnly = false;
+                }
+                else
+                {
+                    TextBox txtAddress = (TextBox)e.Row.FindControl("txt_1b1");
+                    txtAddress.ReadOnly = true;
+
+                }
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_Zip' and Colval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    TextBox txtPin = (TextBox)e.Row.FindControl("txt_1b2");
+                    txtPin.ReadOnly = false;
+                }
+                else
+                {
+                    TextBox txtPin = (TextBox)e.Row.FindControl("txt_1b2");
+                    txtPin.ReadOnly = true;
+                }
+
+                //DROP DOWN AND OTHER FIELDS CHANGE AS READ ONLY
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_StateId' and COlval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    DropDownList ddlState = (DropDownList)e.Row.FindControl("ddlState_b3");
+                    ddlState.Enabled = true;
+                }
+                else
+                {
+                    DropDownList ddlState = (DropDownList)e.Row.FindControl("ddlState_b3");
+                    ddlState.Enabled = false;
+                }
+
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_CityId' and COlval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    DropDownList ddlCity = (DropDownList)e.Row.FindControl("ddlCity_b4");
+                    ddlCity.Enabled = true;
+                }
+                else
+                {
+                    DropDownList ddlCity = (DropDownList)e.Row.FindControl("ddlCity_b4");
+                    ddlCity.Enabled = false;
+                }
+
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_Phone' and COlval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    TextBox txtFactPhone = (TextBox)e.Row.FindControl("txt_1b5");
+                    txtFactPhone.ReadOnly = false;
+                }
+                else
+                {
+                    TextBox txtFactPhone = (TextBox)e.Row.FindControl("txt_1b5");
+                    txtFactPhone.ReadOnly = true;
+                }
+
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_Fax' and COlval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    TextBox txtFactFax = (TextBox)e.Row.FindControl("txt_1b6");
+                    txtFactFax.ReadOnly = false;
+                }
+                else
+                {
+                    TextBox txtFactFax = (TextBox)e.Row.FindControl("txt_1b6");
+                    txtFactFax.ReadOnly = true;
+                }
+
+                AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_1B_Factory_Email'  and COlval = 1 ");
+                if (AllstepchangeRow.Length > 0 && RoleId == 8)
+                {
+                    TextBox txtFactEmail = (TextBox)e.Row.FindControl("txt_1b7");
+                    txtFactEmail.ReadOnly = false;
+                }
+                else
+                {
+                    TextBox txtFactEmail = (TextBox)e.Row.FindControl("txt_1b7");
+                    txtFactEmail.ReadOnly = true;
+                }
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    private void funfill_ddlCategory()
+    {
+        try
+        {
+            //Category Area DROPDOWNLIST
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt = clsDDL.ddlCategoryArea();
+            ddl_1d.DataSource = dt;
+            ddl_1d.DataTextField = dt.Columns["fGPtbl_CUnit_CA_Name"].ToString();
+            ddl_1d.DataValueField = dt.Columns["fGPtbl_CUnit_CA_Id"].ToString();
+            ddl_1d.DataBind();
+            ddl_1d.Items.Insert(0, new ListItem("--Select Category Area--", ""));
+
+            //Category Cast DROPDOWNLIST
+            dt.Clear();
+            dt = clsDDL.ddlCategoryCast();
+            ddl_1e.DataSource = dt;
+            ddl_1e.DataTextField = dt.Columns["fGPtbl_CUnit_CC_Name"].ToString();
+            ddl_1e.DataValueField = dt.Columns["fGPtbl_CUnit_CC_Id"].ToString();
+            ddl_1e.DataBind();
+            ddl_1e.Items.Insert(0, new ListItem("--Select Category Cast--", ""));
+
+            //Category Unit Size DROPDOWNLIST
+            dt.Clear();
+            dt = clsDDL.ddlCategoryUnitSize();
+            ddl_1f.DataSource = dt;
+            ddl_1f.DataTextField = dt.Columns["fGPtbl_CUnit_CUS_Name"].ToString();
+            ddl_1f.DataValueField = dt.Columns["fGPtbl_CUnit_CUS_Id"].ToString();
+            ddl_1f.DataBind();
+            ddl_1f.Items.Insert(0, new ListItem("--Select Category Unit Size--", ""));
+
+            dt.Clear();
+            dt.Dispose();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    private void FunctionShowHide()
+    {
+        //ifpageis not postback
+        try
+        {
+            AllstepchangeDs = clsDDL.Allfieldsbyrows_Fetch_Dataset(CompanyId);
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_PAN' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                txt_1.ReadOnly = false;
+            }
+            else
+            {
+                txt_1.ReadOnly = true;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_Name' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                txt_1p1.ReadOnly = false;
+            }
+
+            else
+            {
+                txt_1p1.ReadOnly = true;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_Address' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                txt_1a1.ReadOnly = false;
+            }
+
+            else
+            {
+                txt_1a1.ReadOnly = true;
+            }
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_Zip' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                txt_1a2.ReadOnly = false;
+            }
+
+            else
+            {
+                txt_1a2.ReadOnly = true;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_StateId' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                ddlState_a3.Enabled = true;
+            }
+
+            else
+            {
+                ddlState_a3.Enabled = false;
+            }
+
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_CityId' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                ddlCity_a4.Enabled = true;
+            }
+
+            else
+            {
+                ddlCity_a4.Enabled = false;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_Phone'and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                txt_1a5.ReadOnly = false;
+            }
+
+            else
+            {
+                txt_1a5.ReadOnly = false;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_Fax' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                txt_1a6.ReadOnly = false;
+            }
+
+            else
+            {
+                txt_1a6.ReadOnly = false;
+            }
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_Company_HeadOffice_Email' and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    txt_1a7.ReadOnly = false;
+            //}
+
+            //else
+            //{
+            //    txt_1a7.ReadOnly = false;
+            //}
+
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_CUnitBranch_Address' and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    txt_1c1.ReadOnly = false;
+            //}
+
+            //else
+            //{
+            //    txt_1c1.ReadOnly = true;
+            //}
+
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_CUnitBranch_Zip' and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    txt_1c2.ReadOnly = false;
+            //}
+
+            //else
+            //{
+            //    txt_1c2.ReadOnly = true;
+            //}
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_CUnitBranch_StateId' and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    ddlState_c3.Enabled = true;
+            //}
+
+            //else
+            //{
+            //    ddlState_c3.Enabled = false;
+            //}
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_CUnitBranch_CityId'and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    ddlCity_c4.Enabled = true;
+            //}
+
+            //else
+            //{
+            //    ddlCity_c4.Enabled = false;
+            //}
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_CUnitBranch_Phone' and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    txt_1c5.ReadOnly = false;
+            //}
+
+            //else
+            //{
+            //    txt_1c5.ReadOnly = false;
+            //}
+
+            //AllstepchangeRow = AllstepchangeDs.Tables[0].Select("Colname='fGPtbl_CUnitBranch_Email' and Colval = 1 ");
+            //if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            //{
+            //    txt_1c7.ReadOnly = false;
+            //}
+
+            //else
+            //{
+            //    txt_1c7.ReadOnly = false;
+            //}
+
+            AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_CategoryAreaId' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                ddl_1d.Enabled = true;
+            }
+
+            else
+            {
+                ddl_1d.Enabled = false;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_CategoryCastId' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                ddl_1e.Enabled = true;
+            }
+
+            else
+            {
+                ddl_1e.Enabled = false;
+            }
+
+            AllstepchangeRow = AllstepchangeDs.Tables[1].Select("Colname='fGPtbl_CUnit_CategoryUnitSizeId' and Colval = 1 ");
+            if (AllstepchangeRow.Length > 0 && RoleId == 8)
+            {
+                ddl_1f.Enabled = true;
+            }
+
+            else
+            {
+                ddl_1f.Enabled = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+    }
+
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        //TO HOLD THE STEP OF COMPLETION
+        int StepCompletion = (int)ViewState["StepCompletion"];
+        objAmendment = new clsAmendment();
+        string PANno = txt_1.Text.Trim().ToUpper();
+        string NameofApplicantFirm = txt_1p1.Text.Trim();
+        string HOAddress = txt_1a1.Text.Trim();
+        string HOPinCode = txt_1a2.Text.Trim();
+        int HOState = 0, HOCity = 0;
+        string Aadhar_number = "";
+
+        if (txt_aahar.Text != "")
+        {
+            Aadhar_number = txt_aahar.Text.ToString();
+        }
+
+        try
+        {
+            HOState = Convert.ToInt32(ddlState_a3.SelectedValue);
+        }
+        catch { }
+
+        try
+        {
+            HOCity = Convert.ToInt32(ddlCity_a4.SelectedValue);
+        }
+        catch { }
+        string HOTelephone = txt_1a5.Text.Trim();
+        string HOFax = txt_1a6.Text.Trim();
+        string HOEmail = txt_1a7.Text.Trim();
+
+        int CategoryAreaId = 0;
+        try
+        {
+            CategoryAreaId = Convert.ToInt32(HdnCatarea.Value);
+        }
+        catch { }
+
+        int CategoryCastId = 0;
+        try
+        {
+            CategoryCastId = Convert.ToInt32(ddl_1e.SelectedValue);
+        }
+        catch { }
+
+        int CategoryUnitSizeId = 0;
+        try
+        {
+            CategoryUnitSizeId = Convert.ToInt32(HdnCatunitsize.Value);
+        }
+        catch { }
+
+        string BRAddress = "";
+        string BRPin = "";
+        string BRPhone = "";
+        string BRFax = "";
+        string BREmail = "";
+        bool bsDeclarationMSME = rdo_declarationMSME.SelectedValue == "1" ? true : false;
+        if (txt_1c1.Text.Trim().ToString() != "")
+        {
+            BRAddress = txt_1c1.Text.Trim().ToString();
+        }
+
+        if (txt_1c2.Text.Trim().ToString() != "")
+        {
+            BRPin = txt_1c2.Text.Trim().ToString();
+        }
+
+        if (txt_1c5.Text.Trim().ToString() != "")
+        {
+            BRPhone = txt_1c5.Text.Trim().ToString();
+        }
+
+        if (txt_1c6.Text.Trim().ToString() != "")
+        {
+            BRFax = txt_1c6.Text.Trim().ToString();
+        }
+
+        if (txt_1c7.Text.Trim().ToString() != "")
+        {
+            BREmail = txt_1c7.Text.Trim().ToString();
+        }
+
+        int BRState = 0;
+        int BRCity = 0;
+
+        try
+        {
+            if (ddlState_c3.SelectedIndex > 0)
+            {
+                BRState = Convert.ToInt32(ddlState_c3.SelectedValue);
+            }
+
+        }
+        catch { }
+
+        try
+        {
+            if (ddlCity_c4.SelectedIndex > 0)
+            {
+                BRCity = Convert.ToInt32(ddlCity_c4.SelectedValue);
+            }
+
+        }
+        catch { }
+
+        try
+        {
+            //objAmendment.CompanyAmendment_InsertUpdate_CompanyBranch_Step1(1, PANno, NameofApplicantFirm, HOAddress, HOState,
+            //      HOCity, HOPinCode, HOTelephone, HOFax, HOEmail, BRAddress, BRPin, BRState, BRCity, BRPhone, BRFax, BREmail, UserId, CompanyId)
+            if (StepCompletion >= 1)
+            {
+                ErrorId = objAmendment.CompanyAmendment_InsertUpdate_CompanyBranch_Step1(2, PANno, NameofApplicantFirm, HOAddress, HOState,
+                    HOCity, HOPinCode, HOTelephone, HOFax, HOEmail, BRAddress, BRPin, BRState, BRCity, BRPhone, BRFax, BREmail, UserId, CompanyId,
+                    "renewal", Convert.ToString(txtproposaldate.Text.Trim()), txtproposalnumber.Text.Trim(), txt_mob.Text.Trim(), "", Aadhar_number, bsDeclarationMSME,null);
+            }
+            else
+            {
+                ErrorId = objAmendment.CompanyAmendment_InsertUpdate_CompanyBranch_Step1(1, PANno, NameofApplicantFirm, HOAddress, HOState,
+                    HOCity, HOPinCode, HOTelephone, HOFax, HOEmail, BRAddress, BRPin, BRState, BRCity, BRPhone, BRFax, BREmail, UserId, CompanyId,
+                    "renewal", Convert.ToString(txtproposaldate.Text.Trim()), txtproposalnumber.Text.Trim(), txt_mob.Text.Trim(), "", Aadhar_number, bsDeclarationMSME,null);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+
+        string FTAddress = "", FTPinCode = "", FTTelephone = "", FTFax = "", FTEmail = "";
+        int i = 0, FTState = 0, FTCity = 0;
+        if (BranchId == null || BranchId == 0)
+        {
+            BranchId = Convert.ToInt32(ViewState["BranchId"]);
+        }
+        while (i < GridFactory.Rows.Count)
+        {
+            //TextBox txtadd = (TextBox)GridFactory.Rows[0].Cells[0].FindControl("txt_1b1");
+
+            TextBox txtadd = (TextBox)GridFactory.Rows[i].FindControl("txt_1b1");
+            HiddenField hdnfld = (HiddenField)GridFactory.Rows[i].FindControl("hdnunit");
+            //CompanyId = Convert.ToInt32(hdnCompany.Value.ToString());
+            UnitId = Convert.ToInt32(hdnfld.Value.ToString());
+
+            TextBox txtpin = (TextBox)GridFactory.Rows[i].FindControl("txt_1b2");
+            TextBox txtphn = (TextBox)GridFactory.Rows[i].FindControl("txt_1b5");
+            TextBox txtfax = (TextBox)GridFactory.Rows[i].FindControl("txt_1b6");
+            TextBox txtemail = (TextBox)GridFactory.Rows[i].FindControl("txt_1b7");
+            HiddenField hdnfstate = (HiddenField)GridFactory.Rows[i].FindControl("hdnstate");
+            HiddenField hdnfcity = (HiddenField)GridFactory.Rows[i].FindControl("hdncity");
+            //RA
+            DropDownList ddlftNatureofOperation = (DropDownList)GridFactory.Rows[i].FindControl("ddlNatureOfOperation_b8");
+            //RA
+            FTAddress = txtadd.Text;
+            FTPinCode = txtpin.Text;
+            FTTelephone = txtphn.Text;
+            FTFax = txtfax.Text;
+            FTEmail = txtemail.Text;//================================================
+
+
+            try
+            {
+                if (UnitId != 0 && txtadd.Text.Trim() != "")
+                {
+                    FTState = Convert.ToInt32(hdnfstate.Value);
+                    FTCity = Convert.ToInt32(hdnfcity.Value);
+                 int   bsFTNatureOfOperation = Convert.ToInt32(ddlftNatureofOperation.SelectedValue);
+                    if (StepCompletion >= 1)
+                    {//TO UPDATE
+                        objAmendment.CompanyAmendment_InsertUpdateFactory_step1(2, FTAddress, FTPinCode, FTState, FTCity, FTTelephone, FTFax, FTEmail,
+                                    CategoryAreaId, CategoryCastId, CategoryUnitSizeId, UnitId, CompanyId, UserId, BranchId, "renewal", bsFTNatureOfOperation);
+                    }
+                    else
+                    {
+                        objAmendment.CompanyAmendment_InsertUpdateFactory_step1(1, FTAddress, FTPinCode, FTState, FTCity, FTTelephone, FTFax, FTEmail,
+                                CategoryAreaId, CategoryCastId, CategoryUnitSizeId, UnitId, CompanyId, UserId, BranchId, "renewal", bsFTNatureOfOperation);
+                    }
+                }
+                
+                i++;
+            }
+            catch (Exception ex)
+            {
+                ErrHandler.WriteError(ex.Message);
+            }
+        }
+
+        if (ErrorId == 2)   //INSERT/UPDATE SUCCESSFULL
+        {
+            DecryptEncrypt objDecEnc = new DecryptEncrypt();
+            string EncryptCompany = string.Empty, EncryptFormtype = string.Empty, EncryptBranchId = string.Empty;
+            //FOR BRANCH
+            if (RoleId == 8)
+            {
+                EncryptCompany = objDecEnc.Encrypt(CompanyId.ToString());
+                //string EncryptUnit = objDecEnc.Encrypt(UnitId.ToString());
+                EncryptFormtype = objDecEnc.Encrypt("3");
+                EncryptBranchId = objDecEnc.Encrypt(BranchId.ToString());
+                //string PanCard = objDecEnc.Encrypt(txt_1.Text.ToString());
+            }
+            else if (RoleId == 7) //FOR REGISTERED COMPANY
+            {
+                EncryptCompany = objDecEnc.Encrypt(CompanyId.ToString());
+                EncryptFormtype = objDecEnc.Encrypt("3");
+                EncryptBranchId = objDecEnc.Encrypt(ViewState["BranchId"].ToString());
+            }
+            ViewState["BranchId"] = "";
+            ViewState["StepCompletion"] = "";
+            Response.Redirect("UnitRenewalStep2.aspx?c=" + EncryptCompany + "&f=" + EncryptFormtype + "&b=" + EncryptBranchId, false);
+
+
+        }
+        else //INSERT/UPDATE FAIL
+        {
+
+        }
+    }
+
+    protected void ShowmissingData(DataSet missingDs)
+    {
+        List<string> MissingValuesList = new List<string>();
+        DataTable companyDt, factoryDt, directorDt = new DataTable();
+        companyDt = missingDs.Tables[0];
+        factoryDt = missingDs.Tables[1];
+        directorDt = missingDs.Tables[2];
+        int valuecount;
+
+        //MissingValuesList.Add("<table border='1' width='100%' cellpadding='1' cellspacing='1'> <tr align='left' valign='right'> <td align='left' valign='top'>");
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_PAN"].ToString(), "1"))
+        {
+            //MissingValuesList.Add(valuecount.ToString()+": Permanent Account Number,  ");
+            MissingValuesList.Add("Permanent Account Number");
+        }
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_Name"].ToString(), "1"))
+        {
+            MissingValuesList.Add("Company Name");
+        }
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_HeadOffice_Address"].ToString(), "1"))
+        {
+            MissingValuesList.Add("Company Head Office Address");
+        }
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_HeadOffice_Zip"].ToString(), "1"))
+            MissingValuesList.Add("Company Head Office Address Pincode");
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_HeadOffice_StateId"].ToString(), "1"))
+            MissingValuesList.Add("Company Head Office State");
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_HeadOffice_CityId"].ToString(), "1"))
+            MissingValuesList.Add("Company Head Office City");
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_HeadOffice_Phone"].ToString(), "1"))
+            MissingValuesList.Add("Company Head Office Telephone Number");
+
+        if (Equals(companyDt.Rows[0]["fGPtbl_Company_HeadOffice_Email"].ToString(), "1"))
+        {
+            MissingValuesList.Add("Company Head Office Email");
+        }
+
+
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_CategoryAreaId"].ToString(), "1"))
+            MissingValuesList.Add("Factory Category Area");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_CategoryCastId"].ToString(), "1"))
+            MissingValuesList.Add("Factor Category Caste");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_CategoryUnitSizeId"].ToString(), "1"))
+            MissingValuesList.Add("Factory Category Unit Size");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3C123_ConstitutionId"].ToString(), "1"))
+            MissingValuesList.Add("Constitution of firm");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3A"].ToString(), "1"))
+            MissingValuesList.Add("Date of Incorporation");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3B"].ToString(), "1"))
+            MissingValuesList.Add("Date of commencement of production/business");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3C5"].ToString(), "1"))
+            MissingValuesList.Add("Whether you are a Partner/Director of any large industries or units registered with NSIC/DGS&D. If so, give details.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3D"].ToString(), "1"))
+            MissingValuesList.Add("Whether your firm is registered under which ACT");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3E"].ToString(), "1"))
+            MissingValuesList.Add("The firm is a subsidiary/Associate of an Indian/foreign/large scale company, give particulars of Parent/holding Company:");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3F"].ToString(), "1"))
+            MissingValuesList.Add("If there are other subsidiaries of the same parent company in India, give full particulars.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3G"].ToString(), "1"))
+            MissingValuesList.Add("If the Directors/Partners/Proprietor have financial interests or are represented on Board(s) of other companies, give details.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3H"].ToString(), "1"))
+            MissingValuesList.Add("Whether any portion of your capital is held by any large unit? If some, give details.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3I"].ToString(), "1"))
+            MissingValuesList.Add("Whether there is any inter-locking of capital or loan funds with any large unit under the same management? If so, give details.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3J"].ToString(), "1"))
+            MissingValuesList.Add("Whether any loan or advance has been under written by any large unit or persons possessing large means? If so, give details.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3K1"].ToString(), "1"))
+            MissingValuesList.Add("Income-tax Circle/Ward/District.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3L"].ToString(), "1"))
+            MissingValuesList.Add("Sales Tax Registration No(s)");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3M"].ToString(), "1"))
+            MissingValuesList.Add("Did you applied for registration with NSIC before under this or any other name? If so, with what result?");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3N"].ToString(), "1"))
+            MissingValuesList.Add("Are you already doing business with NSIC under this or some other name? If so, give name and address.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_3O"].ToString(), "1"))
+            MissingValuesList.Add("Whether your firm or any of its Directors/Partners were prosecuted at any time for any offence under any Court for Civil/Criminal/Revenue or Economic Offence? If so, give particulars of offence and penalty.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_4A"].ToString(), "1"))
+            MissingValuesList.Add("Whether you are registered with DGS&D? If so, give registration No. and date, attach a copy of registration certificate and specify the item for which registered.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_4B"].ToString(), "1"))
+            MissingValuesList.Add("Have you supplied any stores to the Government through DGS&D, Direct to the Government Department or through any other Supplier? If so, give details of the contract if any, during the last Three years in Annexure-‘G’");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_8"].ToString(), "1"))
+            MissingValuesList.Add("State if the products have been fully tested, including type tests where required in specifications. If so, attach copy of test reports:");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_9"].ToString(), "1"))
+            MissingValuesList.Add("If the products require after sales service, give Names & Addresses of places where such facilities are available. Indicate if your products are directly marketed by you in whole of India. If not, indicate names of firms with whom marketing arrangements have been made product-wise/area-wise:");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_10"].ToString(), "1"))
+            MissingValuesList.Add("Statement indicating the Result of Operations and Financial Position of the SSI Unit for the last three years (year-wise) duly supported by relevant Audited Balance Sheets (Annexure-C).");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_11"].ToString(), "1"))
+            MissingValuesList.Add("Name and address of the Bankers (Indicate Account No. with each bank and submit Bankers Report in Original as per proforma in Annexure-F):");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_12A"].ToString(), "1"))
+            MissingValuesList.Add("State if the products are BIS Marked. If so, attach a copy of valid BIS License.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_12B"].ToString(), "1"))
+            MissingValuesList.Add("State if the firm has ISO 9000 Certification. If yes, attach copy of the same.");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_13A"].ToString(), "1"))
+            MissingValuesList.Add("Name and designation of the signatory of this application (enclose a copy of Power of Attorney where applicable) NAME");
+
+        if (Equals(factoryDt.Rows[0]["fGPtbl_CUnit_13B"].ToString(), "1"))
+            MissingValuesList.Add("Name and designation of the signatory of this application (enclose a copy of Power of Attorney where applicable) DESIGNATION");
+
+        //HANDLING MULTIPLE VALUES FOR FACTORIES
+        int factoryrowcount = 0;
+        int counter = 0;
+        bool chkcompany = false;
+        if (factoryDt != null)
+        {
+            foreach (DataRow drow in factoryDt.Rows)
+            {
+                string factval = Convert.ToString(counter + 1);
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_Address"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory Address");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_Address"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory Address");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_Zip"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory Pin");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_StateId"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory State");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_CityId"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory City");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_Address"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory Address");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_Zip"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory Pin");
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_StateId"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory State");
+                    chkcompany = true;
+                }
+
+                if (Equals(drow["fGPtbl_CUnit_1B_Factory_CityId"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Factory City");
+                    chkcompany = true;
+                }
+                if (chkcompany == true)
+                {
+                    MissingValuesList.Add("---- Factory----" + factval);
+                }
+                counter = counter + 1;
+            }
+        }
+
+
+
+
+        //FOR DIRECTOR ONLY FOR FIRST DIRECTOR
+
+
+
+        int countdt = 0;
+        bool chkdir = false;
+        if (directorDt != null)
+        {
+            foreach (DataRow drowdt in directorDt.Rows)
+            {
+                string directval = Convert.ToString(countdt + 1);
+
+                if (Equals(drowdt["fGPtbl_Company_Directors_Name"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Director Name");
+                    chkdir = true;
+                }
+
+                if (Equals(drowdt["fGPtbl_Company_Directors_Address"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Director Address");
+                    chkdir = true;
+                }
+
+                if (Equals(drowdt["fGPtbl_Company_Directors_Zip"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Director Pincode");
+                    chkdir = true;
+                }
+
+                if (Equals(drowdt["fGPtbl_Company_Directors_StateId"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Director State");
+                    chkdir = true;
+                }
+
+                if (Equals(drowdt["fGPtbl_Company_Directors_CityId"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Director City");
+                    chkdir = true;
+                }
+
+                if (Equals(drowdt["fGPtbl_Company_Directors_Phone"].ToString(), "1"))
+                {
+                    MissingValuesList.Add("Director Phone number");
+                    chkdir = true;
+                }
+
+                if (chkdir == true)
+                {
+                    MissingValuesList.Add("----Directors----" + directval);
+                }
+                countdt = countdt + 1;
+            }
+        }
+
+
+
+        int len = MissingValuesList.Count;
+
+
+        valuecount = 1;
+        lblMissingvalues.Text = "<table border='1' width='100%' cellpadding='1' cellspacing='0'>";
+        lblMissingvalues.Text = lblMissingvalues.Text + "<tr align='left' valign='top'> <td align='left' valign='top'/><td align='center' valign='top'><strong>Missing/Incomplete Info</strong></td></tr>";
+        if (len == 0)
+        {
+            lblMissingvalues.Text = lblMissingvalues.Text.Replace("Missing/Incomplete Info", "");
+        }
+        foreach (string str in MissingValuesList)
+        {
+            lblMissingvalues.Text = lblMissingvalues.Text + "<tr align='left' valign='top'> <td align='left' valign='top'>";
+            if (str == "Factory Address" || str == "Factory Pin" || str == "Director Address" || str == "Director Address" || str == "Director Pincode" || str == "Director State" || str == "Director City" || str == "Director Phone number")
+            {
+                lblMissingvalues.Text = lblMissingvalues.Text + "</td><td align='left' valign='top'>" + str + "</td></tr>";
+            }
+            else
+            {
+                lblMissingvalues.Text = lblMissingvalues.Text + valuecount.ToString() + "</td><td align='left' valign='top'>" + str + "</td></tr>";
+                valuecount++;
+            }
+
+        }
+
+        lblMissingvalues.Text = lblMissingvalues.Text + "</table>";
+
+        string compEmail = string.Empty;
+        if (txt_1a7.Text == "")
+        {
+            compEmail = "--Company Email--";
+        }
+        else
+        {
+            compEmail = txt_1a7.Text.ToString();
+        }
+
+        DecryptEncrypt objEncrypt = new DecryptEncrypt();
+        lnkmail.NavigateUrl = "~/appAdministrator/Sendmail.aspx?Company_ID=" + objEncrypt.Encrypt(CompanyId.ToString()) + "&Com_name=" + objEncrypt.Encrypt(UserFullName) + "&BranchName="
+            + objEncrypt.Encrypt("noname") + "&Branchmail=" + objEncrypt.Encrypt(compEmail) + "&Compemail=" + objEncrypt.Encrypt("admin@nsic.com");
+
+
+
+    }
+
+
+    protected void txt_1_TextChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            lblPANmsg.Visible = false;
+            string fPANno = "";
+            fPANno = txt_1.Text.ToString().ToUpper();
+            int fPANlength = 0;
+            fPANlength = fPANno.Length;
+            if (fPANlength != 10)
+            {
+                txt_1.Focus();
+            }
+
+            objCompany = new clsCompany();
+            fStatus = objCompany.Company_PANnoCheck(fPANno);
+            //fStatus = objCompany.Company_PANnoCheck(fPANno, BranchId);
+            //fStatus = objCompany.Company_PanSSInoCheck(ssiNo, fPANno);
+            //objAmendment = new clsAmendment();
+            // ssistatus = objAmendment.Company_SSInoCheck(ssiNo);
+
+            switch (fStatus)
+            {
+                case 1: //CONFIRM
+                    lblPANmsg.Text = "PAN already confirmed";
+                    goto case 6;
+                case 2: //INPROCESS
+                    lblPANmsg.Text = "PAN already exists with INPROCESS status";
+                    goto case 6;
+                case 3:// WAITING
+                    lblPANmsg.Text = "PAN already exists with WAITING status";
+                    goto case 6;
+                case 4://EXPIRED
+                    lblPANmsg.Text = "PAN already exists with EXPIRED status";
+                    goto case 6;
+                case 5://INCOMPLETE
+                    lblPANmsg.Text = "PAN already exists with INCOMPLETE status";
+                    goto case 6;
+                case 6://DISABLE BUTTON
+                    lblPANmsg.Visible = true;
+                    btnSubmit.Enabled = false;
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.StackTrace + "  " + ex.Message);
+        }
+
+    }
+
+
+    protected void txt_aahar_TextChanged(object sender, EventArgs e)
+    {
+        try
+        {
+         lbl_adhar_number.Visible = false;
+            string fPANno = "";
+            fPANno = txt_aahar.Text.ToString().ToUpper();
+            int fPANlength = 0;
+            fPANlength = fPANno.Length;
+            if (fPANlength != 12)
+            {
+                txt_aahar.Focus();
+            }
+
+            objCompany = new clsCompany();
+            fStatus = objCompany.Company_AadhernoCheck(fPANno);
+            //fStatus = objCompany.Company_PANnoCheck(fPANno, BranchId);
+            //fStatus = objCompany.Company_PanSSInoCheck(ssiNo, fPANno);
+            //objAmendment = new clsAmendment();
+            // ssistatus = objAmendment.Company_SSInoCheck(ssiNo);
+
+            switch (fStatus)
+            {
+                case 1: //CONFIRM
+                    lbl_adhar_number.Text = "Please enter another Aadhar Number";
+                    goto case 6;
+                case 2: //INPROCESS
+                  lbl_adhar_number.Text = "Please enter another Aadhar Number";
+
+                    goto case 6;
+                case 3:// WAITING
+                    lbl_adhar_number.Text = "Please enter another Aadhar Number";
+
+                    goto case 6;
+                case 4://EXPIRED
+                  lbl_adhar_number.Text = "Please enter another Aadhar Number";
+
+                    goto case 6;
+                case 5://INCOMPLETE
+                    lbl_adhar_number.Text = "Please enter another Aadhar Number";
+
+                    goto case 6;
+                case 6://DISABLE BUTTON
+                    lblPANmsg.Visible = true;
+                   // btnSubmit.Enabled = false;
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.StackTrace + "  " + ex.Message);
+        }
+    }
+
+
+    public void checkButtonDoubleClick(Button button)
+    {
+        System.Text.StringBuilder sbValid = new System.Text.StringBuilder();
+        sbValid.Append("if (typeof(Page_ClientValidate) == 'function') { ");
+        sbValid.Append("if (Page_ClientValidate() == false) { return false; }} ");
+        sbValid.Append("this.value = 'Save & Continue >>';");
+        sbValid.Append("this.disabled = true;");
+        sbValid.Append(this.Page.ClientScript.GetPostBackEventReference(button, ""));
+        sbValid.Append(";");
+        button.Attributes.Add("onclick", sbValid.ToString());
+    }
+
+
+   
+}

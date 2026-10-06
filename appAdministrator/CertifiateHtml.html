@@ -1,0 +1,863 @@
+﻿
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+        Company Certificate
+    </title>
+
+    <script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/49269C13-F749-274A-ACD3-67B17F90D3B6/main.js" charset="UTF-8"></script>
+    <script src="../JScript/jquery-1.7.1.js" type="text/javascript"></script>
+
+    <style type="text/css" media="print">
+        @media print {
+            thead {
+                display: table-header-group;
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+
+            h6 {
+                page-break-before: always;
+            }
+        }
+    </style>
+
+    <style type="text/css">
+        body {
+            font-family: Arial,Helvetica, Sans-Serif;
+            font-size: 10pt;
+            margin-left: 5pt;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            /*background-image: url(../Images/NSIC_Logo1.gif);*/
+            background-color: #F8F8F8;
+            background-repeat: repeat;
+            background-position: 0px 0px;
+            /*text-align:center;*/
+        }
+
+        body, th, p, div, span, td {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            vertical-align: top;
+        }
+
+        .label_Address {
+            font-family: Arial, Sans-Serif;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        .leftHeading_printcertificate {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            height: 11pt;
+            padding-left: 5pt;
+            padding-right: 5pt;
+            font-weight: bold;
+            text-align: right;
+            padding-left: 550pt;
+        }
+
+        .leftHeading_printcertificate_first {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9pt;
+            height: 9pt;
+            padding-left: 5pt;
+            padding-right: 5pt;
+            font-weight: bold;
+        }
+
+        .btnCls_CERTIFICATE {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            background-color: #22518F;
+            color: #FFFFFF;
+            font-weight: bold;
+            width: 95pt;
+            display: none;
+        }
+
+        .leftHeading_certificate_store {
+            font-family: Arial;
+            font-size: 10pt;
+            height: 10pt;
+            padding-left: 5pt;
+            padding-right: 5pt;
+            font-weight: bold;
+        }
+
+        .dynRowHeadercertificate_grid {
+            border: solid 1pt #011e0f;
+        }
+
+        .RowClass {
+            vertical-align: top;
+        }
+
+        .leftHeading_certificate1 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        .leftHeading_certificate1_ref {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            height: 10pt;
+            padding-left: 2pt;
+            font-weight: bold;
+        }
+
+        .leftHeading1 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            height: 10pt;
+            padding-left: 1pt;
+            padding-right: 1pt;
+            font-weight: bold;
+        }
+
+        .leftHeading2 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            height: 10pt;
+            padding-left: 10pt;
+            padding-right: 5pt;
+            font-weight: bold;
+        }
+
+        .lblclass {
+            font-size: 10pt;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+
+        .grdturnmrgtop {
+            margin-top: 5pt;
+        }
+
+        .clslinethrough {
+            text-decoration: line-through;
+        }
+
+        .gridviewstore {
+            min-width: 16cm;
+            table-layout: fixed;
+            white-space: nowrap;
+        }
+
+            .gridviewstore th {
+                white-space: pre;
+            }
+
+
+        @page {
+            margin-top: 3.4cm;
+            font-size: 10pt;
+        }
+
+        .thgridcolumname {
+            white-space: pre;
+        }
+    </style>
+   
+
+</head>
+<body>
+    <form name="form1" method="post" action="RegistrationCertificatePageView.aspx?id=2220" id="form1">
+
+        <table cellpadding="2" cellspacing="2" border="0" width="100%">
+
+            <thead>
+                <tr>
+                    <td align="center">
+                        <div id="HederText">
+                            <table cellpadding="2" cellspacing="2" border="0" style="table-layout:fixed; width:99%;">
+                                <tr valign="bottom">
+                                    <td align="right" colspan="4" valign="bottom" id="serial_no_padding">
+                                        <b> S.No.</b>
+                                        <span id="lblserialNo">NOI-0000240</span>
+                                    </td>
+                                    <input type="hidden" name="hdn_enterprise" id="hdn_enterprise" value="1" />
+                                    <input type="hidden" name="hdn_pmps" id="hdn_pmps" value="P.M.P.S." />
+                                </tr>
+
+                                <tr>
+                                    <td align="right" valign="top" style="padding-left:50pt;font-size:10pt; white-space:nowrap;"> <b>Branch Office : </b></td>
+                                    <td align="left" valign="top" colspan="3">
+                                        <table cellpadding="1" cellspacing="1" border="0">
+                                            <tr>
+                                                <td colspan="2" valign="top"><b><span id="lbl_branch_address" class="leftHeading_certificate1">III-B/118,Sector-18, Noida-201301(UP)</span></b></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" class="leftHeading_certificate1"><b>Ph : <span id="lbl_branch_phone" class="leftHeading_certificate1">0120-4595000-45</span></b></td>
+                                                <td align="left" class="leftHeading_certificate1"><b>Fax : <span id="lbl_branch_fax" class="leftHeading_certificate1">0120-4556453</span></b></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" class="leftHeading_certificate1"><b>Email : <span id="lbl_branch_email" class="leftHeading_certificate1">bonoida@nsic.co.in</span></b> </td>
+                                                <td align="left" class="leftHeading_certificate1"><b>Website : <span id="Label1">www.nsic.co.in</span></b> </td>
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left" valign="top" colspan="2"> &nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left" valign="top" colspan="2"> &nbsp;</td>
+                                </tr>
+
+
+
+                            </table>
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+
+            </thead>
+
+
+
+            <tbody>
+                <tr>
+                    <td style="width:100%;" id="td_refrence">
+                        <div id="Referances" style="width:100%;clear: both; ">
+                            <table cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed; width:99%;">
+                                <tr>
+
+                                    <td colspan="4" align="center" valign="top">
+                                        <span id="lblvalidToFrom">Renewal Certificate    <b>(Valid From 04/02/2017 to 03/02/2019)</b></span>
+
+                                    </td>
+                                </tr>
+
+
+                                <tr style="margin-top:10pt ;">
+                                    <td colspan="4">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:99%;">
+                                            <tr>
+                                                <td class="leftHeading_certificate1_ref" align="left" colspan="2" style="white-space:nowrap; ">
+                                                    <b>Ref.No</b>&nbsp;
+                                                    <span id="lblrefnumber"></span>
+                                                </td>
+                                                <td class="leftHeading_certificate1" align="right" style="padding-right:14pt;">
+                                                    <span id="lblDate">Date:</span>
+                                                    <span id="lbldateform">01/09/2017</span>
+                                                </td>
+
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+
+
+
+
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" align="left" valign="top" style=" width:39%;"=width:39%;">
+                                        <table cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td align="left" valign="top" style="height:5px;">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top"><b><span id="lblNameCom"> M/s. RITIKA SYSTEMS PVT.LTD.</span></b></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td valign="top"><span id="LblCompanyAdress">SHOP NO.6, LSC SITE NO.42, MORLAND BEHIND K-BLOCK SCHOOL , KALKAJI,</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top"><span id="lbl_city_name">New Delhi,</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" style="white-space:nowrap; ">
+                                                    <span id="lblStateName">DELHI-</span>
+
+                                                    <span id="lblcompanypin">110019</span>
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                        <br />
+                                        <br />
+                                        <b>Name of the <span id="lbl_name_of_DIRECTOR">Directors</span></b>
+
+                                        <input type="hidden" name="hdnlablName" id="hdnlablName" value="SH.A.K. WADHWA@SH.SAMARATH WADHWA@" />
+                                        <br />
+
+                                        <span id="lblpartnaerName">1.SH.A.K. WADHWA</br>2.SH.SAMARATH WADHWA</br></span>
+
+
+
+                                    </td>
+                                    <td colspan="2" align="left" valign="top" style="width:100%;">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="height:3.5cm;">
+
+                                            <tr valign="top" style=" border-spacing:0;=border-spacing:0; padding:0;"=padding:0;">
+                                                <td style="vertical-align:top; padding-left:10pt;" valign="top">
+                                                    <b>Factory Address:</b><br />
+
+
+
+                                                    <table cellpadding="0" cellspacing="0" border="0" style=" vertical-align:top;"=vertical-align:top;" id="tbl_rept">
+                                                        <tr valign="top" style="border-spacing:0; padding:0">
+                                                            <td align="left" colspan="2">
+                                                                <span id="Rpt_Address_ctl01_Label2">1</span>
+                                                                <span id="Rpt_Address_ctl01_lblAddress">.C-25,SECTOR-65, NOIDA</span>
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr valign="top" style=" border-spacing:0;=border-spacing:0; padding:0;"=padding:0;">
+                                                            <td align="left" colspan="2" valign="top">
+                                                                <span id="Rpt_Address_ctl01_lbl_citynameUnit">Gautam Budh Nagar,</span>
+                                                                <span id="Rpt_Address_ctl01_lblState">UTTAR PRADESH</span>
+                                                                <span id="Rpt_Address_ctl01_lbl_pin">-201301</span>
+                                                            </td>
+
+
+                                                        </tr>
+
+
+                                                    </table>
+
+
+
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                        <table cellpadding="0" cellspacing="0" border="0" style="margin-top:10pt;">
+
+                                            <tr>
+                                                <td align="left" valign="top"></td>
+
+                                            </tr>
+
+                                        </table>
+                                    </td>
+
+
+
+                                </tr>
+
+
+
+                                <tr style="margin-top:10pt;">
+                                    <td align="left" colspan="2">
+                                        <b>Constitution of the firm-</b>
+                                        <span id="lblconstitutionCode">Private Limited</span>
+                                    </td>
+                                    <td align="center">
+                                        <b>UAM</b>
+                                        <span id="lblUAM">UP28B0007268</span>
+                                    </td>
+                                    <td align="left">
+                                        <b>Enterprise Social Class: </b>
+                                        <span id="lbl_Gen_sc">GENERAL</span>
+                                    </td>
+
+                                </tr>
+                                <tr> <td colspan="4" style="height:2pt;"></td></tr>
+                                <tr style="margin-top:5pt;">
+                                    <td colspan="4" style="white-space:nowrap; font-size:10pt;" align="center">
+                                        <b>
+                                            GOVERNMENT
+
+
+
+                                            &nbsp;PURCHASE REGISTRATION NO:
+                                        </b>&nbsp;<b><span id="lblRegisNo">NSIC/GP/NOI/2013/0003092</span></b>
+                                    </td>
+
+
+                                </tr>
+                                <tr> <td colspan="4" style="height:2pt;"></td></tr>
+                                <tr id="old_registration_number" style="margin-top:5pt;">
+                                    <td colspan="4" style="white-space:nowrap; font-size:10pt;" align="center">
+                                        <b>
+                                            GOVERNMENT
+
+
+
+                                            &nbsp;PURCHASE OLD REGISTRATION NO:
+                                        </b>&nbsp;<b><span id="lbl_old_registration_no">NSIC/NOIDA/GP/RS/07/RN-061</span></b>
+                                    </td>
+                                </tr>
+
+                                <tr> <td colspan="4" style="height:2pt;"></td></tr>
+                                <tr style="margin-top:10pt;">
+
+                                    <td colspan="4" style="white-space:nowrap;margin-top:12pt;" align="center">
+                                        <b>Monetary Limit:</b>
+                                        <img src="../Images/RupeeLogoSmall.jpg" alt="RS." /><span id="lblMonLimit"> 1077  lakhs (</span>
+
+                                        <img src="../Images/RupeeLogoSmall.jpg" alt="RS." /><span id="lblTextRupee"> One Thousand Seventy Seven  Lakh Only)</span>
+                                    </td>
+                                </tr>
+
+
+
+                                <tr style="margin-top:5pt;">
+                                    <td colspan="4" align="center" style="margin-top:5pt;">
+                                        <span id="lbltrunover" class="leftHeading1">TURNOVER (Rupees in Lakhs)</span>
+                                        <br />
+
+                                        Renewal Certificate (Valid From 04/02/2017 to 03/02/2019)
+                                        <div>
+                                            <table class="grdturnmrgtop" cellspacing="2" cellpadding="2" rules="all" border="1" id="grdTurnOver" style="border-color:Black;border-style:Solid;">
+                                                <tr>
+                                                    <th scope="col" style="width:100px;">Financial Year</th>
+                                                    <th scope="col" style="width:85px;">Annual Turnover</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>2013-14 </td>
+                                                    <td>1481.47</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2014-15</td>
+                                                    <td>1256.81</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2015-16</td>
+                                                    <td>2152.95</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b> Monetary Limit</b> </td>
+                                                    <td>1077</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4" align="center" style="margin-top:3pt;"><b><span id="lbl_consolidate"></span></b></td>
+
+                                </tr>
+                                <tr style=" border-spacing:0;=border-spacing:0; padding:0;"=padding:0;">
+                                    <td colspan="4" style="width:100%;">
+                                        <p style="text-align:justify;">
+                                            MSEs registered with NSIC are exempted from deposit of Earnest Money irrespective of value of Monetary Limit.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <br />
+                                <tr style=" border-spacing:0;=border-spacing:0; padding:0;"=padding:0;">
+                                    <td colspan="4" align="left" style="width:100%;">
+                                        <p style="text-align:justify;">
+
+                                            Your name has been registered as a MSE Unit eligible for participation in the<b> Central Government Store Purchase  Programme</b> as per the
+                                            <b>Single Point Registration Scheme</b> for the following Item(s)/Store(s)/Service(s).
+
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+
+                                <tr style=" border-spacing:0;=border-spacing:0; padding:0;"=padding:0;">
+                                    <td colspan="4" align="left">
+                                        <table cellpadding="0" cellspacing="0" border="1" style=" width:99%;"=width:99%;" align="left">
+                                            <tr>
+                                                <td class="leftHeading1" align="center" style="white-space:nowrap;">Name of the Store(s)/<br />  Service(s) </td>
+                                                <td class="leftHeading1" align="center" style="white-space:nowrap;">Specification(s)</td>
+                                                <td class="leftHeading1" align="center" style="white-space:nowrap;">Qualitative Capacity</td>
+                                                <td class="leftHeading1" align="center" style="white-space:nowrap;">Quantitative Capacity <br /> <span id="lbl_Quantitive_capacity">P.M.P.S.</span></td>
+
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4" align="center" class="leftHeading_printcertificate_first"
+                                        style="font-size:10pt;">
+                                        "As per List Attached" <span id="lblGridCount">(6&nbsp; item only )</span>
+                                    </td>
+
+                                </tr>
+                                <tr>
+
+                                    <td colspan="4" align="left" style="border-spacing:0; padding:0; font-size:7pt; font-family: Arial, Helvetica, sans-serif;height: 9pt;padding-left: 5pt;padding-right: 5pt;font-weight: none;">
+
+                                        <p>
+                                            <b>Disclaimer:-</b> The purchasing agencies are advised to satisfy themselves with the store details in the certificate while doing the Technical Evaluation stage before placing the tender/order on the units, certified by NSIC.
+
+                                        </p>
+
+
+                                    </td>
+
+
+                                </tr>
+
+                                <!--<tr id="next_button_row">
+                                    <td colspan="4" align="center">
+                                        <input type="button" id="btn_next" value="Next Page" onclick="Javascript:showHideDiv();" />
+
+                                    </td>
+
+                                </tr>-->
+
+
+
+
+
+
+                            </table>
+
+                        </div>
+
+                    </td>
+                </tr>
+
+
+
+
+                <tr style="height:0px;"> <td style="height:0pt; width:100%"> <h6 style="margin:0; height:0cm;"></h6></td></tr>
+                <tr>
+                    <td valign="top" align="right" style="width:100%; margin-right:14pt;">
+                        <table cellpadding="2" cellspacing="2" border="0" id="tbl_print_deatils" style="width:99%;">
+
+                            <tr>
+
+                                <td align="left"><br /><br /><br /> <span id="lbl_company_name_footer"> M/s. RITIKA SYSTEMS PVT.LTD.</span>    </td>
+                                <td align="right">
+                                    <br /><br /><br /> Authorised Signatory
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="2">
+                                    <b> &quot;Authenticity of the certificate can be checked through the web portal: www.nsicspronline.com"</b>
+
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td align="center">
+                        <div id="HederText">
+                            <table cellpadding="2" cellspacing="2" border="0" style="table-layout:fixed; width:99%;">
+                                <tr>
+                                    <td align="right" valign="top" style="padding-left:50pt;font-size:10pt; white-space:nowrap;"> <b>Branch Office : </b></td>
+                                    <td align="left" valign="top" colspan="3">
+                                        <table cellpadding="1" cellspacing="1" border="0">
+                                            <tr>
+                                                <td colspan="2" valign="top"><b><span id="lbl_branch_address" class="leftHeading_certificate1">III-B/118,Sector-18, Noida-201301(UP)</span></b></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" class="leftHeading_certificate1"><b>Ph : <span id="lbl_branch_phone" class="leftHeading_certificate1">0120-4595000-45</span></b></td>
+                                                <td align="left" class="leftHeading_certificate1"><b>Fax : <span id="lbl_branch_fax" class="leftHeading_certificate1">0120-4556453</span></b></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" class="leftHeading_certificate1"><b>Email : <span id="lbl_branch_email" class="leftHeading_certificate1">bonoida@nsic.co.in</span></b> </td>
+                                                <td align="left" class="leftHeading_certificate1"><b>Website : <span id="Label1">www.nsic.co.in</span></b> </td>
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left" valign="top" colspan="2"> &nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left" valign="top" colspan="2"> &nbsp;</td>
+                                </tr>
+
+
+
+                            </table>
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr>
+                    <td style="width:100%;">
+
+                        <table cellpadding="2" cellspacing="2" border="0" id="tr_store_deatail_desc">
+                            <tr>
+                                <td align="center">
+                                    <span id="lblvalidToFrom_store">Renewal Certificate    <b>(Valid From 04/02/2017 to 03/02/2019)</b></span>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td align="left" style="width:100%;">
+                                    ANNEXURE TO GOVERNMENT PURCHASES ENLISTMENT CERTIFICATE
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" valign="top" style="width:100%">
+                                    <table cellpadding="2" cellspacing="2" border="0">
+                                        <tr>
+                                            <td align="left">
+                                                NO.&nbsp; <span id="lblregistration_number" class="lblclass">NSIC/GP/NOI/2013/0003092</span>&nbsp; D.T.&nbsp;<span id="lbldatestore">01/09/2017</span>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td align="left">
+                                                ISSUED TO&nbsp; <span id="lblCompanyNameStore" class="lblclass"> M/s. RITIKA SYSTEMS PVT.LTD.,</span> <span id="lblstanameStore">DELHI </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+
+
+                        </table>
+
+
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td align="left" valign="top" style="width:100%;" id="td_storedetails">
+
+
+
+
+                        <table cellpadding="2" cellspacing="2" border="0" style="width:100%;" id="tbl_store_Tbl">
+                            <tr>
+                                <td align="left" valign="top" style="width:100%; ">
+                                    <span class="LabelPrintCertificate"><br />   C-25,SECTOR-65, NOIDA,  Gautam Budh Nagar, UTTAR PRADESH-201301<br /><br /></span>
+                                    <table cellspacing="2" cellpadding="2" rules="all" border="2" style="border-width:2px;border-style:Inset;">
+
+                                        <tr align="center">
+                                            <td><b>Sno<b /></b></td>
+                                            <td><b>Store(s)/ <br /> Service(s) Name<b /></b></td>
+                                            <td><b>Specification(s)<b /></b></td>
+                                            <td><b>Qualitative Capacity<b /></b></td>
+                                            <td><b>Quantitative Capacity <br />PMPS<b /></b></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>1</td>
+                                            <td>SOLOR LANTERN</td>
+                                            <td>
+                                                As per MNRE
+                                                <br />Specification for off-grid
+                                                <br />solar application scheme
+                                                <br />2016-17
+                                            </td>
+                                            <td>
+                                                Module;4-8 Wp
+                                                <br />Battery:Up to 10 Ah
+                                                <br />LED: 2-4 W
+                                            </td>
+                                            <td>
+                                                10,000Nos.
+                                                <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>
+                                                SOLOR HOME
+                                                <br />LIGHTING SYSTEM
+                                            </td>
+                                            <td>
+                                                As per MNRE
+                                                <br />Specification for off-grid
+                                                <br />solar application scheme
+                                                <br />2016-17
+                                            </td>
+                                            <td>
+                                                Module6-300 Wp
+                                                <br />Battery: Up to 300 Ah
+                                                <br />Accessories:LED Lights,
+                                                <br />Charge Controller,
+                                                <br />Mobile Charger,DC Fan
+                                            </td>
+                                            <td>
+                                                10,000 Nos.
+                                                <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>
+                                                SOLOR STREET
+                                                <br />LIGHTING SYSTEM
+                                            </td>
+                                            <td>
+                                                As per MNRE
+                                                <br />Specification for off-grid
+                                                <br />solar application scheme
+                                                <br />2016-17
+                                            </td>
+                                            <td>
+                                                Module : 30-120 Wp
+                                                <br />Battery:20-120 Ah
+                                                <br />LED Luminaire
+                                            </td>
+                                            <td>
+                                                5000 Nos.
+                                                <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>SOLOR POWER PACKS</td>
+                                            <td>
+                                                Solar appliaction scheme
+                                                <br />2016-2017 of MNRE
+                                            </td>
+                                            <td>UP to 500 W</td>
+                                            <td>5000 Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>SOLAR POWER PLANTS </td>
+                                            <td>
+                                                UP to 3MW
+                                                <br />As per solar appliaction
+                                                <br />scheme 2016-17 of MNRE
+                                            </td>
+                                            <td>
+                                                Ongrid,Offgrid,Grid
+                                                <br />Interactive Power Plants
+                                                <br />Up to 500 KW
+                                            </td>
+                                            <td>50 Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>SOLAR PANELS </td>
+                                            <td>
+                                                Up to 5 MW
+                                                <br />As per IEC-61215,
+                                                <br />IEC-61730
+                                            </td>
+                                            <td>6 W-320 Wp</td>
+                                            <td>10,000 Nos.</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td align="left" valign="top" style="margin-top:10pt;"></td>
+                </tr>
+                <tr>
+                    <td align="left" style=" border-spacing:0;=border-spacing:0; padding:0;=padding:0; font-size:10pt;=font-size:10pt; text-align:justify;"=text-align:justify;">
+                        <span id="lbl_Comment_text"> Comments / Note<br />(Optional):  jh</span>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+        <!--</td>
+
+        </tr>
+
+
+
+        </tbody>-->
+
+
+
+
+
+        <table cellpadding="2" cellspacing="2" border="0" width="100%">
+
+
+            <tfoot>
+                <tr>
+                    <td valign="top" align="right" style="width:100%; margin-right:14pt;">
+                        <table cellpadding="2" cellspacing="2" border="0" id="tbl_print_deatils" style="width:99%;">
+
+                            <tr>
+
+                                <td align="left"><br /><br /><br /> <span id="lbl_company_name_footer"> M/s. RITIKA SYSTEMS PVT.LTD.</span>    </td>
+                                <td align="right">
+                                    <br /><br /><br /> Authorised Signatory
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="2">
+                                    <b> &quot;Authenticity of the certificate can be checked through the web portal: www.nsicspronline.com"</b>
+
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </td>
+
+                </tr>
+
+            </tfoot>
+
+
+
+
+        </table>
+
+
+
+
+     
+    </form>
+</body>
+</html>

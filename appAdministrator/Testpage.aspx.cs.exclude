@@ -1,0 +1,158 @@
+﻿using NSICGP_VBClassLibrary;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using NSICGP_VBClassLibrary;
+
+
+public partial class appAdministrator_Testpage : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    public void Bind_gridview()
+    {
+        try
+        {
+            //int agency = -1;
+            //string fromdate = "";
+            //string todate = "";
+            //try
+            //{
+
+
+            //    if (txt_fromdate.Text.ToString() != "" && txt_fromdate.Text != "__/__/____")
+            //    {
+            //        fromdate = Convert.ToDateTime(txt_fromdate.Text).ToString("yyyy-MM-dd");// txt_fromdate.Text.ToString();
+            //    }
+            //    if (txt_todate.Text.ToString() != "" && txt_todate.Text != "__/__/____")
+            //    {
+            //        todate = Convert.ToDateTime(txt_todate.Text).ToString("yyyy-MM-dd");
+            //    }
+            //    agency = ddl_InspectionAgency.SelectedValue != "" ? Convert.ToInt32(ddl_InspectionAgency.SelectedValue) : -1;
+
+            objcompany = new clsCompany();
+            DataSet ds = new DataSet();
+            //ds = objcompany.Fetch_Inspection_Report_nullpath_mod();
+            ////ds = objcompany.POI_Details(Convert.ToInt32(1));
+
+            ds = POI_Details(Convert.ToInt32(ddlStatus.SelectedValue));
+            dt = new DataTable();
+            dt = ds.Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                grd_inspection.DataSource = dt;
+                grd_inspection.DataBind();
+            }
+            else
+            {
+                ds.Dispose();
+                dt.Dispose();
+                grd_inspection.DataBind();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message.ToString() + "  " + ex.StackTrace.ToString());
+        }
+    }
+
+
+    public DataSet POI_Details(Int32 Status)
+    {
+        SqlCommand MySqlComm;
+        SqlDataAdapter MyAdp = new SqlDataAdapter();
+        SqlDataReader MyDr;
+        DataSet MyDs = new DataSet();
+        DataTable MyDt;
+
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("Gp_sp_Fetch_PointOfInterest_Admin", DBManager.ConnectToDB()); // this procedure if pass Between date than show error so please Modified again and again
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.CommandTimeout = 60000;
+            MyAdp.SelectCommand.Parameters.Add("@Status", SqlDbType.Int).Value = Status;
+            MyAdp.Fill(MyDs);
+
+        }
+        catch (Exception ex)
+        {
+
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+
+    protected void btnDownload_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            Response.Clear();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment;filename=GridViewExport.xls");
+            Response.Charset = "";
+            Response.ContentType = "application/vnd.ms-excel";
+            using (StringWriter sw = new StringWriter())
+            {
+                HtmlTextWriter hw = new HtmlTextWriter(sw);
+
+                //To Export all pages
+                grd_inspection.AllowPaging = false;
+                this.Bind_gridview();
+                grd_inspection.HeaderRow.BackColor = Color.White;
+                foreach (TableCell cell in grd_inspection.HeaderRow.Cells)
+                {
+                    cell.BackColor = grd_inspection.HeaderStyle.BackColor;
+                }
+                foreach (GridViewRow row in grd_inspection.Rows)
+                {
+                    row.BackColor = Color.White;
+                    foreach (TableCell cell in row.Cells)
+                    {
+                        if (row.RowIndex % 2 == 0)
+                        {
+                            cell.BackColor = grd_inspection.AlternatingRowStyle.BackColor;
+                        }
+                        else
+                        {
+                            cell.BackColor = grd_inspection.RowStyle.BackColor;
+                        }
+                        cell.CssClass = "textmode";
+                    }
+                }
+
+                grd_inspection.RenderControl(hw);
+
+                //style to format numbers to string
+                string style = @"<style> .textmode { } </style>";
+                Response.Write(style);
+                Response.Output.Write(sw.ToString());
+                Response.Flush();
+                Response.End();
+            }
+        }
+        catch (Exception ex)
+        {
+            //ErrHandler.WriteError(" " + ex.Message.ToString());
+        }
+    }
+    public override void VerifyRenderingInServerForm(Control control)
+    {
+        /* Verifies that the control is rendered */
+    }
+
+}

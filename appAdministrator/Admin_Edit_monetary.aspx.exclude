@@ -1,0 +1,76 @@
+<%@ Page Title="" Language="C#" MasterPageFile="~/appMaster/Admin.master" AutoEventWireup="true" CodeFile="Admin_Edit_monetary.aspx.cs" Inherits="appAdministrator_Admin_Edit_monetary" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<script type ="text/javascript">
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<div align="left">
+        <asp:Label ID="lblMonetary" runat="server" Text="Edit Monetary Limit" CssClass="headerAll"></asp:Label>
+    </div>
+    <br />
+    <asp:HiddenField runat ="server" ID ="hid_type" />
+  <div align="left" style="padding-left: 10px; padding-right: 10px;">
+     <%--   <asp:GridView ID="gvmonetary" runat="server"
+            Width="100%" BorderWidth="0px" CellPadding="0" CellSpacing="1" 
+       AutoGenerateColumns ="false"  > 
+            <HeaderStyle CssClass="dynRowHeader" />
+            <RowStyle CssClass="dynRowEven" />
+            <AlternatingRowStyle CssClass="dynRowOdd" />
+            <PagerStyle VerticalAlign="Middle" HorizontalAlign="Center" CssClass="Pagging" />
+        </asp:GridView>    --%>
+        <asp:Panel runat ="server" ID ="pnl_content" Width ="100%">
+          <asp:GridView ID="gvmonetary"  
+         Width="100%" BorderWidth="0px" CellPadding="0" CellSpacing="5"
+      runat="server"  AutoGenerateColumns="False" 
+       AllowPaging="True" AllowSorting="True"   OnRowEditing ="gvmonetary_RowEditing"
+       OnRowUpdating ="gvmonetary_RowUpdating"
+       OnRowCancelingEdit ="gvmonetary_RowCancelingEdit">
+      <HeaderStyle CssClass="dynRowHeader" />
+        <RowStyle CssClass="dynRowEven" />
+         <AlternatingRowStyle CssClass="dynRowOdd" />
+         <PagerStyle VerticalAlign="Middle" HorizontalAlign="Center" CssClass="Pagging" />
+ </asp:GridView>
+  <br />
+            <table style="width: 100%;" border ="1"  runat ="server" id ="tbl1" >
+                <tr>
+                  <td>
+                      <b>  Monetary Limit </b></td>
+                 
+                    <td runat ="server" id ="td1">
+                       <asp:Label runat ="server" ID ="lblml1"  Font-Bold ="true"  Text ="Unit1"></asp:Label> <br />
+                        <asp:TextBox runat ="server" ID ="txtml1" onkeypress="return isNumber(event)" Width="80px"></asp:TextBox> </td>
+                    <td id ="td2" runat="server">
+                  <asp:Label runat ="server" ID ="lblml2" Font-Bold ="true" Text ="Unit2"></asp:Label>  <br />
+                        <asp:TextBox runat ="server" ID ="txtml2"  onkeypress="return isNumber(event)" Width="80px"></asp:TextBox>    </td>
+                    <td id ="td3" runat="server">
+                        <asp:Label runat ="server" ID ="lblml3" Font-Bold ="true" Text ="Unit3"></asp:Label>   <br />
+                        <asp:TextBox runat ="server" ID ="txtml3" onkeypress="return isNumber(event)" Width="80px"></asp:TextBox> </td>
+                     <td id ="td4" runat="server">
+                           <asp:Label runat ="server" ID ="lblml4"  Font-Bold ="true" Text ="Unit4"></asp:Label> <br />
+                           <asp:TextBox runat ="server" ID ="txtml4"  onkeypress="return isNumber(event)" Width="80px"></asp:TextBox>  </td>
+                    <td id ="td5" runat="server">
+                        <asp:Label runat ="server" ID ="lblml5" Font-Bold ="true" Text ="Unit5"></asp:Label>  <br />
+                        <asp:TextBox runat ="server" ID ="txtml5" onkeypress="return isNumber(event)" Width="80px"></asp:TextBox></td>
+                </tr>
+                
+             
+                
+            </table>
+ </asp:Panel>
+        <br /> <br /> <center>
+        <asp:Button runat="server" ID="btnSubmit" Text="Submit" CssClass="btnCls" onclick="btnSubmit_Click" 
+      />
+        </center>
+        <br /> <br />
+    </div>
+</asp:Content>
+

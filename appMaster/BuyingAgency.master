@@ -1,0 +1,63 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="BuyingAgency.master.cs" Inherits="appMaster_BuyingAgency" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register Src="../UserControl/Footer_Login.ascx" TagName="Footer_Login" TagPrefix="uc2" %>
+<%@ Register Src="../UserControl/HeaderLogin_BuyingAgency.ascx" TagName="Header_Login" TagPrefix="uc1" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Buying Agency Login</title>
+    <script language="javascript" type="text/javascript" src="../JScript/jquery-1.7.1.js"></script>
+
+    <link type="text/css" rel="Stylesheet" href="../CSS/StyleAdmin.css" />
+    <link type="text/css" rel="Stylesheet" href="../TreeMenu/CSS/menu.css" />
+
+    <script language="javascript" type="text/javascript" src="../JScript/JSAdmin.js"></script>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <center>
+        <form id="form1" runat="server">
+        <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+        </asp:ToolkitScriptManager>
+        <div>
+            <table width="900" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF;">
+                <tr>
+                    <td colspan="2">
+                        <uc1:Header_Login ID="Header_Login1" runat="server" />
+                    </td>
+                </tr>
+                <tr><%--style="height: 435px; vertical-align: top; width: 200px; background-color: #DDF1F7;"--%>
+                <td align="left" >
+                        <%--<uc3:TreeMenu_Admin ID="TreeMenu_Admin1" runat="server" />--%>
+                    </td>
+                    <td style="vertical-align: top; width: 700px;">
+                        <asp:UpdatePanel ID="UpdatePanel1_PlzWait" runat="server">
+                            <ContentTemplate>
+                                
+                                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                                </asp:ContentPlaceHolder>
+                           </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </td>
+                    </tr>
+
+               <%-- <tr>
+                    <td align="center" colspan="2" style="vertical-align: top; width: 100%; height: 435px;">
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </td>
+                </tr>--%>
+                <tr>
+                    <td colspan="2">
+                        <uc2:Footer_Login ID="Footer_Login1" runat="server" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </center>
+</body>
+</html>

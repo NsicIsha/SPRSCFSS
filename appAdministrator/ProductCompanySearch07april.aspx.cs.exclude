@@ -1,0 +1,191 @@
+﻿using System;
+using System.Data;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using NSICGP_VBClassLibrary;
+using System.Data.SqlClient;
+public partial class appAdministrator_ProductCompanySearch : System.Web.UI.Page
+{
+    int UserId, RoleId, DepartmentId;
+    string UserFullName = string.Empty;
+    string date = "";
+    clsMasterInspectionAgency objInspAgency;
+    clsCompany objcompany;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        try
+        {
+            // READ COOKIES
+            UserId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+            RoleId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+            DepartmentId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["DEPARTMENTID"]).ToString());
+            UserFullName = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERFULLNAME"]).ToString();
+            // END READ COOKIES
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+    }
+
+    protected void Btn_Search_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string SearchText = string.Empty;
+            SearchText = txt_serch_Criteria.Text.Trim().ToString();
+            if (SearchText.ToUpper().Trim() == "Enter text to search")
+            {
+                SearchText = "";
+            }
+
+            else
+            {
+                SearchText = txt_serch_Criteria.Text.Trim().ToString();
+            }
+            if (SearchText != "")
+            {
+                lbl_search_data_item.Text = ddlSearchCriteria.SelectedItem.Text +" " + ":" +""+""+ SearchText.ToString();
+            }
+            else
+            {
+                lbl_search_data_item.Text = "";
+            }
+            BindGridview(Convert.ToInt32(ddlSearchCriteria.SelectedValue), SearchText);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+    }
+
+    protected void grd_search_result_dg_RowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                LinkButton lnk_view = (LinkButton)e.Row.FindControl("lnkview");
+                HiddenField hdn_company_id = (HiddenField)e.Row.FindControl("HiddenFieldCompanyIdview");
+                HiddenField Hdn_Unit_id = (HiddenField)e.Row.FindControl("HiddenFieldUnitId");
+                HiddenField Hdn_Branch_name = (HiddenField)e.Row.FindControl("HiddenFieldBranch");
+                Label lbl_compnay_name = (Label)e.Row.FindControl("lbl_Company");
+               // Label lbl_storedetails = (Label)e.Row.FindControl("lbl_store");
+          //      lbl_storedetails.Text = System.Web.HttpUtility.HtmlDecode(lbl_storedetails.Text);
+                DecryptEncrypt objDecEnc = new DecryptEncrypt();
+                string EncryptCompanyID = objDecEnc.Encrypt(hdn_company_id.Value.ToString());
+                string EncryptCompany_Name = objDecEnc.Encrypt(lbl_compnay_name.Text.ToString());
+                string EncryptID = objDecEnc.Encrypt(Hdn_Unit_id.Value.ToString());
+                string EncryptBranchName = objDecEnc.Encrypt(Hdn_Branch_name.Value.ToString());
+                string imageid = "../appAdministrator/ReportViewPage.aspx?Company_ID=" + EncryptCompanyID + "&Com_Name=" + EncryptCompany_Name + "&id=" + EncryptID + "&BranchName=" + EncryptBranchName;
+                objcompany = new clsCompany();
+                Label lbl_validity = (Label)e.Row.FindControl("lbl_date_validity");
+                DataSet ds_chekvality = new DataSet();
+                ds_chekvality = objcompany.fetch_company_valitiy(Convert.ToInt32(hdn_company_id.Value));
+                if (ds_chekvality.Tables[0].Rows.Count > 0)
+                {
+                    lbl_validity.Text = ds_chekvality.Tables[0].Rows[0]["validity"].ToString();
+                }
+                else
+                {
+                    ds_chekvality.Dispose();
+                }
+              
+              
+                lnk_view.Attributes.Add("onclick", "return FunOpenPopup('" + imageid + "');");
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message+"  "+ex.StackTrace);
+        }
+    }
+
+    protected void grd_search_result_dg_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+
+        try
+        {
+            grd_search_result_dg.PageIndex = e.NewPageIndex;
+            string SearchText = string.Empty;
+            SearchText = txt_serch_Criteria.Text.Trim().ToString();
+            if (SearchText.ToUpper().Trim() == "Enter text to search")
+            {
+                SearchText = "";
+            }
+            else
+            {
+                SearchText = txt_serch_Criteria.Text.Trim().ToString();
+            }
+            BindGridview(Convert.ToInt32(ddlSearchCriteria.SelectedValue), SearchText);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+    }
+
+    protected void BindGridview(int ddlcriteria, string searchtext)
+    {
+        try
+        {
+             int k=0;
+            objInspAgency = new clsMasterInspectionAgency();
+            DataTable Mydt = new DataTable();
+           // System.Data.SqlClient.SqlDataReader Dr = objInspAgency.ProductCompany_Search(ddlcriteria, searchtext, RoleId, UserId);
+          Mydt = objInspAgency.ProductCompany_Search(ddlcriteria, searchtext, RoleId, UserId);
+           // if(Dr.HasRows)
+            //{
+          if(Mydt.Rows.Count>0)
+            {
+                
+                grd_search_result_dg.DataSource = Mydt;
+                grd_search_result_dg.DataBind();
+             lbl_count_grid.Text = "Total" +" Companies "+ ":" + "     "+" " + Mydt.Rows.Count;
+                //k = k + 1;
+            }
+                //lbl_count_grid.Text = "Total" +" Companies "+ ":" + "     "+" " +k.ToString();
+                //            Dr.Close();
+          
+            else
+            {
+                 grd_search_result_dg.Dispose();
+                grd_search_result_dg.DataBind();
+                Mydt.Dispose();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+    }
+/*
+    public string bindcheckvalidity(int companyid)
+    {
+        try
+        {
+            
+            objcompany = new clsCompany();
+            DataSet ds_chekvality = new DataSet();
+            ds_chekvality = objcompany.fetch_company_valitiy(companyid);
+            if (ds_chekvality.Tables[0].Rows.Count > 0)
+            {
+                date = ds_chekvality.Tables[0].Rows[0]["validity"].ToString();
+            }
+            else
+            {
+                ds_chekvality.Dispose();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError("" + ex.Message.ToString() + "" + ex.StackTrace);
+        }
+
+        return date;
+    }*/
+
+}

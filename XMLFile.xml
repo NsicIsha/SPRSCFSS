@@ -1,0 +1,32 @@
+﻿<GetXMLResponse>
+ 
+<GetXMLResult><MSMEDataBank xmlns="">
+<UAN>AP03A0001023</UAN>
+  <EnterpriseName>M/s Naga Lakshmi Coir Rope Industry</EnterpriseName>
+  <AadhaarNo>311454039657</AadhaarNo>
+  <UnitCategory>Micro</UnitCategory>
+  <OrganisationType>Proprietary</OrganisationType>
+  <NatureOfOperation>Perennial</NatureOfOperation>
+  <State>ANDHRA PRADESH</State>
+  <District>EAST GODAVARI</District>
+  <Pincode>533247</Pincode>
+  <Mobile>9948263250</Mobile>
+  <Email>marlapudibaby @gmail.com</Email>
+  <AuthorisedPersonName>MARLAPUDI BABY</AuthorisedPersonName>
+  <CommunicationAddress>R S 121 8A, Pasarlapudi</CommunicationAddress>
+  <SocialCaterogy>SC</SocialCaterogy>
+  <CommencementDate>2015-11-16</CommencementDate>
+  <MajorActivity>Manufacturing</MajorActivity>
+  <PwDEntrepreneur>False</PwDEntrepreneur>
+  <WomanEntrepreneur>False</WomanEntrepreneur>
+  <Minority>False</Minority>
+  <Ex-Serviceman>False</Ex-Serviceman>
+  <ProductDesc>13943-Manufacture of cordage or rope made of coir</ProductDesc>
+  <Factories>
+  <Factory>
+    <Address>R S 121 8A Pasarlapudi</Address>
+    <State>ANDHRA PRADESH</State>
+    <District>EAST GODAVARI</District>
+    <Pincode>533247</Pincode>
+  </Factory>
+</Factories></MSMEDataBank></GetXMLResult></GetXMLResponse>

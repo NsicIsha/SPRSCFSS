@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MISDataset" targetNamespace="http://tempuri.org/MISDataset.xsd" xmlns:mstns="http://tempuri.org/MISDataset.xsd" xmlns="http://tempuri.org/MISDataset.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="MISDataset" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="MISDataset" msprop:Generator_DataSetName="MISDataset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Zone" msprop:Generator_ColumnPropNameInTable="ZoneColumn" msprop:Generator_ColumnPropNameInRow="Zone" msprop:Generator_UserColumnName="Zone" msprop:Generator_ColumnVarNameInTable="columnZone" type="xs:string" minOccurs="0" />
+              <xs:element name="fGPtbl_MB_Name" msprop:Generator_ColumnPropNameInTable="fGPtbl_MB_NameColumn" msprop:Generator_ColumnPropNameInRow="fGPtbl_MB_Name" msprop:Generator_UserColumnName="fGPtbl_MB_Name" msprop:Generator_ColumnVarNameInTable="columnfGPtbl_MB_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="fresh" msprop:Generator_ColumnPropNameInTable="freshColumn" msprop:Generator_ColumnPropNameInRow="fresh" msprop:Generator_UserColumnName="fresh" msprop:Generator_ColumnVarNameInTable="columnfresh" type="xs:string" minOccurs="0" />
+              <xs:element name="freshRevenue" msprop:Generator_ColumnPropNameInTable="freshRevenueColumn" msprop:Generator_ColumnPropNameInRow="freshRevenue" msprop:Generator_UserColumnName="freshRevenue" msprop:Generator_ColumnVarNameInTable="columnfreshRevenue" type="xs:string" minOccurs="0" />
+              <xs:element name="renewal" msprop:Generator_ColumnPropNameInTable="renewalColumn" msprop:Generator_ColumnPropNameInRow="renewal" msprop:Generator_UserColumnName="renewal" msprop:Generator_ColumnVarNameInTable="columnrenewal" type="xs:string" minOccurs="0" />
+              <xs:element name="renewalRevenue" msprop:Generator_ColumnPropNameInTable="renewalRevenueColumn" msprop:Generator_ColumnPropNameInRow="renewalRevenue" msprop:Generator_UserColumnName="renewalRevenue" msprop:Generator_ColumnVarNameInTable="columnrenewalRevenue" type="xs:string" minOccurs="0" />
+              <xs:element name="Amend" msprop:Generator_ColumnPropNameInTable="AmendColumn" msprop:Generator_ColumnPropNameInRow="Amend" msprop:Generator_UserColumnName="Amend" msprop:Generator_ColumnVarNameInTable="columnAmend" type="xs:string" minOccurs="0" />
+              <xs:element name="AmendRevenue" msprop:Generator_ColumnPropNameInTable="AmendRevenueColumn" msprop:Generator_ColumnPropNameInRow="AmendRevenue" msprop:Generator_UserColumnName="AmendRevenue" msprop:Generator_ColumnVarNameInTable="columnAmendRevenue" type="xs:string" minOccurs="0" />
+              <xs:element name="Total_Revenue_CurrentFY" msprop:Generator_ColumnPropNameInRow="Total_Revenue_CurrentFY" msprop:Generator_ColumnPropNameInTable="Total_Revenue_CurrentFYColumn" msprop:Generator_ColumnVarNameInTable="columnTotal_Revenue_CurrentFY" msprop:Generator_UserColumnName="Total_Revenue_CurrentFY" type="xs:string" minOccurs="0" />
+              <xs:element name="Total_Revenue_FY2425" msprop:Generator_ColumnPropNameInRow="Total_Revenue_FY2425" msprop:Generator_ColumnPropNameInTable="Total_Revenue_FY2425Column" msprop:Generator_ColumnVarNameInTable="columnTotal_Revenue_FY2425" msprop:Generator_UserColumnName="Total_Revenue_FY2425" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

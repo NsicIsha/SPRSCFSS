@@ -1,0 +1,234 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using NSICGP_VBClassLibrary;
+
+
+public partial class appAdministrator_ICAmendment : System.Web.UI.Page
+{
+    clsAmendment objAmendment;
+    clsCompany objCompany;
+    int UserId, RoleId, DepartmentId;
+    int successId;
+    string UserFullName;
+    string emailid;
+    public int icamdAction = 0;
+    string filepath;
+    int SuccessInspectionComplete, amendmentid;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        //Read Cookies+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        try
+        {
+            UserId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERID"]).ToString());
+            RoleId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["ROLEID"]).ToString());
+            DepartmentId = Convert.ToInt32(Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["DEPARTMENTID"]).ToString());
+            UserFullName = Server.HtmlEncode(Request.Cookies["OSUYULUKR8"]["USERFULLNAME"]).ToString();
+
+            filepath = Server.MapPath(".");
+            //filepath = Request.FilePath[1].ToString();
+
+            if (RoleId == 8)
+            {
+                
+                if (Page.IsPostBack != true)
+                {
+                    //ACTIVATE THE VIEW AND FILLING GRIDVIEW
+                    GridViewDataBind();
+                    objCompany = new clsCompany();
+                    DataSet Myds = new DataSet();
+                    Myds = objCompany.Fetch_MasterDoc();
+
+                    ChkListDoc.DataSource = Myds;
+                    ChkListDoc.DataTextField = Myds.Tables[0].Columns[1].ToString();
+                    ChkListDoc.DataValueField = (Myds.Tables[0].Columns[0].ToString());
+                    ChkListDoc.DataBind();
+
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            UserId = 0;
+            RoleId = 0;
+            DepartmentId = 0;
+            UserFullName = "";
+        }
+        //End Read Cookies+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    }
+
+
+    //BINDING GRIDVIEW
+    public void GridViewDataBind()
+    {
+        try
+        {
+            objAmendment = new clsAmendment();
+
+            gvICAmendment.DataSource = objAmendment.CompanyAmendment_ICompleteAmendment_Dataset(UserId);
+            gvICAmendment.DataBind();
+
+            if (gvICAmendment.Rows.Count == 0)
+            {
+                lblMessage.Text = "No company found!";
+            }
+            else
+                lblMessage.Text = "";
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        try
+        {
+            if (Session["icamdAction"] != null)
+            {
+                LabelAction.Text = Session["icamdAction"].ToString();
+                icamdAction = 1;
+                Session["icamdAction"] = null;
+            }
+            else
+            {
+                LabelAction.Text = "";
+                icamdAction = 0;
+                Session["icamdAction"] = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            Session["icamdAction"] = null;
+        }
+    }
+
+
+    protected void gvICAmendment_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                HyperLink hlname = (HyperLink)e.Row.FindControl("HLName");
+                HiddenField hfpath = (HiddenField)e.Row.FindControl("HiddenFieldpath");
+                HiddenField hfname = (HiddenField)e.Row.FindControl("HiddenFieldname");
+                HiddenField hfcompany = (HiddenField)e.Row.FindControl("HiddenField1");
+
+                HiddenFieldCompany.Value = hfcompany.Value;
+
+                //hlname.NavigateUrl = filepath + "/." + hfpath.Value.ToString() + hfname.Value.ToString();
+                hlname.NavigateUrl = hfpath.Value.ToString() + hfname.Value.ToString();
+                //hlname.NavigateUrl = "~/Document/Upload/Registration/Mist Valley Marchants-HP.doc";
+
+
+                HiddenField hfCompanyId = (HiddenField)e.Row.FindControl("HiddenfieldCompanyId");
+                hiddenfieldCompanyId.Value = hfCompanyId.Value;
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+    protected void gvICAmendment_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (e.CommandName == "reject")
+            {
+                Response.Redirect("ICRegistration_Reject.aspx?cid=" + e.CommandArgument);
+            }
+            else if (e.CommandName == "accept")
+            {
+                //SHOWING MODALPOPUPEXTENDER
+                hdncunitid.Value = e.CommandArgument.ToString();
+
+                ModalPopupExtender1.Show();
+            }
+            GridViewDataBind();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+    public void sendmailbranchaccount()
+    {
+        try
+        {
+            string ToMail, FromMail, ccMail, bccMail, subject, bodyMail;
+            clsMasterUser objUser = new clsMasterUser();
+            clsCompany objCompany = new clsCompany();
+            clsMasterMailer objMailer = new clsMasterMailer();
+
+            DataSet Myds = new DataSet();
+            //TO BRANCH ACCOUNT MAILER
+            Myds = objMailer.MasterMailer_Fetch_DataSet(4);
+            FromMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_From"].ToString();
+            ccMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Cc"].ToString();
+            bccMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Bcc"].ToString();
+            subject = Myds.Tables[0].Rows[0]["fGPtbl_MM_Subject"].ToString();
+            bodyMail = Myds.Tables[0].Rows[0]["fGPtbl_MM_Body"].ToString() + "This Unit has been accepted COMPANY NAME IS: " + HiddenFieldCompany.Value.ToString() + ".";
+
+            //TO FETCH BRANCH ACCOUNT MAILER
+            Myds = objUser.MasterUser_Fetch_DataSet(UserId);
+            ToMail = Myds.Tables[0].Rows[0]["fGPtbl_MU_Email"].ToString();
+
+            SendMail.Mail_WithOUTAttachment(ToMail, 0, 0, FromMail, 0, 0, ccMail, bccMail, subject, bodyMail, "", 0, "", "", "");
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+    }
+
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        objCompany = new clsCompany();
+        objAmendment = new clsAmendment();
+        amendmentid = objAmendment.CompanyAmendment_WaitingCompany_FetchAmendmentId(Convert.ToInt32(hdncunitid.Value));
+        //ListItem li = new ListItem();
+        // int chekboxcheked;
+        foreach (ListItem item in ChkListDoc.Items)
+        {
+            if (item.Selected)
+            {
+
+                int chkid = Convert.ToInt32(item.Value);
+                string ChekboxName = item.Text;
+                SuccessInspectionComplete = objCompany.Company_WaitingCompany_Insert_DocumentSubmitted(chkid, Convert.ToString(ChekboxName.ToString()),Convert.ToInt32(hiddenfieldCompanyId.Value), 1, UserId, UserId);
+
+            }
+        }
+
+        successId = objAmendment.CompanyAmendment_ICompleteAmendment_Accept(amendmentid, Convert.ToInt32(hdncunitid.Value), UserId);
+        
+        if (successId == 2)
+        {
+            sendmailbranchaccount();
+            Session["icregAction"] = "Status changed successfully!";
+        }
+        else
+        {
+            Session["icregAction"] = "Server is busy!";
+        }
+        GridViewDataBind();
+
+
+    }
+}

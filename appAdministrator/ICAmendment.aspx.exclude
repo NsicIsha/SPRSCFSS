@@ -1,0 +1,167 @@
+﻿<%@ Page Title="Inspection Complete for Amendment" Language="C#" MasterPageFile="~/appMaster/Admin.master" AutoEventWireup="true" CodeFile="ICAmendment.aspx.cs" Inherits="appAdministrator_ICAmendment" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+<div align="left">
+    <div align="left">
+        <asp:Label ID="lblRegistration" runat="server" Text="Inspection Complete Amendment" CssClass="headerAll"></asp:Label>
+    </div>
+    <div align="left" style="height:10px;">
+        
+    </div>
+    
+    <div align="center">
+        <%if(icamdAction==1){ %>
+        <div style="height:30px;">
+            <div id="divAction" runat="server" class="Action_Div" align="center" style="background-color:#ECF8FB; height:30px;">
+                <div id="Action_DivInner_1" align="center">
+                    <asp:Label ID="LabelAction" runat="server" CssClass="MasterAction"></asp:Label>
+                </div>
+                <div id="Action_DivInner_2" align="center">
+                    <img id="imgAction" onclick="FunZoneActionClose()" src="../Images/Admin/delete.png" border="0" width="16px" height="15px" alt="CLOSE" style="cursor:pointer;" />
+                </div>
+            </div>
+        </div>
+        <cc1:RoundedCornersExtender
+            ID="RoundedCornersExtender1" runat="server"
+            TargetControlID="divAction"
+            BorderColor="#22518F"
+            Radius="10"
+            Corners="All">
+         </cc1:RoundedCornersExtender>
+         <%} %>
+    </div>
+    
+        <div align="left" style="padding-left: 10px; padding-right: 10px;">
+            <asp:HiddenField ID="HiddenFieldCompany" runat="server" />
+            <asp:HiddenField ID="hiddenfieldCompanyId" runat="server" />
+            <asp:GridView ID="gvICAmendment" runat="server" AutoGenerateColumns="false"
+                Width="100%" BorderWidth="0" CellPadding="0" CellSpacing="1" 
+                    onrowcommand="gvICAmendment_RowCommand" 
+                    onrowdatabound="gvICAmendment_RowDataBound" >
+                <HeaderStyle CssClass="dynRowHeader" />
+                <RowStyle CssClass="dynRowEven" />
+                <AlternatingRowStyle CssClass="dynRowOdd" />
+                <Columns>
+                <asp:TemplateField HeaderText="S.No.">
+                <ItemTemplate><%#Container.DataItemIndex+1 %>
+
+                </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:BoundField DataField="fGPtbl_Company_GPReferenceNo" HeaderText="GP Referenceno." />
+                <asp:BoundField DataField="fGPtbl_Company_Name" HeaderText="Company Name" />
+                <asp:BoundField DataField="fGPtbl_Company_PAN" HeaderText="PAN No."/>
+                <asp:BoundField DataField="fGPtbl_IS_DateStatus6" HeaderText="Inspection Report Date" />
+                <asp:BoundField DataField="fGPtbl_MIA_Name" HeaderText="Inspection agency name" />
+                <asp:TemplateField HeaderText="Inspection Report">
+                <ItemTemplate>
+                <asp:HyperLink ID="HLName" runat="server" Text="Report" ToolTip="View Inspection Report" Target="_blank"></asp:HyperLink>
+                <asp:HiddenField ID="HiddenFieldpath" runat="server" Value='<%#Eval("fGPtbl_IS_ReportPath") %>' />
+                <asp:HiddenField ID="HiddenFieldname" runat="server" Value='<%#Eval("fGPtbl_IS_ReportName") %>' />
+                </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Accept" ItemStyle-HorizontalAlign="Center">
+                <ItemTemplate>
+                <asp:Button ID="btnAccept" runat="server" CssClass="btnCls" CausesValidation="false"
+                Text="Accept" Width="60px" CommandName="accept" CommandArgument='<%#Eval("fGPtbl_IS_UnitId") %>' />
+                <asp:HiddenField ID="HiddenField1" runat="server" Value='<%#Eval("fGPtbl_Company_Name") %>' />
+                <asp:HiddenField ID="HiddenfieldCompanyId" runat="server" Value='<%#Eval("fGPtbl_CUnit_CompanyId") %>' />
+                </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Reject" ItemStyle-HorizontalAlign="Center">
+                <ItemTemplate>
+                <asp:Button ID="btnReject" runat="server" CssClass="btnCls" CausesValidation="false"
+                Text="Reject" Width="60px" CommandName="reject" CommandArgument='<%#Eval("fGPtbl_IS_UnitId") %>' />
+                </ItemTemplate>
+                </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+
+        </div>
+
+    <div align="center" style="padding-top:10px;">
+            <asp:Label ID="lblMessage" runat="server"></asp:Label>
+     </div>
+     
+      <asp:Panel ID="pnlOut" runat="server" Style="display: block;" CssClass="outerPopup">
+        <asp:Panel ID="pnlInner" runat="server" Width="400px" CssClass="innerPopup">
+            <center>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr valign="top" align="left" style="width: 100%;">
+                        <td valign="top" align="left" style="width: 100%;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr align="left" valign="top">
+                                    <td colspan="2" align="left" valign="top" style="width: 100%; padding-bottom: 10px; padding-right:5px;">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr align="left" valign="top">
+                                                <td align="center" valign="top" class="updateInnerHeader">
+                                                    <asp:HiddenField ID="hdncunitid" runat="server" />
+                                                    &nbsp;&nbsp;</td>
+                                                <td align="right" valign="top" style="width: 20px;">
+                                                    <asp:ImageButton AlternateText="CLOSE" ToolTip="CLOSE" ID="btnBack" runat="server"
+                                                        ImageUrl="~/Images/Admin/closeblue.png" Width="16px" Height="16px" BorderWidth="0" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr align="left" valign="top" style="width: 100%;">
+                                    <td colspan="2" align="right" valign="top">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td colspan="2" class="updateInnerColumn" > List of documents</td>
+                                </tr>
+                                <tr valign="top" align="center">
+                                <td></td>
+                                    <td align="center" colspan="2" valign="top" style="width:100px;" class="updateInnerColumn">
+                                       
+                                        <asp:CheckBoxList ID="ChkListDoc" runat="server">
+                                        </asp:CheckBoxList>
+                                    </td>
+                                   
+                                </tr>
+                                
+                                <tr align="left" valign="top">
+                                    <td align="left" valign="top" colspan="2" style="height: 10px;">
+                                    </td>
+                                </tr>
+                                <tr valign="top" align="left">
+                                    <td valign="top" align="left"  class="updateInnerColumn">
+                                    </td>
+                                    <td valign="top" align="left"  class="updateInnerColumn">
+                                        <asp:Button ID="btnSubmit" runat="server" Text="Submit" TabIndex="4" ValidationGroup="1"
+                                            CssClass="btnCls" OnClick="btnSubmit_Click" />
+                                        &nbsp;&nbsp;
+                                        <input id="btnReset" type="button" value="Reset" tabindex="5" class="btnCls" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+               
+            </center>
+        </asp:Panel>
+    </asp:Panel>
+    <cc1:ModalPopupExtender ID="ModalPopupExtender1" runat="server" PopupControlID="pnlOut"
+        TargetControlID="LinkButton1" CancelControlID="btnBack" BackgroundCssClass="modalBackground">
+    </cc1:ModalPopupExtender>
+    <cc1:RoundedCornersExtender ID="RoundedCornersExtender2" TargetControlID="pnlInner"
+        runat="server" BorderColor="#22518F" Radius="10" Corners="All">
+    </cc1:RoundedCornersExtender>
+    <asp:LinkButton ID="LinkButton1" runat="server" Style="display: none;"></asp:LinkButton>
+    
+    
+    
+</div>
+
+</asp:Content>
+

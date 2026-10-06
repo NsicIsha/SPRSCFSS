@@ -1,0 +1,147 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Data;
+using System.Data.SqlClient;
+using NSICGP_VBClassLibrary;
+
+
+/// <summary>
+/// Summary description for clsTrans_InspectionagecnyBranch
+/// </summary>
+public class clsTrans_InspectionagecnyBranch
+{
+
+    SqlCommand MySqlComm;
+    SqlDataAdapter MyAdp;
+    SqlDataReader MyDr;
+    DataSet MyDs;
+    DataTable MyDt;
+    FormInputReplace objInputReplace;
+
+    int ErrorId = 0;
+	public clsTrans_InspectionagecnyBranch()
+	{
+		//
+		// TODO: Add constructor logic here
+		//
+	}
+
+    //TO FETCH ALL DATA
+    public DataSet Trans_InspectionagecnyBranch_Fetch_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_TransInspectionagencyBranch_All", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    // TO FETCH SELECTIVE DATA FROM TABLE USING ID
+    public DataSet Trans_InspectionagecnyBranch_Fetch_DataSet(int TransInspAgenBranchId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_TransInspectionagencyBranch_ById", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_TIAB_Id", SqlDbType.Int).Value = TransInspAgenBranchId;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO DELETE USING ID
+    public int Trans_InspectionagecnyBranch_DeleteById(int TransInspAgenBranchId, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Delete_TransInspectionagencyBranch_ById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Id", SqlDbType.Int).Value = TransInspAgenBranchId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    //TO INSERT OR UPDATE TABLE
+    public int Trans_InspectionagecnyBranch_InsertUpdate(int TransInspAgenBranchId, int fGPtbl_TIAB_AgencyId, int fGPtbl_TIAB_ZoneId, int fGPtbl_TIAB_BranchId, double fGPtbl_TIAB_FeeRegistration, double fGPtbl_TIAB_FeeRenewal, double fGPtbl_TIAB_FeeAmendment, double fGPtbl_TIAB_FeeCC, double fGPtbl_TIAB_FeeCV, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Update_TransInspectionagencyBranch", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Id", SqlDbType.Int).Value = TransInspAgenBranchId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_AgencyId", SqlDbType.Int).Value = fGPtbl_TIAB_AgencyId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_ZoneId", SqlDbType.Int).Value = fGPtbl_TIAB_ZoneId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_BranchId", SqlDbType.Int).Value = fGPtbl_TIAB_BranchId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_FeeRegistration", SqlDbType.Float).Value = fGPtbl_TIAB_FeeRegistration;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_FeeRenewal", SqlDbType.Float).Value = fGPtbl_TIAB_FeeRenewal;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_FeeAmendment", SqlDbType.Float).Value = fGPtbl_TIAB_FeeAmendment;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_FeeCC", SqlDbType.Float).Value = fGPtbl_TIAB_FeeCC;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_FeeCV", SqlDbType.Float).Value = fGPtbl_TIAB_FeeCV;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+
+}

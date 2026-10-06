@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Insert Hyperlink</title>
+    <link type="text/css" rel="stylesheet" href="../EditorCSS/StyleSheet_1.css" />
+    <script language="javascript" type="text/javascript" src="../EditorScripts/GlobalVar_1.js"></script>
+    <script language="javascript" type="text/javascript" src="../EditorScripts/HtmlInsert_1.js"></script>
+
+</head>
+<body bgcolor="#EEEEEE">
+    <table border="0" cellpadding="0" cellspacing="0" style="padding: 10px;" class="bodytext_1">
+        <tr>
+            <td>
+                <span style="font-family: arial, verdana, helvetica; font-size: 11px; font-weight: bold;">
+                    Insert Hyperlink:</span>
+                <table width="330" border="0" cellpadding="1" cellspacing="0" style="background-color: #F7F7F7;
+                    border: 2px solid #FFFFFF; padding: 5px;">
+                    <tr>
+                        <td style="padding-bottom: 2px; padding-top: 0px; font-family: arial, verdana, helvetica;
+                            font-size: 11px;">
+                            URL:</td>
+                        <td style="padding-bottom: 2px; padding-top: 0px;" colspan="3">
+                            <input type="text" name="linkUrl" disabled="disabled" id="txtTblLink_Http" value="http://" style="font-size:10px; font-weight:bold;
+                                width:13%;" class="bodytext_1">&nbsp;
+                            <input type="text" name="linkUrl" id="txtTblLink_Url" value="" style="font-size: 10px;
+                                width: 80%;" class="bodytext_1">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom: 2px; width: 50px; font-family: arial, verdana, helvetica;
+                            font-size: 11px;">
+                            Target:</td>
+                        <td style="padding-bottom: 2px;" colspan="3">
+                            <select name="linkTargetChooser" id="txtTblLink_Target" style="font-size: 10px; width: 30%;"
+                                class="bodytext_1">
+                                <option value="" selected="selected">no target</option>
+                                <option value="_blank">_blank</option>
+                                <option value="_self">_self</option>
+                                <option value="_parent">_parent</option>
+                                <option value="_top">_top</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td style="padding-bottom: 2px; width: 50px; font-family: arial, verdana, helvetica;
+                            font-size: 11px;">
+                            Style:</td>
+                        <td style="padding-bottom: 2px;" colspan="3">
+                            <input type="text" name="linkStyle" id="linkStyle" value="" style="font-size: 10px;
+                                width: 100%;" class="bodytext_1">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom: 2px; width: 50px; font-family: arial, verdana, helvetica;
+                            font-size: 11px;"><a href="" target="_blank" class=""></a>
+                            Class:</td>
+                        <td style="padding-bottom: 2px;">
+                            <input type="text" name="linkClass" id="txtTblLink_Class" value="" style="font-size: 10px;
+                                width: 80%;" class="bodytext_1">
+                        </td>
+                        <td style="padding-bottom: 2px; width: 30px; font-family: arial, verdana, helvetica;
+                            font-size: 11px;">
+                            Name:</td>
+                        <td style="padding-bottom: 2px; width: 120px;">
+                            <input type="text" name="linkName" id="txtTblLink_Name" value="" style="font-size: 10px;
+                                width: 93%;" class="bodytext_1">
+                        </td>
+                    </tr>
+                </table>
+                <div align="right" style="padding-top: 5px;">
+                    <input type="submit" value="  Submit  " onclick="funinsertHyperLink_1();" style="font-size: 12px;"
+                        class="bodytext_1" />&nbsp;<input type="submit" value="  Cancel  " onclick="window.close();"
+                            style="font-size: 12px;" class="bodytext_1" /></div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

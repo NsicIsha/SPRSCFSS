@@ -1,0 +1,104 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/appMaster/BuyingAgencyNew.master" AutoEventWireup="true" CodeFile="BuyingAgencyChangePasswordNew.aspx.cs" Inherits="appBuyingAgency_BuyingAgencyChangePasswordNew" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+     <!-- Bootstrap core CSS -->
+    <link href="../CSS/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Animation CSS -->
+    <link href="../CSS/animate.css" rel="stylesheet">
+    <link href="../font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../CSS/Style_Verify.css" rel="stylesheet">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td colspan="3" align="left" class="headerAll">
+                    Change Password
+            </td>
+        </tr>
+        <tr>
+            <td align="left" height="400" valign="top">
+                <table width="370" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td colspan="3" align="center" class="header">
+                            &nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="10" colspan="3" align="right" style="padding-left:10px;" class="errMessage">
+                            <asp:Label ID="lblMsg" runat="server"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-right: 10px; padding-top: 10px;" class="leftHeading">
+                            *Old Password:
+                        </td>
+                        <td colspan="2" align="left" style="padding-top: 10px;">
+                            <asp:TextBox ID="txtOldPassword" runat="server" TextMode="Password" CssClass="txt_bx"
+                                MaxLength="100" TabIndex="1"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="RFVPassword" runat="server" Display="None" ErrorMessage="Old Password is required !"
+                                ControlToValidate="txtOldPassword" SetFocusOnError="true" ValidationGroup="1"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-right: 10px; padding-top: 10px;" class="leftHeading">
+                            *New Password:
+                        </td>
+                        <td width="202" colspan="2" style="padding-top: 10px;">
+                            <asp:TextBox ID="txtNewPassword" runat="server" TextMode="Password" CssClass="txt_bx"
+                                MaxLength="100" TabIndex="2"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="RFVnewpassword" runat="server" Display="None" SetFocusOnError="true"
+                                ErrorMessage="New Password is required !" ControlToValidate="txtNewPassword" ValidationGroup="1"></asp:RequiredFieldValidator>
+                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtNewPassword"
+                                Display="None" ErrorMessage="Password lenght must be between 4 to 20" ValidationExpression="^.{4,20}$" ValidationGroup="1"></asp:RegularExpressionValidator>
+                            <cc1:ValidatorCalloutExtender ID="ValidatorCalloutExtender2" runat="server" TargetControlID="RegularExpressionValidator1">
+                            </cc1:ValidatorCalloutExtender>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-right: 10px; padding-top: 10px;" class="leftHeading">
+                            *Confirm New Password:
+                        </td>
+                        <td width="202" colspan="2" style="padding-top: 10px; height: 15px">
+                            <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" CssClass="txt_bx"
+                                MaxLength="100" TabIndex="3"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="RFVConfirmPassword" runat="server" Display="None"
+                                ErrorMessage="Confirm Password is required !" ControlToValidate="txtConfirmPassword"
+                                SetFocusOnError="true" ValidationGroup="1"></asp:RequiredFieldValidator>
+                            <asp:CompareValidator ID="CVConfirmPassword" runat="server" SetFocusOnError="true"
+                                ErrorMessage="Password do not match !" Display="None" ControlToCompare="txtNewPassword"
+                                ControlToValidate="txtConfirmPassword" ValidationGroup="1"></asp:CompareValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="10">
+                        </td>
+                        <td height="10"  style="padding-top: 10px; padding-left: 20px;">
+                            <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="btnCls" 
+                                ValidationGroup="1" TabIndex="4" onclick="btnSubmit_Click" />
+                        </td>
+                         <td height="10" style="padding-top:10px; padding-left:20px;">
+                           <asp:Button ID="btnback" runat="server" Text="Back" CssClass="btnCls" 
+                                 TabIndex="5" onclick="btnback_Click" />
+                         
+                         </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    
+    <cc1:ValidatorCalloutExtender ID="VCExtenderOldpassword" runat="server" TargetControlID="RFVPassword" >
+    </cc1:ValidatorCalloutExtender>
+    <cc1:ValidatorCalloutExtender ID="VCExtenderRfnewpassword" runat="server" TargetControlID="RFVnewpassword">
+    </cc1:ValidatorCalloutExtender>
+    <cc1:ValidatorCalloutExtender ID="VCExtenderRfconfpass" runat="server" TargetControlID="RFVConfirmPassword">
+    </cc1:ValidatorCalloutExtender>
+    <cc1:ValidatorCalloutExtender ID="VCExtenderConfirmcompare" runat="server" TargetControlID="CVConfirmPassword">
+    </cc1:ValidatorCalloutExtender>
+</asp:Content>

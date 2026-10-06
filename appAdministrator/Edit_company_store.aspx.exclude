@@ -1,0 +1,201 @@
+﻿
+<%@ Page Title="" Language="C#" MasterPageFile="~/appMaster/Admin.master" AutoEventWireup="true" CodeFile="Edit_company_store.aspx.cs" Inherits="appAdministrator_Edit_company_store" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<style>
+  .content
+  {
+    padding-left:10px;
+    padding-right:10px;	
+  }
+</style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<div align="left">
+        <asp:Label ID="lblstore" runat="server" Text="Edit Store Details" CssClass="headerAll"></asp:Label>
+    </div>
+    <br />
+       
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+    <ContentTemplate>
+    <asp:Panel runat ="server" ID ="pnl_store" ScrollBars ="Auto"  Width ="800px" class ="content">
+       <asp:HiddenField runat ="server" ID ="hndamendmentid" />
+        <asp:GridView ID="gv_storedetails" runat="server" AutoGenerateColumns="False"
+            Width="100%" BorderWidth="0px" CellPadding="3" CellSpacing="3"  DataKeyNames = "fGPtbl_CUnit_Store_Id"
+                AllowPaging="false" 
+                AllowSorting="True" ShowFooter ="True" 
+               onrowcommand="gv_storedetails_RowCommand" 
+               onrowdatabound="gv_storedetails_RowDataBound" 
+               onrowediting="gv_storedetails_RowEditing" 
+            onrowupdating="gv_storedetails_RowUpdating" 
+            onrowdeleting="gv_storedetails_RowDeleting"> 
+            <HeaderStyle CssClass="dynRowHeader" />
+            <RowStyle CssClass="dynRowEven" />
+            <AlternatingRowStyle CssClass="dynRowOdd" />
+         
+         <%--   <PagerStyle VerticalAlign="Middle" HorizontalAlign="Center" CssClass="Pagging" />--%>
+            <Columns>
+               
+                <asp:TemplateField HeaderText="Location">
+                    <EditItemTemplate>
+                        <asp:DropDownList runat ="server" ID ="ddl_editlocation" Width ="100%"></asp:DropDownList>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                    <asp:Label runat ="server" ID = "lbl_location" Text = '<%# Bind("fGPtbl_CUnit_1B_Factory_Address") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate  >
+                      <asp:DropDownList runat ="server" DataValueField ="fGPtbl_CUnit_Id" DataTextField ="fAddress" ID ="ddl_footlocation" Width ="100%"></asp:DropDownList>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText=" Description of Stores/ Products">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_product" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_DescriptionStoresProducts") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_product" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_DescriptionStoresProducts") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                     <asp:TextBox runat ="server" ID = "txt_footproduct"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Ref. of BIS Specification">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_refbisspecification" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_RefOfBISSpecification") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_refbisspecification" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_RefOfBISSpecification") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                      <asp:TextBox runat ="server" ID = "txt_footrefbisspecification"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Model/ Brand">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_model" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_ModelBrand") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_model" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_ModelBrand") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                      <asp:TextBox runat ="server" ID = "txt_footmodel"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText=" Limiting Size Capacity/ Rating">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_limitingsize" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_LimitingSizeCapacityRating") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_limitingsize" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_LimitingSizeCapacityRating") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                     <asp:TextBox runat ="server" ID = "txt_footlimitingsize"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Annual Production Capacity per shift">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_annualcapacity" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_AnnualProductionCapacity") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_annualcapacity" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_AnnualProductionCapacity") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                     <asp:TextBox runat ="server" ID = "txt_footannualcapacity"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText=" No. of shifts factory normally works">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_noofshifts" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_NoOfShifts") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_noofshifts" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_NoOfShifts") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                       <asp:TextBox runat ="server" ID = "txt_footnoofshifts"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Qualitative Capacity">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_qualitativecapcity" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_QualitativeCapacity") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_qualitativecapcity" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_QualitativeCapacity") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                      <asp:TextBox runat ="server" ID = "txt_footqualitativecapcity"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Quantitative Capacity">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="txt_quantitativecapacity" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_QuantitativeCapacity") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbl_quantitativecapacity" runat="server" 
+                            Text='<%# Bind("fGPtbl_CUnit_Store_QuantitativeCapacity") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                      <asp:TextBox runat ="server" ID = "txt_footquantitativecapacity"></asp:TextBox>
+                    </FooterTemplate>
+                </asp:TemplateField>
+               <asp:TemplateField HeaderText="HS Code">
+                    <EditItemTemplate>
+                        <asp:DropDownList runat ="server" ID ="ddl_hscode" Width ="100px"></asp:DropDownList>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                    <asp:Label runat ="server" ID = "lbl_hscode" Text = '<%# Bind("fGPtbl_CUnit_Store_HsCode") %>'></asp:Label>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                      <asp:DropDownList runat ="server" ID ="ddl_foothscode" DataTextField = "fGPtbl_HS_HScode" DataValueField = "fGPtbl_HS_HScode" Width ="100px"></asp:DropDownList>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Options">
+                    <EditItemTemplate>
+                                              <asp:LinkButton runat = "server" ID = "lnk_update" CausesValidation ="false" Text = "Update" CommandName = "Update" ></asp:LinkButton>
+                       <asp:LinkButton runat = "server" ID = "lnk_cancel" Text = "Cancel" CommandName = "Cancel" ></asp:LinkButton>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                       <asp:LinkButton runat = "server" CausesValidation ="false" ID = "lnk_edit" Text = "Edit" CommandName = "Edit" ></asp:LinkButton>
+                       <asp:LinkButton runat = "server" ID = "lnk_delete"  Text = "Delete" OnClientClick="return confirm('Are you sureyou want to delete this record?');"  CommandName = "Delete" ></asp:LinkButton>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                         <asp:LinkButton runat = "server" ID = "lnk_edit" Text = "INSERT" CommandArgument = "INSERT" ></asp:LinkButton>
+                        <%--<asp:Button runat ="server" ID ="btn_addnew" UseSubmitBehavior ="false" CommandName="AddNew" Text ="Add" />--%>
+                    </FooterTemplate>
+                </asp:TemplateField>
+               
+               
+               
+               </Columns>
+             
+        </asp:GridView>   
+     
+        
+   </asp:Panel>
+      <br />
+    </ContentTemplate>
+    </asp:UpdatePanel>
+    
+       
+    
+   
+  
+     <%-- <div align="center">
+  
+           <asp:Label ID="ltlMessage" runat="server" CssClass="Message"></asp:Label>
+        </div>--%>
+</asp:Content>
+

@@ -1,0 +1,435 @@
+﻿<%@ Page Title="NSIC SPR :: New Unit Registration:Step 7" Language="C#" MasterPageFile="~/appMaster/AdminUpload.master" AutoEventWireup="true" CodeFile="NewUnitRegistrationStep7.aspx.cs" Inherits="appAdministrator_NewUnitRegistrationStep7" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<script type="text/javascript" language="javascript">
+
+                  function disableBackButton() {
+            window.history.forward();
+        }
+        setTimeout("disableBackButton()", 0);
+           
+        $(document).ready(function()
+         {
+            $("#progressbar").progressbar({ value: 100 });
+            });
+             
+        function updateProgress() {            
+            var value = $("#progressbar").progressbar("option", "100");
+            if (value < 100) {
+                $("#progressbar").progressbar("value", value + 1);                
+            }
+        }
+        
+          function UpdateProgressBar_DroDown()
+            {
+               $("#progressbar").progressbar({ value: 100 });
+            }
+               
+    </script>
+    <style type="text/css">
+        .style1
+        {
+            background-color: #DDDDDD;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            height: 15px;
+            padding-left: 5px;
+            padding-right: 5px;
+            font-weight: bold;
+        }
+        
+        .ErrMsgLbl
+        {
+        	font-weight:bold;
+        	font-style:italic;
+        	text-decoration:underline;
+        	color:Red;
+        	}
+        
+        .style2
+        {
+            height: 22px;
+        }
+        
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+    </asp:ToolkitScriptManager>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td align="left" class="headerAll">
+                New Unit Registration - Step 7
+            </td>
+        </tr>
+       <tr style="width:95%;">
+            <td align="left" valign="top" style="padding-left: 10px; padding-right: 10px;">
+                   <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                   <tr style="width:100%;">
+                   <td style="width:100%;">
+                     <table cellpadding="0" cellspacing="0" border="1" style="width:100%;">
+                       <tr>
+                       <td style="width:15%;padding-left: 10px; padding-right: 10px;"><b>Step-1</b></td>
+                        <td style="width:15%;padding-left: 10px; padding-right: 10px;"><b>Step-2</b></td>
+                         <td style="width:15%;padding-left: 10px; padding-right: 10px;"><b>Step-3</b></td>
+                          <td style="width:15%;padding-left: 10px; padding-right: 10px;"><b>Step-4</b></td>
+                           <td style="width:15%;padding-left: 10px; padding-right: 10px;"><b>Step-5</b></td>
+                            <td style="width:15%;padding-left: 10px; padding-right: 10px;"><b>Step-6</b></td>
+                            <td style="width:10%;padding-left: 10px; padding-right: 10px;"><b>Step-7</b></td>
+                       </tr>
+                     
+                     </table>
+                   
+                   </td>
+                   </tr>
+                         
+                   
+                     <tr style="width:100%;">
+                    
+                     
+                       
+                         <td id="step2" style="width:100%;">
+                      
+                         <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                         <tr>
+                         <td id="progressbar" align="left" ></td>
+                         </tr>
+                         
+                         
+                         
+                         </table>
+                       
+                       
+                     </td>
+                     </tr>
+                       
+                   
+                   </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" style="padding-left:10px; padding-right:10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr align="left" valign="top">
+                        <td colspan="3" align="right" valign="top" class="rowStep">
+                            STEP 7 of 7
+                        </td>
+                    </tr>
+                    <tr align="left" valign="top" style="padding-top :10px;">
+                        <td colspan="3" align="left" valign="top" class="style1">
+                            Payment Detail
+                        </td>
+                    </tr>
+                    <%--<tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Registration Fees Slab:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblUnitSlabName" runat="server" ></asp:Label>
+                        </td>
+                    </tr>--%>
+                    
+                    <tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Inspection Fees Slab:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblAgencySlabName" runat="server" ></asp:Label>
+                        </td>
+                    </tr>
+                 
+                     <tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Registration Fees:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblUnitAmnt" runat="server" ></asp:Label>
+                        </td>
+                    </tr>
+                     <tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Inspection Fees:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblAgencyAmnt" runat="server" ></asp:Label>
+                        </td>
+                    </tr>
+                    <tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Sub Total:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblSubTot" runat="server" ></asp:Label>
+                        </td>
+                    </tr><tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Service Tax:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblServiceTax" runat="server" ></asp:Label>
+                        </td>
+                    </tr>
+                    
+                     <tr align="left" valign="top" style="padding-top :10px;">
+                     
+                        <td align="left" valign="top" class="leftHeading" style="width:200px;">
+                            Total amount payable:
+                        </td>
+                        <td align="left" valign="top">
+                           <asp:Label ID="lblTotAmnt" runat="server" ></asp:Label>
+                        </td>
+                    </tr>
+                    <tr align="left" valign="top">
+                        <td colspan="3" align="right" valign="top" style="height:10px;">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    
+                    <tr align="left" valign="top">
+                        <td colspan="3" align="left" valign="top" class="style1">
+                            Select Payment Option
+                        </td>
+                    </tr>
+                    <tr align="right" valign="top">
+                        <td colspan="3" align ="center" class="style2"  >
+                            <asp:RadioButtonList ID="radPay" runat ="server" RepeatDirection="Horizontal"  
+                                Width="70%" onselectedindexchanged="radPay_SelectedIndexChanged" 
+                                AutoPostBack="True" >
+                            <asp:ListItem Text="Cash" Value="1"></asp:ListItem>
+                            <asp:ListItem Text="DD" Value="2"></asp:ListItem>
+                            <asp:ListItem Text="Cheque" Value="3"></asp:ListItem>
+                            <%--<asp:ListItem Text="Online" Value="4"></asp:ListItem>--%>
+                            </asp:RadioButtonList>
+                        </td>
+                    </tr>
+                    
+                </table>
+             </td> 
+         </tr> 
+          <tr align="left" valign="top">
+                        <td colspan="3" align="right" valign="top" style="height:10px;">
+                            &nbsp;
+                        </td>
+                    </tr>                   
+                   
+              
+        <tr>
+        <td  valign="top" style="padding-left:10px; padding-right:10px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+        <td align="left" >
+        <asp:Panel ID="pnlCash" runat="server" Visible="false"  >
+        <table width="80%">
+        <tr>
+        <td class="rowStep" colspan="2" >
+        <b>Cash Payment Details</b>
+        </td>
+        </tr>
+        <tr>
+        <td>
+        <b>Amount</b>
+        </td>
+        <td align="left" >
+        <asp:Label ID="lblCashAmnt" runat="server"  ></asp:Label>
+        </td>
+        </tr>
+         <tr id="receipt" runat="server" >
+        <td>
+        <b>Receipt No.</b>
+        </td>
+        <td align="left" >
+        <%--<asp:Label ID="Label2" runat="server"  ></asp:Label>--%>
+        <asp:TextBox ID="txtReceipt" runat="server" ></asp:TextBox>
+        </td>
+        </tr>
+        <tr>
+        <td align="right" >
+        <asp:Button ID="btnCash" runat="server" Text="Submit" CssClass="btnCls" 
+                onclick="btnCash_Click" />
+        </td>
+        </tr>
+        </table>
+        </asp:Panel>
+        </td>
+        </tr>
+        
+        </table> 
+        </td>
+        </tr>
+          <tr align="left" valign="top">
+                        <td colspan="3" align="right" valign="top" style="height:10px;">
+                            &nbsp;
+                        </td>
+                    </tr>        
+        <tr>
+        <td align="left" valign="top" style="padding-left:10px; padding-right:10px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+        <td >
+        <asp:Panel ID="pnlChqDD" runat="server" Visible="false">
+        <table width="80%" >
+        <tr>
+        <td class="rowStep" colspan="2">
+        <b>CHEQUE / DD PAYMENT DETAILS </b>
+        </td>
+        </tr>
+        <tr>
+        <td >
+        <b>Cheque / DD No.</b>
+        </td>
+        <td align="left" valign="top" style="padding-bottom:10px;">
+                            <asp:TextBox ID="txt_chqddNo" runat="server" CssClass="txt_bx" 
+                                ValidationGroup="1" MaxLength="50"></asp:TextBox>
+                                
+                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
+                                                ErrorMessage="Please Enter Cheque or DD Number"
+                                                ControlToValidate="txt_chqddNo"
+                                                SetFocusOnError="true"
+                                                ValidationGroup="1"
+                                            ></asp:RequiredFieldValidator>
+                                            <asp:ValidatorCalloutExtender ID="ValidatorCalloutExtender2" runat="server"
+                                                PopupPosition="BottomRight"
+                                                TargetControlID="RequiredFieldValidator1"
+                                            ></asp:ValidatorCalloutExtender>
+                                            
+                           
+                        </td>
+        </tr>
+        <tr>
+        <td >
+        <b>Bank Name</b>
+        </td>
+         <td align="left" valign="top" style="padding-bottom:10px;">
+                            <asp:TextBox ID="txt_BankName" runat="server" CssClass="txt_bx" 
+                                ValidationGroup="1" MaxLength="50"></asp:TextBox>
+                                
+                                  <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server"
+                                                ErrorMessage="Please Enter Bank Name"
+                                                ControlToValidate="txt_BankName"
+                                                SetFocusOnError="true"
+                                                ValidationGroup="1"
+                                            ></asp:RequiredFieldValidator>
+                                            <asp:ValidatorCalloutExtender ID="ValidatorCalloutExtender1" runat="server"
+                                                PopupPosition="BottomRight"
+                                                TargetControlID="RequiredFieldValidator2"
+                                            ></asp:ValidatorCalloutExtender>
+                           
+                        </td>
+        </tr>
+       
+       <tr>
+        <td >
+        <b>Bank Branch</b>
+        </td>
+         <td align="left" valign="top" style="padding-bottom:10px;">
+                            <asp:TextBox ID="txt_BankBranch" runat="server" CssClass="txt_bx" 
+                                ValidationGroup="1" MaxLength="50"></asp:TextBox>
+                                
+                                  <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server"
+                                                ErrorMessage="Please Enter Bank Branch"
+                                                ControlToValidate="txt_BankBranch"
+                                                SetFocusOnError="true"
+                                                ValidationGroup="1"
+                                            ></asp:RequiredFieldValidator>
+                                            <asp:ValidatorCalloutExtender ID="ValidatorCalloutExtender4" runat="server"
+                                                PopupPosition="BottomRight"
+                                                TargetControlID="RequiredFieldValidator4"
+                                            ></asp:ValidatorCalloutExtender>
+                           
+                        </td>
+        </tr>
+	  
+        <tr>
+        <td >
+        <b>Payable At</b>
+        </td>
+         <td align="left" valign="top" style="padding-bottom:10px;">
+                            <asp:TextBox ID="txt_PayableAt" runat="server" CssClass="txt_bx" 
+                                ValidationGroup="1" MaxLength="50"></asp:TextBox>
+                                
+                                  <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server"
+                                                ErrorMessage="Please Enter Payable At"
+                                                ControlToValidate="txt_PayableAt"
+                                                SetFocusOnError="true"
+                                                ValidationGroup="1"
+                                            ></asp:RequiredFieldValidator>
+                                            <asp:ValidatorCalloutExtender ID="ValidatorCalloutExtender3" runat="server"
+                                                PopupPosition="BottomRight"
+                                                TargetControlID="RequiredFieldValidator2"
+                                            ></asp:ValidatorCalloutExtender>
+                           
+                        </td>
+        </tr>
+        
+         <tr>
+        <td >
+        <b>Cheque / DD Amount</b>
+        </td>
+         <td align="left" valign="top" style="padding-bottom:10px;">
+                            <asp:TextBox ID="txt_chqddAmnt" runat="server" CssClass="txt_bx" 
+                                ValidationGroup="1" MaxLength="50" ReadOnly="true" ></asp:TextBox>
+         </td>
+        </tr>
+  <tr>
+        <td >
+        <b>Cheque / DD Date</b>
+        </td>
+         <td align="left" valign="top" style="padding-bottom:10px;">
+                <asp:TextBox ID="txt_chqddate" runat="server" CssClass="txt_bx" 
+                    ValidationGroup="1" MaxLength="50" ReadOnly="false" ></asp:TextBox>
+               
+               <%-- <asp:MaskedEditExtender ID="MaskedEditExtender1" runat="server" TargetControlID="txt_chqddate" MaskType="Date"
+                        Mask="99/99/9999" CultureName="en-US" InputDirection="LeftToRight" MessageValidatorTip="true" ClearTextOnInvalid="true">
+                        </asp:MaskedEditExtender>
+                        <asp:MaskedEditValidator ID="MaskedEditValidator1" runat="server" ControlToValidate="txt_chqddate" ControlExtender="MaskedEditExtender1"
+                        InvalidValueMessage="Date format should be MM/DD/YYYY" IsValidEmpty="false" Display="Dynamic"
+                        TooltipMessage="Input date as MM/DD/YYYY" SetFocusOnError="true" EmptyValueMessage="Date is required" ></asp:MaskedEditValidator>--%>
+             <asp:RequiredFieldValidator ID="RFValidatortxt_chqddate" runat="server" ErrorMessage="Please enter date" ControlToValidate="txt_chqddate"
+                Display="None" SetFocusOnError="true"></asp:RequiredFieldValidator>
+              <asp:ValidatorCalloutExtender ID="VCExtendertxt_chqddate" runat="server"
+                                TargetControlID="RFValidatortxt_chqddate">
+              </asp:ValidatorCalloutExtender>
+             <asp:CompareValidator ID="CValidatortxt_chqddate" runat="server" ErrorMessage="Please enter date in MM/DD/YYYY format"></asp:CompareValidator>
+                 
+        </td>
+        </tr>
+        <tr>
+        <td >
+        <b>Upload Scanned Copy of Cheque / DD </b>
+        </td>
+        <td align="left" >        
+            <asp:FileUpload ID="FileUpload1" runat="server" />
+            <asp:Label ID="Label1" runat="server" CssClass="ErrMsgLbl"></asp:Label>
+                        
+        </td>
+        </tr>
+        <tr>
+        <td align="right"  >
+        <asp:Button ID="Button1" runat="server" Text="Submit" CssClass="btnCls" 
+                ValidationGroup="1" onclick="Button1_Click" />
+        </td>
+        </tr>
+        </table>
+        </asp:Panel>
+        </td>
+        </tr>
+        
+        </table> 
+        </td>
+        </tr>
+        
+        
+    </table>
+    
+    
+</asp:Content>
+

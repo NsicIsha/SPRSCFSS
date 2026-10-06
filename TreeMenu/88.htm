@@ -1,0 +1,533 @@
+﻿
+<link href='../TreeMenu/CSS/menu.css' rel='stylesheet' type='text/css' />
+
+<script type='text/javascript' src='../JScript/Menu.js'></script>
+
+<script language="javascript1.2">if(window.screen.width==800){document.cookie ='hllflag=800'}if(window.screen.width==1024){document.cookie ='hllflag=1024'}</script>
+
+<table width='100%' border='0' cellspacing='0' cellpadding='0'>
+    <tr>
+        <td align='left' valign='top' scope='col'>
+            <!-- Keep all menus within masterdiv-->
+            <div id='masterdiv'>
+                <div onclick="SwitchMenu('sub1','img1')">
+                    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+                        <tr>
+                            <td style='width: 10%;' valign='top'>
+                                <img id='img1' src='../TreeMenu/menuimg/plus.gif' border='0' />
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a href='#' class='td_menu_link' title="View Instructions to fill form">Instructions</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <span class='submenu' id='sub1' style='vertical-align: top; width: 100%;'>
+                    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./InstructionsCommon.aspx?i=1'>Registration Form</a>
+                            </td>
+                        </tr>
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./InstructionsCommon.aspx?i=2'>Renewal Form</a>
+                            </td>
+                        </tr>
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./InstructionsCommon.aspx?i=3'>Amendment Form</a>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+                <div onclick="SwitchMenu('sub6','img6')">
+                    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+                        <tr>
+                            <td style='width: 10%;' valign='top'>
+                                <img id='img6' src='../TreeMenu/menuimg/plus.gif' border='0' />
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a href='#' class='td_menu_link' title="View Important Lists">Important Lists</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <span class='submenu' id='sub6' style='vertical-align: top; width: 100%;'>
+                    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0' />
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./ListCommon.aspx?i=1' title='SSI List of reserved items which comes under SSI'>SSI List of reserved items</a>
+                            </td>
+                        </tr>
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0' />
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./ListCommon.aspx?i=2' title='Registrar of Firm with contact details'>Registrar of Firm</a>
+                            </td>
+                        </tr>
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./ListCommon.aspx?i=3' title='Registrar of Company with contact details'>Registrar of Company</a>
+                            </td>
+                        </tr>
+                        <!--<tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'/></td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./ListCommon.aspx?i=4' title='DIC Offices with contact details'>DIC Offices</a></td>
+                        </tr>-->
+                        <tr valign='bottom'>
+                            <td valign='top' style='width: 10%;'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a class='menu_link' href='./ListCommon.aspx?i=5' title='MSME DI Offices with contact details'>MSME DI Offices</a>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <!--<div>
+                    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+                        <tr>
+                            <td style='width: 10%;' valign='top'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0'/></td>
+                            <td valign='top' style='width: 90%;'>
+                                <a href='./BacklogUnitStep1.aspx' class='td_menu_link' style="color:red;">FILL BACKLOG UNITS</a></td>
+                        </tr>
+                    </table>
+                </div>-->
+
+                <div>
+                    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+                        <tr>
+                            <td style='width: 10%;' valign='top'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0' />
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+                                <a href='./NewUnitRegistration.aspx?i=0' class='td_menu_link'>New Unit Registration</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div>
+                    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+                        <tr>
+                            <td style='width: 10%;' valign='top'>
+                                <img src='../TreeMenu/menuimg/dot.gif' border='0' />
+                            </td>
+                            <td valign='top' style='width: 90%;'>
+
+                                <a href='./NewUnitRegistration.aspx?i=1' class='td_menu_link'>Provisional Registration</a>
+                            </td>
+        </td>
+    </tr>
+</table> 
+<div>
+
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0' />
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='./Certificatelist.aspx' class='td_menu_link'>Registered Companies</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='./Expiredcompanies.aspx' class='td_menu_link'>Expired Companies</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div onclick="SwitchMenu('sub7','img7')">
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img id='img7' src='../TreeMenu/menuimg/plus.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='#' class='td_menu_link' title="Waiting Companies">Unconfirmed Transactions</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<span class='submenu' id='sub7' style='vertical-align: top; width: 100%;'>
+    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./ConfirmPayment.aspx?i=1'>Registration Process</a>
+            </td>
+        </tr>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./ConfirmPayment.aspx?i=2'>Renewal Process</a>
+            </td>
+        </tr>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./ConfirmPayment.aspx?i=3'>Amendment Process</a>
+            </td>
+        </tr>
+        <!--  <tr valign='bottom'>
+              <td valign='top' style='width: 10%;'>
+                  <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+              <td valign='top' style='width: 90%;'>
+                  <a class='menu_link' href='./ConfirmPayment.aspx'>Competency Certificate Process</a></td>
+          </tr>
+          <tr valign='bottom'>
+              <td valign='top' style='width: 10%;'>
+                  <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+              <td valign='top' style='width: 90%;'>
+                  <a class='menu_link' href='./ConfirmPayment.aspx'>Capacity Verification Process</a></td>
+          </tr>-->
+    </table>
+</span>
+<div onclick="SwitchMenu('sub2','img2')">
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img id='img2' src='../TreeMenu/menuimg/plus.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='#' class='td_menu_link' title="Waiting Companies">Waiting Companies</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<span class='submenu' id='sub2' style='vertical-align: top; width: 100%;'>
+    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./WaitingCompanies.aspx?i=1'>Registration Process</a>
+            </td>
+        </tr>
+        <!--<tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./WaitingCompanies.aspx?i=2'>Renewal Process</a></td>
+        </tr>-->
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./WaitingCompanies.aspx?i=3'>Amendment Process</a>
+            </td>
+        </tr>
+        <!--  <tr valign='bottom'>
+             <td valign='top' style='width: 10%;'>
+                 <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+             <td valign='top' style='width: 90%;'>
+                 <a class='menu_link' href='../appAdministrator/CheckMonetryLimitbyUser.aspx'>Renewal Monetry Limit >10 crores</a></td>
+         </tr>
+         <tr valign='bottom'>
+             <td valign='top' style='width: 10%;'>
+                 <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+             <td valign='top' style='width: 90%;'>
+                 <a class='menu_link' href='./WaitingCompetencyCertificate.aspx'>Competency Certificate Process</a></td>
+         </tr>
+         <tr valign='bottom'>
+             <td valign='top' style='width: 10%;'>
+                 <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+             <td valign='top' style='width: 90%;'>
+                 <a class='menu_link' href='./WaitingCapacityVerification.aspx'>Capacity Verification Process</a></td>
+         </tr>-->
+    </table>
+</span>
+<div onclick="SwitchMenu('sub3','img3')">
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img id='img3' src='../TreeMenu/menuimg/plus.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='#' class='td_menu_link' title="Accepted Companies">Accepted Companies</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<span class='submenu' id='sub3' style='vertical-align: top; width: 100%;'>
+    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./InspectionDatetobeIssued.aspx'>Inspection Date to be Issued</a>
+            </td>
+        </tr>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./InspectionDateAlreadyIssued.aspx' title='Inspection Date already Issued but Inspection is Pending'>Inspection Date already Issued</a>
+            </td>
+        </tr>
+        <!--<tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./InspectionInprocess.aspx'>Inspection INPROCESS</a></td>
+        </tr>-->
+    </table>
+</span>
+<div onclick="SwitchMenu('sub4','img4')">
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img id='img4' src='../TreeMenu/menuimg/plus.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='#' class='td_menu_link' title="Inspection Complete">Inspection Complete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<span class='submenu' id='sub4' style='vertical-align: top; width: 100%;'>
+    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./ICRegistration.aspx?urlid=1'>For Registration</a>
+            </td>
+        </tr>
+        <!-- <tr valign='bottom'>
+             <td valign='top' style='width: 10%;'>
+                 <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+             <td valign='top' style='width: 90%;'>
+                 <a class='menu_link' href='./ICRenewal.aspx'>For Renewal</a></td>
+         </tr>-->
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href='./ICRegistration.aspx?urlid=3'>For Amendment</a>
+            </td>
+        </tr>
+
+    </table>
+</span>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href='../appAdministrator/CheckMonetryLimitbyUser.aspx'>Renewal Monetary Limit >10 crores</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href='../appAdministrator/Admin_Edit_Search.aspx'>Edit Company Data</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href='../appAdministrator/Unit_Branchshift.aspx'>Branch Shift</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href='../appAdministrator/CertificateList_OneMonth.aspx'><span style="color:red">Renewal Pendency</span> </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href='../appAdministrator/PointOfInterest_Branch.aspx'><span style="color:red">View Point of Interest</span> </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div onclick="SwitchMenu('sub5','img5')">
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img id='img5' src='../TreeMenu/menuimg/plus.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='#' class='td_menu_link' title="Reports">Reports</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<span class='submenu' id='sub5' style='vertical-align: top; width: 100%;'>
+    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href="../appAdministrator/SpecificListOfReportPage.aspx">Reports</a>
+            </td>
+        </tr>
+        <!--                            <tr valign='bottom'>
+                                        <td valign='top' style='width: 10%;'>
+                                        <img src='../TreeMenu/menuimg/dot.gif' border='0'></td>
+                                        <td valign='top' style='width: 90%;'>
+                                        <a class='menu_link' href="../appAdministrator/DraftPrintList.aspx">Draft Certificate</a></td>
+                                    </tr>-->
+        <tr valign='bottom'>
+            <td valign='top' style='width:10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'
+            </td>
+            <td valign='top' style='width:90%;'>
+                <a class='menu_link' href="../appAdministrator/BranchWiseSearchReport.aspx">Dashboard Report</a>
+            </td>
+        </tr>
+        <tr valign='bottom'>
+            <td valign='top' style='width:10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'
+            </td>
+            <td valign='top' style='width:90%;'>
+                <a class='menu_link' href="../appAdministrator/ZonewiseliveCompany.aspx">Data Status Report</a>
+            </td>
+        </tr>
+
+
+
+
+        <!--<tr valign='bottom'>
+                <td valign='top' style='width:10%;'>
+                    <img src='../TreeMenu/menuimg/dot.gif' border='0'
+                </td>
+                <td valign='top' style='width:90%;'>
+                    <a class='menu_link' href="../appAdministrator/STATUS_REPORT_AS_ON_DATE.aspx">STATUS REPORT AS ON DATE Report</a>
+                </td>
+            </tr>-->
+
+
+
+
+        <tr>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0' />
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='menu_link' href="../appAdministrator/ProductCompanySearch.aspx">Product Search</a>
+            </td>
+        </tr>
+        <!--                              <tr>
+                                        <td valign='top' style='width: 10%;'>
+                                            <img src='../TreeMenu/menuimg/dot.gif' border='0'/>
+                                        </td>
+                                        <td valign='top' style='width: 90%;'>
+                                            <a class='menu_link' href="../SPR-FAQ.pdf">F.A.Q</a>
+                                        </td>
+                                     </tr>-->
+    </table>
+</span>
+<div onclick="SwitchMenu('sub10','img10')">
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr>
+            <td style='width: 10%;' valign='top'>
+                <img id='img10' src='../TreeMenu/menuimg/plus.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a href='#' class='td_menu_link' title="Reports">Help</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<span class='submenu' id='sub10' style='vertical-align: top; width: 100%;'>
+    <table border='0' height='100%' cellspacing='0' cellpadding='2' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href="../Document/Manuals/NSIC_SPR_BranchManual.pdf" target="_blank">User Manual</a>
+            </td>
+        </tr>
+
+    </table>
+</span>
+<div>
+    <table border='0' cellpadding='0' cellspacing='0' class='menutitle' style='width: 100%;'>
+        <tr valign='bottom'>
+            <td valign='top' style='width: 10%;'>
+                <img src='../TreeMenu/menuimg/dot.gif' border='0'>
+            </td>
+            <td valign='top' style='width: 90%;'>
+                <a class='td_menu_link' href="../Document/Manuals/SPR-FAQ.pdf" target="_blank">FAQs</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+              

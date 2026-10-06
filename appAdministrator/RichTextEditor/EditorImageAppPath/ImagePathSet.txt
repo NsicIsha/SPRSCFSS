@@ -1,0 +1,1 @@
+http://localhost:12636/NAGCMSAdmin_Build6.1.1/upload_file/descfile/Images/

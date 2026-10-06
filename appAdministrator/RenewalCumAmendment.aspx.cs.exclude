@@ -1,0 +1,228 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class appAdministrator_RenewalCumAmendment : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            string query = "Select Condition as Condition,ID as ID from GPtbl_RenewalAmendmentConditions where Con_Display=1 and Con_Delete=0";
+            int count = 0;
+            string constr = System.Configuration.ConfigurationManager.AppSettings["DBConnectionString"].ToString();
+            //CheckIfCompanyIDExists(ref count, constr);
+            //if (count > 0)
+            {
+
+                DataSet ds = null;
+                using (SqlConnection conn = new SqlConnection(constr))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        try
+                        {
+                            using (SqlDataAdapter sda = new SqlDataAdapter())
+                            {
+                                cmd.Connection = conn;
+                                sda.SelectCommand = cmd;
+                                using (ds = new DataSet())
+                                {
+                                    sda.Fill(ds);
+                                }
+
+                            }
+                            grdCondition.DataSource = ds;
+                            grdCondition.DataBind();
+
+                            PoplulateOldCheckbox(constr);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    private static string CheckIfCompanyIDExists(ref int count, string constr)
+    {
+        string check = "Select Top(1) CompanyID from Gptbl_RenAmendCombination where RA_Display=1 and RA_Delete=0 and CompanyID=2222 ";
+
+        using (SqlConnection conn = new SqlConnection(constr))
+        {
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand(check, conn))
+            {
+                try
+                {
+                    count = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        return constr;
+    }
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        int companyID = 2222;
+        foreach (GridViewRow gvrow in grdCondition.Rows)
+        {
+            CheckBox chk = (CheckBox)gvrow.FindControl("chkSelect");
+            if (chk != null & chk.Checked)
+            {
+                Label lblID = (Label)gvrow.FindControl("lblID");
+                DateTime dbt = DateTime.Now;
+                string query = "INSERT INTO Gptbl_RenAmendCombination (ConditionID,CompanyID,RA_Display,RA_Delete) values('" + lblID.Text + "','" + companyID + "','1','0')";
+                string constr = System.Configuration.ConfigurationManager.AppSettings["DBConnectionString"].ToString();
+                SqlConnection cnn = new SqlConnection(constr);
+                try
+                {
+                    cnn.Open();
+                    SqlCommand cmd = new SqlCommand(query, cnn);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    cnn.Close();
+
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show("Can not open connection ! ");
+                }
+
+            }
+        }
+    }
+
+    protected void btnUpdate_Click(object sender, EventArgs e)
+    {
+        int companyID = 2222;
+        string query = "Update Gptbl_RenAmendCombination Set RA_Display=0,RA_Delete=1 Where CompanyID='" + companyID + "'";
+        string constr = System.Configuration.ConfigurationManager.AppSettings["DBConnectionString"].ToString();
+        SqlConnection cnn = new SqlConnection(constr);
+        try
+        {
+            cnn.Open();
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            cnn.Close();
+
+        }
+        catch (Exception ex)
+        {
+            //MessageBox.Show("Can not open connection ! ");
+        }
+
+        foreach (GridViewRow gvrow in grdCondition.Rows)
+        {
+            CheckBox chk = (CheckBox)gvrow.FindControl("chkSelect");
+            if (chk != null & chk.Checked)
+            {
+                Label lblID = (Label)gvrow.FindControl("lblID");
+                DateTime dbt = DateTime.Now;
+
+                query = "INSERT INTO Gptbl_RenAmendCombination (ConditionID,CompanyID,RA_Display,RA_Delete) values('" + lblID.Text + "','" + companyID + "','1','0')";
+                //string constr = System.Configuration.ConfigurationManager.AppSettings["DBConnectionString"].ToString();
+                cnn = new SqlConnection(constr);
+                try
+                {
+                    cnn.Open();
+                    SqlCommand cmd = new SqlCommand(query, cnn);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    cnn.Close();
+
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show("Can not open connection ! ");
+                }              
+
+            }
+           
+        }
+    }
+
+    private void PoplulateOldCheckbox(string constr)
+    {
+        string condition = "Select ConditionID from Gptbl_RenAmendCombination where CompanyID=2222 and RA_Display=1 and RA_Delete=0 ";
+        DataSet dd = null;
+        using (SqlConnection conn = new SqlConnection(constr))
+        {
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand(condition, conn))
+            {
+                try
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                    {
+                        cmd.Connection = conn;
+                        sda.SelectCommand = cmd;
+                        using (dd = new DataSet())
+                        {
+                            sda.Fill(dd);
+                            foreach (DataRow dr in dd.Tables[0].Rows)
+                            {
+                                foreach (GridViewRow gvr in grdCondition.Rows)
+                                {
+                                    Label lblID = gvr.FindControl("lblID") as Label;
+                                    if (lblID.Text.Equals(dr[0].ToString()))
+                                    {
+                                        CheckBox chkSelect = gvr.FindControl("chkSelect") as CheckBox;
+                                        chkSelect.Checked = true;
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        // return ds;
+    }
+
+ 
+
+    protected void btnBack_Click(object sender, EventArgs e)
+    {
+        string constr = System.Configuration.ConfigurationManager.AppSettings["DBConnectionString"].ToString();
+        PoplulateOldCheckbox(constr);
+    }
+}
+

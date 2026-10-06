@@ -1,0 +1,1628 @@
+﻿using System;
+using System.Web;
+using System.Data;
+using System.Data.SqlClient;
+using NSICGP_VBClassLibrary;
+using System.Collections;
+
+
+/// <summary>
+/// Summary description for clsMasterInspectionAgency
+/// </summary>
+public class clsMasterInspectionAgency
+{
+    SqlCommand MySqlComm;
+    SqlDataAdapter MyAdp;
+    SqlDataReader MyDr;
+    DataSet MyDs;
+    DataTable MyDt;
+    FormInputReplace objInputReplace;
+
+    int ErrorId = 0;
+
+	public clsMasterInspectionAgency()
+	{
+		//
+		// TODO: Add constructor logic here
+		//
+	}
+
+    //TO FETCH ALL DATA FROM TABLE
+    public DataSet MasterInspectionAgency_Fetch_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            //MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_All", DBManager.ConnectToDB());
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_Activated", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO FETCH ALL DATA FROM TABLE IN DESCENDING ORDER
+    public DataSet MasterInspectionAgency_FetchDesc_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_All_OBDesc", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO FETCH SELECTED DATA FROM TABLE USING ID
+    public DataSet MasterInspectionAgency_Fetch_DataSet(int MasterInspectionAgencyId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_ById", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_MIA_Id", SqlDbType.Int).Value = MasterInspectionAgencyId;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO DELETE USING ID
+    public int MasterInspectionAgency_DeleteById(int MasterInspectionAgencyId, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Delete_MasterInspectionAgency_ById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_MIA_Id", SqlDbType.Int).Value = MasterInspectionAgencyId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@OutPut", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    //TO INSERT OR UPDATE
+    public int MasterInspectionAgency_InsertUpdate(int MasterInspectionAgencyId, string fGPtbl_MIA_Name, string fGPtbl_MIA_Desc, int UserId)
+    {
+        try
+        {
+            /*RandomKeyGenerator objRand = new RandomKeyGenerator();
+            string passwd = objRand.Generate();*/
+
+            MySqlComm = new SqlCommand("GPsp_Update_MasterInspectionAgency", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_MIA_Id", SqlDbType.Int).Value = MasterInspectionAgencyId;
+            if (fGPtbl_MIA_Name.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MIA_Name", SqlDbType.VarChar, 200).Value = fGPtbl_MIA_Name;
+            //if (fGPtbl_MIA_Email!="") MySqlComm.Parameters.Add("@fGPtbl_MIA_Email", SqlDbType.VarChar, 100).Value=fGPtbl_MIA_Email;
+            //MySqlComm.Parameters.Add("@fGPtbl_MIA_Pwd", SqlDbType.NVarChar, 50).Value = passwd;
+            if (fGPtbl_MIA_Desc.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MIA_Desc", SqlDbType.VarChar, 2000).Value = fGPtbl_MIA_Desc;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public int MasterInspectionAgency_ActivateById(int InspId, int UserId, string Activate)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Update_MasterInspectionAgency_ActivateById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+            MySqlComm.Parameters.Add("@fGPtbl_MIA_Id", SqlDbType.Int).Value = InspId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+            MySqlComm.Parameters.Add("@Activate", SqlDbType.VarChar, 15).Value = Activate;
+
+            SqlParameter outVal = new SqlParameter("@OutPut", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public SqlDataReader Fetch_AgencyByName(string fGPtbl_TIAB_UserName, string fGPtbl_TIAB_Pwd)
+    {
+        try
+        {
+            /*SIMPLE PASSWORD 7/6/2012
+             DecryptEncrypt objDecEnc = new DecryptEncrypt();
+             string EncryptedPwd = objDecEnc.Encrypt(fGPtbl_TIAB_Pwd.ToString().Trim());*/
+            string EncryptedPwd = fGPtbl_TIAB_Pwd.ToString().Trim();
+
+            MySqlComm = new SqlCommand("GPsp_Fetch_AgencyByName", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_UserName", SqlDbType.VarChar, 200).Value = fGPtbl_TIAB_UserName;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Pwd", SqlDbType.VarChar, 2000).Value = EncryptedPwd;
+
+            MyDr = MySqlComm.ExecuteReader();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        return MyDr;
+    }
+
+    #region Trans_InspectionagecnyBranch
+
+    //==================================================================
+    //================================================================
+    //Trans_InspectionagecnyBranch FUNCTIONALITY
+
+    //TO FETCH ALL DATA
+    public DataSet Trans_InspectionagecnyBranch_Fetch_DataSet_byuserId(int userid)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_TransInspectionAgencyBranch_All", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@UserId", SqlDbType.Int).Value=userid;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    // TO FETCH SELECTIVE DATA FROM TABLE USING ID
+    public DataSet Trans_InspectionagecnyBranch_Fetch_DataSet(int TransInspAgenBranchId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_TransInspectionagencyBranch_ById", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_TIAB_Id", SqlDbType.Int).Value = TransInspAgenBranchId;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO FETCH BRANCH NAME BY USER ID
+    public DataTable Trans_InspectionagecnyBranch_Fetch_DataTableByUserId(int userid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_TransUserBranch_ByUserId", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_TUB_UserId", SqlDbType.Int).Value = userid;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+
+    //TO DELETE USING ID
+    public int Trans_InspectionagecnyBranch_DeleteById(int TransInspAgenBranchId, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Delete_TransInspectionagencyBranch_ById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Id", SqlDbType.Int).Value = TransInspAgenBranchId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    //TO INSERT OR UPDATE TABLE
+    public int Trans_InspectionagecnyBranch_InsertUpdate(int Inspbrid, int fGPtbl_TIAB_AgencyId, int fGPtbl_TIAB_ZoneId, int fGPtbl_TIAB_BranchId,
+                string username, string passwd, string address, string fGPtbl_TIAB_Instructions, string fGPtbl_TIAB_EmailId, string IAphone, string servicetax, int UserId, string InspectionAgencyName_Location)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Update_TransInspectionagencyBranch", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Id", SqlDbType.Int).Value = Inspbrid;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_AgencyId", SqlDbType.Int).Value = fGPtbl_TIAB_AgencyId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_ZoneId", SqlDbType.Int).Value = fGPtbl_TIAB_ZoneId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_BranchId", SqlDbType.Int).Value = fGPtbl_TIAB_BranchId;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_UserName", SqlDbType.VarChar, 200).Value = username;
+
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Name", SqlDbType.VarChar, 200).Value = InspectionAgencyName_Location;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Pwd", SqlDbType.NVarChar, 200).Value = passwd;
+            if (address.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_TIAB_Address", SqlDbType.VarChar, 2000).Value = address;
+            if (fGPtbl_TIAB_Instructions.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_TIAB_Instructions", SqlDbType.VarChar, 5000).Value = fGPtbl_TIAB_Instructions;
+            if (fGPtbl_TIAB_EmailId.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_TIAB_EmailId", SqlDbType.VarChar, 500).Value = fGPtbl_TIAB_EmailId;
+            if (IAphone != "") MySqlComm.Parameters.Add("@Phone", SqlDbType.VarChar, 50).Value = IAphone;
+            MySqlComm.Parameters.Add("@Servicetax", SqlDbType.VarChar, 5).Value = servicetax;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    #region Forget Password & Change Password Of Inspection Agency BY Gauarv Srivastava
+
+    public int InspectionAgency_ChangePassword(int TIABid, string Newpassword, string Oldpassword, int UserId)
+    {
+        try
+        {
+            //DecryptEncrypt objDecEnc = new DecryptEncrypt(); SIMPLE PASSWORD 7/6/2012
+            string EncryptedPwd = Newpassword.ToString().Trim();
+            string EncryptedOldPwd = Oldpassword.ToString().Trim();
+
+            MySqlComm = new SqlCommand("GPsp_Agency_ChangePassword", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@MiauId", SqlDbType.Int).Value = TIABid;
+            MySqlComm.Parameters.Add("@NewPassword", SqlDbType.NVarChar, 2000).Value = EncryptedPwd;
+            MySqlComm.Parameters.Add("@OldPassword", SqlDbType.NVarChar, 2000).Value = EncryptedOldPwd;
+            MySqlComm.Parameters.Add("@EditUser", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public ArrayList InspectionAgency_ForgotPassword(string Username)
+    {
+        string Decryptpwd = string.Empty;
+        ArrayList arr = new ArrayList(); 
+        try
+        {
+            //DecryptEncrypt objDecEnc = new DecryptEncrypt(); SIMPLE PASSWORD 7/6/2012
+            RandomKeyGenerator objRnd = new RandomKeyGenerator();
+            Decryptpwd = objRnd.Generate();
+            //Encryptpwd = objDecEnc.Encrypt(Decryptpwd).Trim();
+
+            MySqlComm = new SqlCommand("GPsp_Agency_ForgotPassword", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_UserName", SqlDbType.VarChar, 200).Value = Username;
+            MySqlComm.Parameters.Add("@fGPtbl_TIAB_Pwd", SqlDbType.NVarChar, 2000).Value = Decryptpwd;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            SqlParameter outEmail = new SqlParameter("@Email", SqlDbType.VarChar, 200);
+            outEmail.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outEmail);
+
+            /* SqlParameter outPwd = new SqlParameter("@Password", SqlDbType.NVarChar, 2000);
+             outPwd.Direction = ParameterDirection.Output;
+             MySqlComm.Parameters.Add(outPwd);*/
+
+            MySqlComm.ExecuteNonQuery();
+
+            arr.Add(outVal.Value);
+            arr.Add(outEmail.Value);
+            arr.Add(Decryptpwd);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return arr;
+
+    }
+
+
+    #endregion
+
+
+
+    #endregion
+
+    #region InspectionAgency Fee
+    //==================================================================
+    //================================================================
+    //Trans_InspectionagecnyFee FUNCTIONALITY
+
+    //TO FETCH ALL DATA
+    public DataSet InspectionPaymentSlab_Fetch_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_InspectionPaymentSlab_All", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+
+
+
+    //TO FETCH SELECTED DATA FROM TABLE USING ID
+    public DataSet InspectionPaymentSlab_Fetch_DataSet(int InspectionPSId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_InspectionPaymentSlab_ById", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_IPS_Id", SqlDbType.Int).Value = InspectionPSId;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    public DataSet InspectionPaymentSlab_FetchByIARoleName_DataSet(int IAgencyid, int Roleid)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_InspectionPaymentSlab_ByAgencyForm", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            if (IAgencyid != 0) MyAdp.SelectCommand.Parameters.Add("@fGPtbl_IPS_AgencyId", SqlDbType.Int).Value = IAgencyid;
+            if (Roleid != 0) MyAdp.SelectCommand.Parameters.Add("@fGPtbl_IPS_FormtypeId", SqlDbType.Int).Value = Roleid;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO DELETE USING ID
+    public int InspectionPaymentSlab_DeleteById(int InspectionPSId, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Delete_InspectionPaymentSlab_ById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_IPS_Id", SqlDbType.Int).Value = InspectionPSId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    
+    //TO INSERT OR UPDATE
+    public int InspectionPaymentSlab_InsertUpdate(int InspectionPSId, int fGPtbl_IPS_AgencyId, int fGPtbl_IPS_FormtypeId, string fGPtbl_IPS_SlabName, double fGPtbl_IPS_Amount, string fGPtbl_IPS_Instructions, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Update_InspectionPaymentSlab", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_IPS_Id", SqlDbType.Int).Value = InspectionPSId;
+            MySqlComm.Parameters.Add("@fGPtbl_IPS_AgencyId", SqlDbType.Int).Value = fGPtbl_IPS_AgencyId;
+            MySqlComm.Parameters.Add("@fGPtbl_IPS_FormtypeId", SqlDbType.Int).Value = fGPtbl_IPS_FormtypeId;
+            if (fGPtbl_IPS_SlabName.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_IPS_SlabName", SqlDbType.VarChar, 500).Value = fGPtbl_IPS_SlabName;
+            MySqlComm.Parameters.Add("@fGPtbl_IPS_Amount", SqlDbType.Float).Value = fGPtbl_IPS_Amount;
+            if (fGPtbl_IPS_Instructions.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_IPS_Instructions", SqlDbType.VarChar, 5000).Value = fGPtbl_IPS_Instructions;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    #endregion
+
+    //public DataTable Agency_Fetch_DatetobeIssued(int AgencyId, int BranchId)
+    //{
+    //    try
+    //    {
+    //        MyDt = new DataTable();
+    //        MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_DatetobeIssued", DBManager.ConnectToDB());
+    //        MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+    //        MyAdp.SelectCommand.Parameters.Add("@AgencyId", SqlDbType.Int).Value = AgencyId;
+    //        MyAdp.SelectCommand.Parameters.Add("@BranchId", SqlDbType.Int).Value = BranchId;
+    //        MyAdp.Fill(MyDt);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ErrHandler.WriteError(ex.Message);
+    //    }
+    //    finally
+    //    {
+    //        DBManager.CloseConnection();
+    //        MyAdp.Dispose();
+    //    }
+    //    return MyDt;
+    //}
+
+
+
+    #region Agency
+
+    public DataTable Agency_Fetch_DatetobeIssued(int id, int AgencyId, int branchid, int inspuserid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            if (id == 1)
+            {
+                MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_DatetobeIssued", DBManager.ConnectToDB());
+            }
+            else if (id == 3)
+            {
+                MyAdp = new SqlDataAdapter("GPsp_AgencyAmendment_Fetch_DatetobeIssued", DBManager.ConnectToDB());
+            }
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@AgencyId", SqlDbType.Int).Value = AgencyId;
+            MyAdp.SelectCommand.Parameters.Add("@Formtypeid", SqlDbType.Int).Value = id;
+            MyAdp.SelectCommand.Parameters.Add("@BranchId", SqlDbType.Int).Value = branchid;
+            MyAdp.SelectCommand.Parameters.Add("@InspUserId", SqlDbType.Int).Value = inspuserid;
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDt;
+    }
+
+
+    public DataTable Agency_Fetch_DatetobeIssuedByUnitCompanyFormtype(int amendmentid, int Unitid, int Companyid, int Formtypeid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            if (amendmentid == 0)
+            {
+                MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_DatetobeIssued_ByCUnitId", DBManager.ConnectToDB());
+                MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            }
+            else
+            {
+                MyAdp = new SqlDataAdapter("GPsp_AgencyAmendment_Fetch_DatetobeIssued_ByCUnitId", DBManager.ConnectToDB());
+                MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+                MyAdp.SelectCommand.Parameters.Add("@fGPtbl_CUnitAmendment_Id", SqlDbType.Int).Value = amendmentid;
+            }
+            
+
+            MyAdp.SelectCommand.Parameters.Add("@Unitid", SqlDbType.Int).Value = Unitid;
+            MyAdp.SelectCommand.Parameters.Add("@Companyid", SqlDbType.Int).Value = Companyid;
+            MyAdp.SelectCommand.Parameters.Add("@Formtypeid", SqlDbType.Int).Value = Formtypeid;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDt;
+    }
+
+    public int Agency_Update_InspectionStatus(int amendmentid, int unitid, int agencyid, int formtypeid, int inspectionstatus, string issuedate, int userid)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Agency_Update_InspectionStatus", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_IS_RenewalAmendmentId", SqlDbType.Int).Value = amendmentid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_UnitId", SqlDbType.Int).Value = unitid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_AgencyId", SqlDbType.Int).Value = agencyid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_FormtypeId", SqlDbType.Int).Value = formtypeid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_InspectionStatus", SqlDbType.Int).Value = inspectionstatus;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_DateStatus4", SqlDbType.DateTime).Value = Convert.ToDateTime(issuedate);
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = userid; 
+            
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+
+    //TO FETCH INSPECTION IS PENDING FOR AGENCY
+    public DataTable Agency_Fetch_InspectionisPending(int id, int AgencyId, int BranchId, int InspUserId)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            if (id == 1)//FOR REGISTRATION
+            {
+                MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspectionisPending", DBManager.ConnectToDB());
+            }
+            else if (id == 3)//FOR AMENDMENT
+            {
+                MyAdp = new SqlDataAdapter("GPsp_AgencyAmendment_Fetch_InspectionisPending", DBManager.ConnectToDB());
+            }
+
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@AgencyId", SqlDbType.Int).Value = AgencyId;
+            if (id == 1)
+            {
+                MyAdp.SelectCommand.Parameters.Add("@BranchId", SqlDbType.Int).Value = BranchId;
+                MyAdp.SelectCommand.Parameters.Add("@InspUserId", SqlDbType.Int).Value = InspUserId; 
+            }
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDt;
+    }
+
+    public DataTable Agency_Fetch_InspectionisPendingByUnitCompanyFormtype(int amendmentid, int Unitid, int Companyid, int Formtypeid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            if (amendmentid == 0)//FOR REGISTRATION
+            {
+                MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspectionisPending_ByCUnitId", DBManager.ConnectToDB());
+                MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            }
+            else //FOR AMENDMENT
+            {
+                MyAdp = new SqlDataAdapter("GPsp_AgencyAmendment_Fetch_InspectionisPending_ByCUnitId", DBManager.ConnectToDB());
+                MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+                MyAdp.SelectCommand.Parameters.Add("@fGPtbl_CUnitAmendment_Id", SqlDbType.Int).Value = amendmentid;
+            }
+
+            MyAdp.SelectCommand.Parameters.Add("@Unitid", SqlDbType.Int).Value = Unitid;
+            MyAdp.SelectCommand.Parameters.Add("@Companyid", SqlDbType.Int).Value = Companyid;
+            MyAdp.SelectCommand.Parameters.Add("@Formtypeid", SqlDbType.Int).Value = Formtypeid;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDt;
+    }
+
+    //TO INSERT DOCUMENT UPLOADED BY AGENCY
+    public int Agency_Update_InspectionAgency_Documents(int unitid, int agencyid,
+int formtypeid, string reportname, string reportpath, int userid)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Agency_Update_InspectionisPending_Documents", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_IS_UnitId", SqlDbType.Int).Value = unitid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_AgencyId", SqlDbType.Int).Value = agencyid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_FormtypeId", SqlDbType.Int).Value = formtypeid;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_ReportName", SqlDbType.VarChar, 1000).Value = reportname;
+            MySqlComm.Parameters.Add("@fGPtbl_IS_ReportPath", SqlDbType.VarChar, 2000).Value = reportpath;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = userid;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+
+    //TO FETCH INSPECTION COMPLETE LIST OF FACTORIES FOR INSPECTION AGENCY
+    public DataTable Agency_Fetch_InspectionisComplete(int agencyid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspectionisComplete", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@AgencyId", SqlDbType.Int).Value = agencyid;
+            //MyAdp.SelectCommand.Parameters.Add("@BranchId", SqlDbType.Int).Value = branchid;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+
+        return MyDt;
+    }
+
+    // Created By Ravish Kumar Pandey
+    public DataTable Agency_Fetch_InspectionComlete_for_Amedment(int agencyid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspectionisComplete_For_Amendment", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@AgencyId ", SqlDbType.Int).Value = agencyid;
+            //MyAdp.SelectCommand.Parameters.Add("@BranchId", SqlDbType.Int).Value = branchid;
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+
+
+
+
+
+    #endregion
+
+
+    #region MasterInspectionAgency_User
+
+    //TO FETCH ALL DATA FROM TABLE
+    public DataSet MasterInspectionAgency_User_Fetch_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_User_All", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    public SqlDataReader MasterInspectionAgency_User_Fetch_DataReader()
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Fetch_MasterInspectionAgency_User_All", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MyDr = MySqlComm.ExecuteReader();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return MyDr;
+    }
+
+
+    public SqlDataReader MasterInspectionAgency_User_Fetch_step6()
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Fetch_MasterInspectionAgency_Activated_step6", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MyDr = MySqlComm.ExecuteReader();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return MyDr;
+    }
+
+    //TO FETCH SELECTED DATA FROM TABLE USING ID
+    public DataSet MasterInspectionAgency_User_FetchById_DataSet(int InspectionAgency_UserId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_User_ById", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_MIAU_Id", SqlDbType.Int).Value = InspectionAgency_UserId;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO FETCH SELECTED DATA FROM TABLE USING AGENCY ID
+    public DataSet MasterInspectionAgency_User_FetchByAgencyId_DataSet(int InspectionAgency_User_AgencyId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_User_ByAgencyId", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_MIAU_AgencyId", SqlDbType.Int).Value = InspectionAgency_User_AgencyId;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO FETCH AGENCY USER USING BRANCH USERID
+    public DataSet MasterInspectionAgency_User_FetchByBranchUserId_DataSet(int BranchUserId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspAgencyUser", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.Parameters.Add("@BranchUserId", SqlDbType.Int).Value = BranchUserId;
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDs;
+    }
+
+    //TO FETCH ACTIVATED AGENCIES
+    public DataSet MasterInspectionAgency_Fetch_Activated_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterInspectionAgency_Activated", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    //TO DELETE USING ID
+    public int MasterInspectionAgency_User_DeleteById(int InspectionAgency_UserId, int UserId)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Delete_MasterInspectionAgency_User_ById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_MIAU_Id", SqlDbType.Int).Value = InspectionAgency_UserId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("@OutPut", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    //TO INSERT OR UPDATE
+    public int MasterInspectionAgency_User_InsertUpdate(int InspectionAgency_UserId, int InspectionAgencyId,
+        string InspectionAgency_UserName, string InspectionAgency_UserEmail,
+        string InspectionAgency_UserDescription, string InspectionAgency_UserLoginname,int UserId)
+    {
+        try
+        {
+            RandomKeyGenerator objRand = new RandomKeyGenerator();
+            string passwd = objRand.Generate();
+
+            MySqlComm = new SqlCommand("GPsp_Update_MasterInspectionAgency_User", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_MIAU_Id", SqlDbType.Int).Value = InspectionAgency_UserId;
+            if (InspectionAgencyId!=0) MySqlComm.Parameters.Add("@fGPtbl_MIAU_AgencyId", SqlDbType.Int).Value = InspectionAgencyId;
+            if (InspectionAgency_UserName.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MIAU_Name", SqlDbType.VarChar, 100).Value = InspectionAgency_UserName;
+            if (InspectionAgency_UserEmail != "") MySqlComm.Parameters.Add("@fGPtbl_MIAU_Email", SqlDbType.VarChar, 50).Value = InspectionAgency_UserEmail;
+            MySqlComm.Parameters.Add("@fGPtbl_MIAU_Password", SqlDbType.NVarChar, 50).Value = passwd;
+            if (InspectionAgency_UserDescription.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MIAU_Description", SqlDbType.VarChar, 2000).Value = InspectionAgency_UserDescription;
+            if (InspectionAgency_UserLoginname.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MIAU_UserName", SqlDbType.VarChar, 50).Value = InspectionAgency_UserLoginname;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    //TO ACTIVATE BY ID
+    public int MasterInspectionAgency_User_ActivateById(int InspectionAgency_UserId, int UserId, string Activate)
+    {
+        try
+        {
+            MySqlComm = new SqlCommand("GPsp_Update_MasterInspectionAgency_User_ActivateById", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+            MySqlComm.Parameters.Add("@fGPtbl_MIAU_Id", SqlDbType.Int).Value = InspectionAgency_UserId;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+            MySqlComm.Parameters.Add("@Activate", SqlDbType.VarChar, 15).Value = Activate;
+
+            SqlParameter outVal = new SqlParameter("@OutPut", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public SqlDataReader MasterInspectionAgency_User_Login(string UserName, string Password, string LoginIP)
+    {
+        try
+        {
+
+            MySqlComm = new SqlCommand("GPsp_Fetch_MasterInspectionAgency_User_Login", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@AgencyUserName", SqlDbType.VarChar, 50).Value = UserName;
+            MySqlComm.Parameters.Add("@AgencyPassword", SqlDbType.VarChar, 50).Value = Password;
+            MySqlComm.Parameters.Add("@LoginIP", SqlDbType.VarChar, 50).Value = LoginIP;
+
+            MyDr = MySqlComm.ExecuteReader();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        return MyDr;
+    }
+
+
+    //TO FETCH AGENCY USER USING UNITID
+    public DataSet MasterInspectionAgency_User_FetchByUnit_DataSet(int unitid, int formtype)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspAgencyUserUnitwise", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.Parameters.Add("@Unitid", SqlDbType.Int).Value = unitid;
+            MyAdp.SelectCommand.Parameters.Add("@Formtype", SqlDbType.Int).Value = formtype;
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDs;
+    }
+
+
+    public DataSet MasterInspectionAgency_User_deletelist(int zoneId,int BranchUserId,int agencyId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_Fetch_InspAgencyUser", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.Parameters.Add("@BranchUserId", SqlDbType.Int).Value = BranchUserId;
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message + "  " + ex.StackTrace);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDs;
+    }
+
+
+
+    #endregion
+
+    #region BUYING AGENCY
+
+    public SqlDataReader MasterBuyingAgency_User_Login(string UserName, string Password, string LoginIP)
+    {
+        try
+        {
+
+            MySqlComm = new SqlCommand("GPsp_Fetch_BuyingAgency_User_Login", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_UserName", SqlDbType.VarChar, 50).Value = UserName;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Password", SqlDbType.VarChar, 50).Value = Password;
+            MySqlComm.Parameters.Add("@LoginIP", SqlDbType.VarChar, 50).Value = LoginIP;
+
+            MyDr = MySqlComm.ExecuteReader();
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+
+        return MyDr;
+    }
+
+    public DataSet MasterBuyingAgency_User_Fetch_DataSet()
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Fetch_MasterBuyingAgency_User_All", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+
+    //TO INSERT OR UPDATE
+    public int MasterBuyingAgency_User_InsertUpdate(string BuyingAgency_UserName, string BuyingAgency_UserEmail,
+        string BuyingAgency_UserDescription, string BuyingAgency_UserLoginname, int UserId)
+    {
+        try
+        {
+            RandomKeyGenerator objRand = new RandomKeyGenerator();
+            string passwd = objRand.Generate();
+
+            MySqlComm = new SqlCommand("GPsp_Update_MasterBuyingAgency_User", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            if (BuyingAgency_UserName.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MBAU_Name", SqlDbType.VarChar, 100).Value = BuyingAgency_UserName;
+            if (BuyingAgency_UserEmail != "") MySqlComm.Parameters.Add("@fGPtbl_MBAU_Email", SqlDbType.VarChar, 50).Value = BuyingAgency_UserEmail;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Password", SqlDbType.NVarChar, 50).Value = passwd;
+            if (BuyingAgency_UserDescription.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MBAU_Remark", SqlDbType.VarChar, 2000).Value = BuyingAgency_UserDescription;
+            if (BuyingAgency_UserLoginname.Trim() != "") MySqlComm.Parameters.Add("@fGPtbl_MBAU_UserName", SqlDbType.VarChar, 50).Value = BuyingAgency_UserLoginname;
+            MySqlComm.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+
+            SqlParameter outVal = new SqlParameter("Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public DataTable BuyingAgency_Fetch_Search(int Inputtext, string SearchText)
+    {
+        try
+        {
+            MyDt = new DataTable();
+          //  MyAdp = new SqlDataAdapter("GPsp_Agency_fetch_BuyingAgencySearch", DBManager.ConnectToDB());
+            MyAdp = new SqlDataAdapter("GPsp_Agency_fetch_BuyingAgencySearch_modified", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@DdlSearchCriteria", SqlDbType.Int).Value = Inputtext;
+            MyAdp.SelectCommand.Parameters.Add("@SearchCriteria", SqlDbType.VarChar, 1000).Value = SearchText;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+    public ArrayList MasterBuyingAgenciesUser_ForgotPassword(string Username)
+    {
+        string Encryptpwd = string.Empty;
+        ArrayList arr = new ArrayList();
+        try
+        {
+            //DecryptEncrypt objDecEnc = new DecryptEncrypt();
+            RandomKeyGenerator objRnd = new RandomKeyGenerator();
+            Encryptpwd = objRnd.Generate();
+            //Encryptpwd = objDecEnc.Encrypt(Encryptpwd).Trim();
+
+            MySqlComm = new SqlCommand("GPsp_BuyingAgenciesForgotPassword", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_UserName", SqlDbType.VarChar, 200).Value = Username;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Password", SqlDbType.NVarChar, 2000).Value = Encryptpwd;
+
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+
+            SqlParameter outEmail = new SqlParameter("@Email", SqlDbType.VarChar, 200);
+            outEmail.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outEmail);
+
+            SqlParameter outPwd = new SqlParameter("@Password", SqlDbType.NVarChar, 2000);
+            outPwd.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outPwd);
+
+            MySqlComm.ExecuteNonQuery();
+            //Decryptpwd = objDecEnc.Decrypt(outPwd.Value.ToString());
+            arr.Add(outVal.Value);
+            arr.Add(outEmail.Value);
+            arr.Add(Encryptpwd);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return arr;
+    }
+
+
+    public DataSet MasterBuyingAgency_Fetch_DataSet(int MasterUserId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("Gpsp_fetch_masterBuyingAgencyUser", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_MBAU_Id", SqlDbType.Int).Value = MasterUserId;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    public int MasterBuyingAgency_UpdateProfile(int UserId, string Email, string Remarks)
+    {
+        try
+        {
+
+
+            MySqlComm = new SqlCommand("Gpsp_update_MasterBuyingAgenyUser", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Id", SqlDbType.Int).Value = UserId;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Email", SqlDbType.VarChar, 50).Value = Email;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Remark", SqlDbType.VarChar, 2000).Value = Remarks;
+
+            SqlParameter outError = new SqlParameter("@ErrorId", SqlDbType.Int);
+            outError.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outError);
+
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outError.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public int MasterBuyingAgency_ChangePassword(int UserId, string Newpassword, string Oldpassword, int Edituser)
+    {
+        try
+        {
+
+            /*SIMPLE PASSWORD 7/6/2012
+             DecryptEncrypt objDecEnc = new DecryptEncrypt();*/
+            string EncryptedPwd = Newpassword.ToString().Trim();
+            string EncryptedOldPwd = Oldpassword.ToString().Trim();
+            MySqlComm = new SqlCommand("GPsp_MasterBuyingAgency_ChangePassword", DBManager.ConnectToDB());
+            MySqlComm.CommandType = CommandType.StoredProcedure;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Id", SqlDbType.Int).Value = UserId;
+            MySqlComm.Parameters.Add("@NewPassword", SqlDbType.NVarChar, 100).Value = EncryptedPwd;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_Password", SqlDbType.NVarChar, 100).Value = EncryptedOldPwd;
+            MySqlComm.Parameters.Add("@fGPtbl_MBAU_EUser", SqlDbType.Int).Value = Edituser;
+            SqlParameter outVal = new SqlParameter("@Output", SqlDbType.Int);
+            outVal.Direction = ParameterDirection.Output;
+            MySqlComm.Parameters.Add(outVal);
+            MySqlComm.ExecuteNonQuery();
+            ErrorId = Convert.ToInt32(outVal.Value);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MySqlComm.Dispose();
+        }
+        return ErrorId;
+    }
+
+    public DataSet MasterBuyingAgency_ChangePassword_send_mail(int UserId)
+    {
+        try
+        {
+            MyDs = new DataSet();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_BuyingAgencies_Change_Password", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            MyAdp.SelectCommand.Parameters.Add("@fGPtbl_MBAU_Id", SqlDbType.Int).Value = UserId;
+
+            MyAdp.Fill(MyDs);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            DBManager.CloseConnection();
+            MyAdp.Dispose();
+        }
+        return MyDs;
+    }
+
+    public DataTable DG_Fetch_Search(int Inputtext, string SearchText)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_fetch_DGSearch", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@DdlSearchCriteria", SqlDbType.Int).Value = Inputtext;
+            MyAdp.SelectCommand.Parameters.Add("@SearchCriteria", SqlDbType.VarChar, 1000).Value = SearchText;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+    public DataTable Report_Fetch_Search(int Inputtext, string SearchText)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_fetch_Reportsearch", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@DdlSearchCriteria", SqlDbType.Int).Value = Inputtext;
+            MyAdp.SelectCommand.Parameters.Add("@SearchCriteria", SqlDbType.VarChar, 1000).Value = SearchText;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+    public DataTable ProductCompany_Search(int ddlvalue, string SearchText, int Roleid, int Userid)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_CompanyProduct_Search", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@DdlSearchCriteria", SqlDbType.Int).Value = ddlvalue;
+            MyAdp.SelectCommand.Parameters.Add("@SearchCriteria", SqlDbType.VarChar, 1000).Value = SearchText;
+            MyAdp.SelectCommand.Parameters.Add("@Roleid", SqlDbType.Int).Value = Roleid;
+            MyAdp.SelectCommand.Parameters.Add("@Userid", SqlDbType.Int).Value = Userid;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message+"  "+ex.StackTrace);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+    public DataTable DG_Fetch_Search_modified(int Inputtext, string SearchText)
+    {
+        try
+        {
+            MyDt = new DataTable();
+            MyAdp = new SqlDataAdapter("GPsp_Agency_fetch_DGSearch_modified", DBManager.ConnectToDB());
+            MyAdp.SelectCommand.CommandType = CommandType.StoredProcedure;
+            MyAdp.SelectCommand.Parameters.Add("@DdlSearchCriteria", SqlDbType.Int).Value = Inputtext;
+            MyAdp.SelectCommand.Parameters.Add("@SearchCriteria", SqlDbType.VarChar, 1000).Value = SearchText;
+
+            MyAdp.Fill(MyDt);
+        }
+        catch (Exception ex)
+        {
+            ErrHandler.WriteError(ex.Message);
+        }
+        finally
+        {
+            MyAdp.Dispose();
+            DBManager.CloseConnection();
+        }
+        return MyDt;
+    }
+
+
+    #endregion
+
+
+
+}

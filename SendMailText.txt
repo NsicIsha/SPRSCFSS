@@ -1,0 +1,28 @@
+﻿
+
+
+public static void Insert_MailDetails(string MailTo, int ToUserId, int ToUserTable, string MailFrom,
+        int FromUserId, int FromUserTable, string MailSubject, string MailBody, int CreateUserId)
+        
+<----- NOTES FOR 'INSERT MAIL DETAILS' TO INSERT INTO SENTMAILER TABLE  ------->
+
+1. MailTo as simple to whom mail has to send.
+
+2.MailFrom from whom mail send.
+
+3.MailSubject refers subject of mail.
+
+4.MailBody is the body of mail.
+
+5.ToUserId refers to Role id to whom mail is being sent. If mail sends to branch then its role id is 8.
+
+6. ToUserTable refers to from where email has chosen. Default value is 0 otherwise
+	 1=User Master, 2=Inspection Agency, 3=Company.
+	 
+7. FromUserId is the Role id from whom email is being sent. In case mail sends from branch head
+	then role id is 3.
+	
+8. FromUserTable refers from where email of sender has picked up. Default value is 0 otherwise
+	1=User Master, 2=Inspection Agency, 3=Company.
+	
+9. CreateUserId is UserId who is sending mail.
